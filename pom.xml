@@ -2,38 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- Below some of the fields/values there is a "Replace Me!", "Delete Me!", "Uncomment!" or "Injected at deployment!" comment. This relates to the field 
-		directly above it and is either an instruction to replace during development or while deploying. Besides those comments, also some comments have been added 
-		to describe the function of several parts of the POM for clarity, these are either behind or above the POM entry in question. -->
-
 	<!-- Parent POM reference. -->
 	<parent>
+		<!-- The main 'group' under which the result of compilation will be stored. This follows Java Package naming convention. (See: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html 
+		for more information) -->
 		<groupId>nl.swisssense</groupId>
 		<artifactId>parent-pom</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../parent-pom/parent-pom.xml</relativePath>
 	</parent>
 	
-	<!-- The main 'group' under which the result of compilation will be stored. This follows Java Package naming convention. (See: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html 
-		for more information) -->
-	<!-- This group is required for iterations of the template, because of using a Parent POM it is abundant upon implementation of the template. -->
-	<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
-	<!-- Delete Me! -->
 	<!-- The name of the artifact within the 'group' which results from compiling this POM. -->
-	<artifactId>development-template</artifactId>
-	<!-- Replace Me! -->
-	<version>1.0.3</version> 
-	<!-- Replace Me! (with:) <version>1.0.0-SNAPSHOT</version>. -->
+	<artifactId>customer-interaction-pl-ms</artifactId>
+	<version>1.0.0-SNAPSHOT</version> 
 	<packaging>mule-application</packaging>
 
 	<!-- Application Name -->
 	<name>customer-interaction-pl-ms</name>
-	<!-- Replace Me! (only needed if the name here differs from the name of the new application, should be handled by the renaming of the application) -->
-
+	
 	<!-- Description of the application. This can be used to state the purpose and give some details/information in a human readable text format. -->
-	<description>This a Template Project for Swiss Sense. One can use this template when the intention is to create/setup an entirely new (or reworked) application.</description>
-	<!-- Replace Me! -->
-
+	<description>This a Process Layer application for Swiss Sense.</description>
+	
 	<build>
 		<resources>
 			<resource>
@@ -49,13 +38,34 @@
 				<extensions>true</extensions> <!-- This enables the Mule Maven plugin. -->
 				<configuration>
 					<cloudHubDeployment> <!-- See: https://docs.mulesoft.com/mule-runtime/4.3/deploy-to-cloudhub for information. -->
+					<!-- Above each element which is required, a comment "REQUIRED!" will be placed, this increases traceability of errors during deployment. -->
+						<uri>https://eu1.anypoint.mulesoft.com/</uri> <!-- Anypoint Platform URI; If not set, defaults to "https://anypoint.mulesoft.com". -->
+						<!-- REQUIRED! -->
 						<muleVersion>${app.runtime}</muleVersion> <!-- muleVersion is the runtime version as it appears on the CloudHub interface. -->
-						<applicationName>${muleenv}-${project.artifactId}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
-						<username>${username}</username>
+						<!-- REQUIRED! (When using Anypoint Platform credentials to login) -->
+						<username>${username}</username> <!-- CloudHub username. -->
 						<!-- Injected at deployment! -->
-						<password>${password}</password>
+						<!-- REQUIRED! (When using Anypoint Platform credentials to login) -->
+						<password>${password}</password> <!-- CloudHub password. -->
 						<!-- Injected at deployment! -->
+						<!-- REQUIRED! -->
+						<applicationName>${cloudhub.application.name}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
+						<!-- Injected at deployment! -->
+						<!-- REQUIRED! -->
 						<environment>${chenv}</environment>
+						<!-- Injected at deployment! -->
+						<properties>
+							<mule.ch.env>${muleenv}</mule.ch.env>
+							<anypoint.platform.analytics_base_uri>https://analytics-ingest.eu1.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
+							<anypoint.platform.base_uri>https://eu1.anypoint.mulesoft.com</anypoint.platform.base_uri>
+							<anypoint.platform.client_id>${envclientid}</anypoint.platform.client_id>
+							<!-- Injected at deployment! -->
+							<anypoint.platform.client_secret>${envclientsecret}</anypoint.platform.client_secret>
+							<!-- Injected at deployment! -->
+							<customer-interaction-pl-ms-encryption-key>${customer-interaction-pl-ms-encryption-key}</customer-interaction-pl-ms-encryption-key>
+							<!-- Injected at deployment! -->
+						</properties>
+						<workers>${workers}</workers> <!-- Sets the amount of CloudHub workers for this application. -->
 						<!-- Injected at deployment! -->
 						<workerType>${workertype}</workerType> <!-- Size of each worker; one of the following values: -->
 						<!-- Injected at deployment! -->
@@ -66,34 +76,16 @@
 							    XLARGE 	(4 vCores)
 							    XXLARGE (8 vCores)
 							    4XLARGE (16 vCores) -->
-						<workers>${workers}</workers> <!-- Sets the amount of CloudHub workers for this application. -->
+						<region>${workerregion}</region> <!-- Sets the region/datacenter in which the application will be deployed. -->
 						<!-- Injected at deployment! -->
-						<uri>https://eu1.anypoint.mulesoft.com/</uri>
-						<businessGroup>Swiss Sense\Swiss Sense ICT</businessGroup>
-						<region>eu-central-1</region>
 						<objectStoreV2>true</objectStoreV2>
+						<businessGroup>Swiss Sense\Swiss Sense ICT</businessGroup>
+						<deploymentTimeout>2000000</deploymentTimeout>
 						<skipDeploymentVerification>${skipVerify}</skipDeploymentVerification>
 						<!-- Injected at deployment! -->
-						<deploymentTimeout>2000000</deploymentTimeout>
-						<properties>
-							<mule.ch.env>${muleenv}</mule.ch.env>
-							<anypoint.platform.analytics_base_uri>https://analytics-ingest.eu1.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
-							<anypoint.platform.base_uri>https://eu1.anypoint.mulesoft.com</anypoint.platform.base_uri>
-							<anypoint.platform.client_id>${envclientid}</anypoint.platform.client_id>
-							<!-- Injected at deployment! -->
-							<anypoint.platform.client_secret>${envclientsecret}</anypoint.platform.client_secret>
-							<!-- Injected at deployment! -->
-							<development-template-encryption-key>${development-template-encryption-key}</development-template-encryption-key>
-							<!-- Replace Me! -->
-							<!-- Application Name should be replaced with the actual name of the application as in the "<name/>" tag. -->
-							<!-- Injected at deployment! -->
-						</properties>
 					</cloudHubDeployment>
-					<classifier>mule-application</classifier>
-					<!-- <classifier>mule-application-template</classifier> -->
-					<!-- Delete Me! (the commented classifier only) -->
 				</configuration>
-				<!-- <executions>
+				<executions>
 					<execution>
 						<id>deploy</id>
 						<phase>deploy</phase>
@@ -101,8 +93,7 @@
 							<goal>deploy</goal>
 						</goals>
 					</execution>
-				</executions> -->
-				<!-- Uncomment! -->
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>external.atlassian.jgitflow</groupId>
@@ -118,8 +109,7 @@
 					<squash>false</squash>
 					<eol>native</eol>
 					<allowUntracked>true</allowUntracked>
-					<defaultOriginUrl>git@bitbucket.org:glosws/development-template.git</defaultOriginUrl>
-					<!-- Replace Me! -->
+					<defaultOriginUrl>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</defaultOriginUrl>
 					<!-- The GIT repository URL for this application. -->
 					<enableSshAgent>true</enableSshAgent>
 					<alwaysUpdateOrigin>true</alwaysUpdateOrigin>
@@ -220,7 +210,4 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
-<properties>
-        <app.runtime>4.3.0-20210119</app.runtime>
-    </properties>
 </project>
