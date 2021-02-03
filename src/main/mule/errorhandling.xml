@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
+	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/json-logger 
+	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+
+	<error-handler name="GlobalErrorHandling" doc:id="5c5ea77b-79b5-4856-b4f4-36f7642c9b3e">
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
+			doc:id="ff44e829-2f1f-483c-894a-9dc8eb9a3da4" type="HTTP:CONNECTIVITY">
+			<json-logger:logger doc:name="Error Log" doc:id="f3c624c6-3906-4e1b-a4aa-b3a1731d109a" config-ref="JSON_Logger_Config"
+				message='Error in/during connection.' tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error">
+				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	(variables: vars) if (vars != null), 
+	(failingNode: error.failingComponent) if (error != null),
+	(originalError: error.detailedDescription) if (error != null)
+}]]]></json-logger:content>
+			</json-logger:logger>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
+			doc:id="3a6b89a4-9797-4f8c-9b68-3852f0e5a115" type="HTTP:INTERNAL_SERVER_ERROR">
+			<json-logger:logger doc:name="Error Log" doc:id="b2e4ca34-eea8-4e06-a162-848a5e220a23" config-ref="JSON_Logger_Config"
+				message='Error occurred in an API which was called by this application.' tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error">
+				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	(variables: vars) if (vars != null), 
+	(failingNode: error.failingComponent) if (error != null),
+	(originalError: error.detailedDescription) if (error != null),
+	(errorFromCalledAPI: error.errorMessage.payload.error) if (error.errorMessage.payload.error != null)
+}]]]></json-logger:content>
+			</json-logger:logger>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
+			doc:id="c10b6a9c-af3e-4be1-9988-41107ae271b6" type="HTTP:TIMEOUT">
+			<json-logger:logger doc:name="Error Log" doc:id="a8f2fc09-a21e-4808-a2c5-9ebde19a9099" config-ref="JSON_Logger_Config"
+				message="Timeout occurred while requesting another API/System." tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error">
+				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	(variables: vars) if (vars != null), 
+	(failingNode: error.failingComponent) if (error != null),
+	(originalError: error.detailedDescription) if (error != null)
+}]]]></json-logger:content>
+			</json-logger:logger>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
+			doc:id="706928e2-8045-41ee-9ede-5ff91cd10768">
+			<json-logger:logger doc:name="Error Log" doc:id="feba7791-69da-4c68-a538-a9c160768fa2" config-ref="JSON_Logger_Config"
+				tracePoint="EXCEPTION" category="nl.swisssense.error" priority="ERROR" message='#[error.description default "No error.description present."]'>
+				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	(variables: vars) if (vars != null), 
+	(failingNode: error.failingComponent) if (error != null),
+	(originalError: error.detailedDescription) if (error != null),
+	(fullerror: error) if (error != null)
+}]]]></json-logger:content>
+			</json-logger:logger>
+		</on-error-propagate>
+	</error-handler>
+</mule>

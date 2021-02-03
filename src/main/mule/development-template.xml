@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+    <flow name="development-template-main">
+        <http:listener config-ref="HTTPS_Listener_config" path="${secure::https.inbound.listener}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <json-logger:logger doc:name="Entry Log" doc:id="638b65af-e21c-4817-9038-4dec80a8ff9d" config-ref="JSON_Logger_Config" message="Entry" category="nl.swisssense.attributes">
+            <json-logger:content><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+        </json-logger:logger>
+        <apikit:router doc:name="development-template" doc:id="035d62cd-a22c-403d-90da-b30aa68ad558" config-ref="development-template-config"/>
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST, APIKIT:METHOD_NOT_ALLOWED, APIKIT:NOT_ACCEPTABLE, APIKIT:NOT_FOUND, APIKIT:UNSUPPORTED_MEDIA_TYPE" enableNotifications="true" logException="true">
+                <json-logger:logger doc:name="Error Log" doc:id="bf47a62e-6176-4d23-9c22-f54000b22b7f" tracePoint="EXCEPTION" message="#[&quot;APIKit Router Error Handling 'APIKIT' path taken. &quot; ++ (error.description default &quot;&quot;)]" priority="ERROR" config-ref="JSON_Logger_Config" category="nl.swisssense.error">
+                    <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	error: message.message.exceptionPayload.info
+}]]]></json-logger:content>
+                </json-logger:logger>
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="a4faae97-d44b-4f30-aed2-fc9253e1e8a9" doc:name="Create Error Response">
+                    <ee:message>
+                        <ee:set-payload resource="dwl/generic-error-response.dwl" />
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable resource="dwl/generic-error-httpstatus.dwl" variableName="httpStatus" />
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="ANY" enableNotifications="true" logException="true">
+                <json-logger:logger doc:name="Error Log" doc:id="5c5a6f1d-d5fa-4325-968c-2498cc9c3389" tracePoint="EXCEPTION" message="#[&quot;APIKit Router Error Handling 'ANY' path taken. &quot; ++ (error.description default &quot;&quot;)]" priority="ERROR" config-ref="JSON_Logger_Config" category="nl.swisssense.error">
+                    <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+	attributes: attributes,
+	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+	error: message.message.exceptionPayload.info
+}]]]></json-logger:content>
+                </json-logger:logger>
+                <ee:transform doc:name="Create Error Response" doc:id="b8723767-c441-43f1-b821-3036fa7afb72">
+                    <ee:message>
+                        <ee:set-payload resource="dwl/any-error-response.dwl" />
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\test:development-template-config">
+        <flow-ref doc:name="get-something" doc:id="1c5465c0-f177-4ab1-9d54-af5b9513cdb7" name="get-something" />
+        <json-logger:logger doc:name="Exit Log" doc:id="d2a3da00-0ca8-45a2-b54b-25ca535c53d7" config-ref="JSON_Logger_Config" tracePoint="END" message="Exit" category="nl.swisssense.attributes">
+            <json-logger:content><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+        </json-logger:logger>
+    </flow>
+</mule>

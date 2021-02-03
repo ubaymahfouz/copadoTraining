@@ -1,0 +1,3 @@
+## Fill these properties with appropriate values for the TST environment. ##
+## Without any properties here, the application will fail when the environment is set to "tst". ##
+## As an example/baseline the DEV properties can be copied to be adjusted for TST. ##

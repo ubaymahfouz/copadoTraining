@@ -1,0 +1,1 @@
+p('error.' ++ error.errorType.namespace ++ '.' ++ error.errorType.identifier ++ '.status')

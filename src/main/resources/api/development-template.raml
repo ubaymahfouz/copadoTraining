@@ -1,0 +1,17 @@
+#%RAML 1.0
+title: development-template
+
+traits:
+  errorHandling: !include exchange_modules/628dd124-53a0-4efa-9453-7ee7109dfdf0/error-http-status-responses/1.0.0/error-http-status-responses.raml
+  
+uses:
+  basicAuth: !inlcude /exchange_modules/628dd124-53a0-4efa-9453-7ee7109dfdf0/basic-authentication-enforcement/1.0.0/basic-authentication-enforcement.raml
+
+/test:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/example.json
+        

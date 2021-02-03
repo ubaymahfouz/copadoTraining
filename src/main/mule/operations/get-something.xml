@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
+	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/http 
+	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+	http://www.mulesoft.org/schema/mule/json-logger 
+	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+
+	<sub-flow name="get-something" doc:id="db2ab2ec-6271-44d3-a485-94998a4585f5">
+		<json-logger:logger doc:name="Functional Log" doc:id="e36af965-7756-4d7d-80f0-4d10a6a8e844" config-ref="JSON_Logger_Config"
+			message="About to send a GET request to obtain 'Something'." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+			<json-logger:content ><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="44cd2347-c163-4a2d-9f9b-5c33ac988714" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="GET" doc:name="Get Something" doc:id="550508cf-f446-47ab-97c7-943fd5dde3f4" config-ref="HTTPS_Request_configuration_Example" path="${secure::https.request.examplesystem.path}" >
+				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
+			</http:request>
+		</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG Log" doc:id="7dde0fcb-697d-4521-8a62-9f8af991dd34" config-ref="JSON_Logger_Config" message="GET Something response" tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" priority="DEBUG">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

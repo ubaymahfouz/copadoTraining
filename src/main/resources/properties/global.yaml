@@ -1,0 +1,22 @@
+# These are error messages and statuscodes for error handling.
+error:
+# error handling namespaces and identifiers below
+  APIKIT:
+    BAD_REQUEST:
+      message: "Bad request. "
+      status: "400"
+    NOT_FOUND:
+      message: "Not found. "
+      status: "404"
+    METHOD_NOT_ALLOWED:
+      message: "Method not allowed. "
+      status: "405"
+    NOT_ACCEPTABLE:
+      message: "Not acceptable. "
+      status: "406"
+    UNSUPPORTED_MEDIA_TYPE:
+      message: "Unsupported media type. "
+      status: "415"
+    NOT_IMPLEMENTED:
+      message: "Not Implemented. "
+      status: "501"
