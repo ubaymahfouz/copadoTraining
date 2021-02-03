@@ -18,7 +18,7 @@
 	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config"
-		doc:id="13dd3969-9104-4db0-baa6-d72ffbb838a9" file="properties/${mule.ch.env}-development-template-properties.yaml" key="rTt1dE26gmdDXb8s">
+		doc:id="13dd3969-9104-4db0-baa6-d72ffbb838a9" file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml" key="${customer-interaction-pl-ms-encryption-key}">
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
 

@@ -1,11 +1,13 @@
-#apiId: "123456"  # Enter the apiId of the application here for consistency.
+#apiId: "438327"  # Enter the apiId of the application here for consistency.
 apiId: "0"        # To enable local execution, having the apiId set to 0 is required.
 
 https:
-  port: "8099" # Replace by the intended port for the new application. See: https://dms.glomidco.com/s/dts38kMHoLDMnkt for an overview and make sure to add this new application there.
+  port: "8094" # Replace by the intended port for the new application. See: https://dms.glomidco.com/s/dts38kMHoLDMnkt for an overview and make sure to add this new application there.
   inbound:
     listener: "/api/v1/*"
   request:
+
+## HTTPS Request Config for connection to Example System ##
     examplesystem:
       basepath: "/api"
       path: "/someEndpointToGetSomething"
@@ -25,7 +27,7 @@ https:
 # See: https://blogs.mulesoft.com/dev/api-dev/json-logging-in-mule-4/ for information about the configuration.
 jsonlogger:
   application:
-    name: "development-template"
+    name: "customer-interaction-pl-ms"
     version: "1"
   maskedfields: "$.attributes.headers.authorization" # Any fields which should not be shown in the logging output need to be entered here.
 
