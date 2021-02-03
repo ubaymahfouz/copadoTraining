@@ -209,5 +209,12 @@
 			<artifactId>json-logger</artifactId>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-	</dependencies>
+		<dependency>
+            <groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
+            <artifactId>customer-interaction-pl-ms</artifactId>
+            <version>0.1.0</version>
+            <classifier>raml</classifier>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
 </project>

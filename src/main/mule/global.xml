@@ -6,8 +6,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/mule-apikit 
 	http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+	http://www.mulesoft.org/schema/mule/mule-apikit 
+	http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 	http://www.mulesoft.org/schema/mule/api-gateway 
-	http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
+	http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 	http://www.mulesoft.org/schema/mule/http 
 	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 	http://www.mulesoft.org/schema/mule/secure-properties 
@@ -57,10 +60,9 @@
 		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
 
 	<api-gateway:autodiscovery apiId="${secure::apiId}" doc:name="API Autodiscovery"
-		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="development-template-main" />
-
-	<apikit:config xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" name="development-template-config"
-		api="development-template.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true"/>
 
 	<configuration doc:name="Configuration" doc:id="acea7b07-dd62-4f94-a0b9-bda0ba581c3e" defaultErrorHandler-ref="GlobalErrorHandling" />
+
+	<apikit:config name="customer-interaction-process-api-config" api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.1.0:raml:zip:customer-interaction-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 </mule>
