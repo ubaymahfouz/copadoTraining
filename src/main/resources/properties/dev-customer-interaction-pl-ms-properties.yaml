@@ -43,8 +43,8 @@ keystore:
   type: "JKS"
   path: "keystore/keystore.jks"
   alias: "mule"
-  password: "password" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
+  password: "![PmDmHW16QlXUEx708FS4Xg==]" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
 truststore:
   type: "JKS"
   path: "keystore/truststore.jks"
-  password: "password" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
+  password: "![PmDmHW16QlXUEx708FS4Xg==]" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
