@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
     <flow name="customer-interaction-process-api-main">
         <http:listener config-ref="HTTPS_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -10,6 +10,12 @@
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
+        <json-logger:logger doc:name="Entry log" doc:id="fa8af29c-c3cd-4b0a-a72a-ee3edd6447ff" config-ref="JSON_Logger_Config" message="Entry" category="nl.swisssense.attributes">
+            <json-logger:content><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+        </json-logger:logger>
         <apikit:router config-ref="customer-interaction-process-api-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST">
@@ -120,16 +126,13 @@ output application/json
         </error-handler>
     </flow>
     <flow name="post:\interests:application\json:customer-interaction-process-api-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
+        <flow-ref doc:name="post-interests" doc:id="2088a73a-d9f0-4561-820e-808554f1870f" name="post-interests" />
+        <json-logger:logger doc:name="Exit Log" doc:id="477ff11c-9e5e-4d80-9dbc-6b3018d3b13b" config-ref="JSON_Logger_Config" message="End" tracePoint="END" category="nl.swisssense.attributes">
+            <json-logger:content><![CDATA[#[output application/json ---
 {
-  error: "Message is invalid; [faultcode]"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+ 	attributes: attributes
+}]]]></json-logger:content>
+        </json-logger:logger>
     </flow>
     <flow name="post:\preferences:application\json:customer-interaction-process-api-config">
         <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
@@ -142,5 +145,11 @@ output application/json
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+        <json-logger:logger doc:name="Exit Log" doc:id="9a6a7304-e56a-4dc4-80e6-db57ed68bcf3" config-ref="JSON_Logger_Config" message="End" tracePoint="END" category="nl.swisssense.attributes">
+            <json-logger:content><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+        </json-logger:logger>
     </flow>
 </mule>
