@@ -4,13 +4,6 @@
         <secure-properties:encrypt algorithm="Blowfish" />
     </secure-properties:config>
     <global-property doc:name="Global Property" doc:id="84e17808-05e7-4718-a498-ec25e79a92a5" name="mule.ch.env" value="dev" />
-    <http:request-config name="HTTPS_Request_configuration_Example" doc:name="HTTP Request configuration" doc:id="9534770b-2810-46e1-be54-24b6a6d6c57a" basePath="${secure::https.request.examplesystem.basepath}" responseTimeout="${secure::https.request.examplesystem.timeout.response}">
-        <http:request-connection protocol="${secure::https.request.examplesystem.protocol}" host="${secure::https.request.examplesystem.host}" port="${secure::https.request.examplesystem.port}" connectionIdleTimeout="${secure::https.request.examplesystem.timeout.idle}">
-            <http:authentication>
-                <http:basic-authentication username="${secure::basic.auth.examplesystem.username}" password="${secure::basic.auth.examplesystem.password}" />
-            </http:authentication>
-        </http:request-connection>
-    </http:request-config>
     <http:listener-config name="HTTPS_Listener_config" doc:name="HTTP Listener config" doc:id="649dcc0a-7492-406c-8c77-9562961edfa2">
         <http:listener-connection host="0.0.0.0" port="${secure::https.port}" tlsContext="TLS_Context_Inbound_Listener" protocol="HTTPS" />
     </http:listener-config>
