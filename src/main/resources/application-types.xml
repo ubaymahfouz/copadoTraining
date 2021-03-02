@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="POST_customers-to-customers-pl-payload" format="json">
+      <types:shape format="weave" example="examples/POST_customers-to-customers-pl-payload.json"><![CDATA[%dw 2.0
+
+type POST_customers_to_customers_pl_payload = {|
+  Customer: {|
+    globalCustomerId: Number {"typeId": "int"}, 
+    changeType: String, 
+    origin: {|
+      system: String, 
+      id: String
+    |}, 
+    customerType: String, 
+    legalEntity: {|
+      contact: Array<{|        mobilePhone: String,         fixedPhone: String,         email: String,         ipAddress: String,         social: Array<{|          "type": String,           handle: String        |}>
+      |}>, 
+      dateOfBirth: String, 
+      address: Array<{|        addressUsage: String,         streetName: String,         houseNumber: Number {"typeId": "int"},         houseNumberSuffix: String,         postalCode: String,         city: String,         country: {|          name: String,           code: String        |},         designation: {|          salutation: String,           firstName: String,           lastNameAffix: String,           lastName: String        |}      |}>, 
+      lastName: String, 
+      firstName: String, 
+      characteristics: {|
+        weight: Number {"typeId": "int"}, 
+        height: Number {"typeId": "int"}
+      |}, 
+      salutation: String, 
+      lastNameAffix: String, 
+      gender: String, 
+      bankAccount: {|
+        iban: String, 
+        ascription: String
+      |}
+    |}, 
+    locale: {|
+      languageCode: String, 
+      countryCode: String
+    |}, 
+    status: String, 
+    lastModifiedDate: String, 
+    preferences: {|
+      communication: {|
+        subscriptions: Array<{|          subscription: String,           enabled: Boolean        |}>, 
+        preferredChannel: String, 
+        language: String
+      |}, 
+      privacy: {|
+        allowTracking: Boolean, 
+        allowMarketing: Boolean, 
+        invokedRightToBeForgotten: Boolean, 
+        allowExternalStorage: Boolean
+      |}
+    |}
+  |}
+|} {"example": "{\\\"Customer\\\":{\\\"globalCustomerId\\\":1003564875,\\\"changeType\\\":\\\"update\\\",\\\"origin\\\":{\\\"system\\\":\\\"sap\\\",\\\"id\\\":\\\"001KDLWOLDKJF923ks\\\"},\\\"customerType\\\":\\\"customer\\\",\\\"legalEntity\\\":{\\\"contact\\\":[{\\\"mobilePhone\\\":\\\"\\\",\\\"fixedPhone\\\":\\\"\\\",\\\"email\\\":\\\"\\\",\\\"ipAddress\\\":\\\"\\\",\\\"social\\\":[{\\\"type\\\":\\\"\\\",\\\"handle\\\":\\\"\\\"}]}],\\\"dateOfBirth\\\":\\\"\\\",\\\"address\\\":[{\\\"addressUsage\\\":\\\"\\\",\\\"streetName\\\":\\\"\\\",\\\"houseNumber\\\":0,\\\"houseNumberSuffix\\\":\\\"\\\",\\\"postalCode\\\":\\\"\\\",\\\"city\\\":\\\"\\\",\\\"country\\\":{\\\"name\\\":\\\"\\\",\\\"code\\\":\\\"\\\"},\\\"designation\\\":{\\\"salutation\\\":\\\"\\\",\\\"firstName\\\":\\\"\\\",\\\"lastNameAffix\\\":\\\"\\\",\\\"lastName\\\":\\\"\\\"}}],\\\"lastName\\\":\\\"\\\",\\\"firstName\\\":\\\"\\\",\\\"characteristics\\\":{\\\"weight\\\":0,\\\"height\\\":0},\\\"salutation\\\":\\\"\\\",\\\"lastNameAffix\\\":\\\"\\\",\\\"gender\\\":\\\"\\\",\\\"bankAccount\\\":{\\\"iban\\\":\\\"NL11ABNA0123521255\\\",\\\"ascription\\\":\\\"Klaas Vaak\\\"}},\\\"locale\\\":{\\\"languageCode\\\":\\\"nl\\\",\\\"countryCode\\\":\\\"NL\\\"},\\\"status\\\":\\\"Known\\\",\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\",\\\"preferences\\\":{\\\"communication\\\":{\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}],\\\"preferredChannel\\\":\\\"\\\",\\\"language\\\":\\\"\\\"},\\\"privacy\\\":{\\\"allowTracking\\\":true,\\\"allowMarketing\\\":true,\\\"invokedRightToBeForgotten\\\":false,\\\"allowExternalStorage\\\":false}}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="GET_customers-from-customers-pl-response-payload" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload = {|
+  customers: Array<{|    globalCustomerId: String,     firstName: String,     lastName: String,     salutation: String,     email: String,     systemCustomerIds: Array<{|      system: String,       id: String,       customerType: String,       contactId: String    |}>, 
+    lastModifiedDate: String
+  |}>
+|} {"example": "{\\\"customers\\\":[{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="POST_interests-request-payload" format="json">
+      <types:shape format="weave" example="examples/POST_interests-request-payload.json"><![CDATA[%dw 2.0
+
+type POST_interests_request_payload = {|
+  source: {|
+    "type": String, 
+    name: String, 
+    campaign: String
+  |}, 
+  salutation: String, 
+  firstName: String, 
+  lastName: String, 
+  addresses: Array<{|    street: String,     houseNumber: Number {"typeId": "int"},     houseNumberSuffix: String,     postalCode: String,     city: String,     countryCode: String  |}>, 
+  phoneNumbers: Array<{|    number: String,     "type": String  |}>, 
+  email: String, 
+  language: String, 
+  preferredChannel: String, 
+  interestData: Array<{|    key: String,     value: String  |}>, 
+  productData: Array<{|    productId: String,     quantity: Number {"typeId": "int"},     price: Number {"typeId": "int"},     discountedPrice: Number {"typeId": "int"},     matchingPercentage: Number {"typeId": "int"}  |}>, 
+  subscriptions: Array<{|    subscription: String,     enabled: Boolean  |}>
+|} {"example": "{\\\"source\\\":{\\\"type\\\":\\\"store\\\",\\\"name\\\":\\\"Leidschendam\\\",\\\"campaign\\\":\\\"kussenwijzer\\\"},\\\"salutation\\\":\\\"Ms.\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaak\\\",\\\"addresses\\\":[{\\\"street\\\":\\\"Jagersveld\\\",\\\"houseNumber\\\":15,\\\"houseNumberSuffix\\\":\\\"a\\\",\\\"postalCode\\\":\\\"5405 BW\\\",\\\"city\\\":\\\"Uden\\\",\\\"countryCode\\\":\\\"NL\\\"}],\\\"phoneNumbers\\\":[{\\\"number\\\":\\\"+31612345678\\\",\\\"type\\\":\\\"mobile\\\"}],\\\"email\\\":\\\"klaas.vandervaak+alias@snurken.com\\\",\\\"language\\\":\\\"nl\\\",\\\"preferredChannel\\\":\\\"email\\\",\\\"interestData\\\":[{\\\"key\\\":\\\"\\\",\\\"value\\\":\\\"\\\"}],\\\"productData\\\":[{\\\"productId\\\":\\\"139289001\\\",\\\"quantity\\\":2,\\\"price\\\":999,\\\"discountedPrice\\\":825,\\\"matchingPercentage\\\":85}],\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#fec5f4d6-7242-4ab5-b140-045f2029b3e7">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="POST_customers-to-customers-pl-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a7874268-d9fe-4a5e-99fc-04c031bfdf22">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="POST_interests-request-payload"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
