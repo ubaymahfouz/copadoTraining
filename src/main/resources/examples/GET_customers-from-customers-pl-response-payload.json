@@ -1,0 +1,20 @@
+{
+	"customers": [
+		{
+			"globalCustomerId": "10048422",
+			"firstName": "Klaas",
+			"lastName": "van der Vaaker",
+			"salutation": "Dhr.",
+			"email": "testreply@provider.nl",
+			"systemCustomerIds": [
+				{
+					"system": "salesforce",
+					"id": "0SP4E0000000ROxWAM",
+					"customerType": "customer",
+					"contactId": "1MF4L0000001KWvMLP"
+				}
+			],
+			"lastModifiedDate": "2020-03-01T21:00:00"
+		}
+	]
+}

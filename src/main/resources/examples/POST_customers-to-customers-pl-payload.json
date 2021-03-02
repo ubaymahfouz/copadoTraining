@@ -1,0 +1,85 @@
+{
+	"Customer": {
+		"globalCustomerId": 1003564875,
+		"changeType": "update",
+		"origin": {
+			"system": "sap",
+			"id": "001KDLWOLDKJF923ks"
+		},
+		"customerType": "customer",
+		"legalEntity": {
+			"contact": [
+				{
+					"mobilePhone": "",
+					"fixedPhone": "",
+					"email": "",
+					"ipAddress": "",
+					"social": [
+						{
+							"type": "",
+							"handle": ""
+						}
+					]
+				}
+			],
+			"dateOfBirth": "",
+			"address": [
+				{
+					"addressUsage": "",
+					"streetName": "",
+					"houseNumber": 0,
+					"houseNumberSuffix": "",
+					"postalCode": "",
+					"city": "",
+					"country": {
+						"name": "",
+						"code": ""
+					},
+					"designation": {
+						"salutation": "",
+						"firstName": "",
+						"lastNameAffix": "",
+						"lastName": ""
+					}
+				}
+			],
+			"lastName": "",
+			"firstName": "",
+			"characteristics": {
+				"weight": 0,
+				"height": 0
+			},
+			"salutation": "",
+			"lastNameAffix": "",
+			"gender": "",
+			"bankAccount": {
+				"iban": "NL11ABNA0123521255",
+				"ascription": "Klaas Vaak"
+			}
+		},
+		"locale": {
+			"languageCode": "nl",
+			"countryCode": "NL"
+		},
+		"status": "Known",
+		"lastModifiedDate": "2020-03-01T21:00:00",
+		"preferences": {
+			"communication": {
+				"subscriptions": [
+					{
+						"subscription": "newsletter",
+						"enabled": true
+					}
+				],
+				"preferredChannel": "",
+				"language": ""
+			},
+			"privacy": {
+				"allowTracking": true,
+				"allowMarketing": true,
+				"invokedRightToBeForgotten": false,
+				"allowExternalStorage": false
+			}
+		}
+	}
+}
