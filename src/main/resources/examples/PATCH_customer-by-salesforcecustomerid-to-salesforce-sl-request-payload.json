@@ -1,0 +1,34 @@
+{
+	"customerId": "123456789",
+	"customerType": "",
+	"globalCustomerId": "2568974",
+	"parentCustomerId": "987456321",
+	"contactId": "00Z0Q000123wAAxfKpe",
+	"individualId": "0PK4E000002jaXaWAI",
+	"firstName": "Klaas",
+	"lastName": "van der Vaaker",
+	"salutation": "Dhr.",
+	"title": "dr.",
+	"suffix": "MSc",
+	"phone": "0478-542639",
+	"mobilePhone": "06-12345678",
+	"communicationLanguage": "NL",
+	"communicationPreference": "email",
+	"gender": "",
+	"birthdate": "1980-10-20",
+	"email": "test@provider.nl",
+	"lastModifiedDate": "2016-02-28T16:41:41.090Z",
+	"street": "Hoofdweg",
+	"city": "Amsterdam",
+	"state": "Noord-Holland",
+	"postalCode": "1111 AA",
+	"country": "The Netherlands",
+	"stateCode": "NH",
+	"countryCode": "NL",
+	"subscriptions": [
+		{
+			"subscription": "",
+			"enabled": false
+		}
+	]
+}

@@ -25,4 +25,11 @@
             </http:authentication>
         </http:request-connection>
     </http:request-config>
+    <http:request-config name="HTTPS_Request_Salesforce_SL_configuration" doc:name="HTTP Request configuration" doc:id="12524b02-344e-40e8-b6e7-da241b919fbb" basePath="${secure::https.request.salesforce-sl.basepath}" responseTimeout="${secure::https.request.salesforce-sl.timeout.response}">
+        <http:request-connection host="${secure::https.request.salesforce-sl.host}" port="${secure::https.request.salesforce-sl.port}" connectionIdleTimeout="${secure::https.request.salesforce-sl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
+            <http:authentication>
+                <http:basic-authentication username="${secure::basic.auth.salesforce-sl.username}" password="${secure::basic.auth.salesforce-sl.password}" />
+            </http:authentication>
+        </http:request-connection>
+    </http:request-config>
 </mule>

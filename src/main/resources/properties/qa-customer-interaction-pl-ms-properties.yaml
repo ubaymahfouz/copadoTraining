@@ -18,8 +18,39 @@ https:
         idle: "60000"
       ## Customers PL Endpoints ##
       customers:
-        path: "/customers"
-        customerid: "/customers/{customerid}"
+        path:             "/customers"
+        customerid:
+          path:           "/customers/{customerid}"
+          deliveries:     "/customers/{customerid}/deliveries"
+          subscriptions:  "/customers/{customerid}/subscriptions"
+
+## HTTPS Request Config for connection to Salesforce SL ##
+    salesforce-sl:
+      basepath: "/api/v1"
+      protocol: "HTTPS"
+      host:     "mule-worker-internal-qa-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
+      port:     "8092"
+      timeout:
+        response: "60000"
+        idle:     "60000"
+      ## Salesforce SL Endpoints ##
+      leads:
+        path:         "/leads"
+        salesforceleadid: 
+          path:       "/leads/{salesforceleadid}"
+          individual: "/leads/{salesforceleadid}/personindividual"
+      accounts:
+        path:               "/accounts"
+        salesforcecustomerid:
+          path:             "/accounts/{salesforcecustomerid}"
+          personindividual: "/accounts/{salesforcecustomerid}/personindividual"
+          subscriptions:    "/accounts/{salesforcecustomerid}/subscriptions"
+          relationship:     "/accounts/{salesforcecustomerid}/relationship"
+          personas:         "/accounts/{salesforcecustomerid}/personas"
+      customers:
+        path:   "/customers"
+        salesforcecustomerid:
+          path: "/customers/{salesforcecustomerid}"
 
 ## HTTP Reconnection Strategy Config ##
   reconnection:

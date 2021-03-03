@@ -1,0 +1,29 @@
+{
+	"customerId": "0015r000003RtV2AAK",
+	"customerType": "account",
+	"globalCustomerId": "1000094897",
+	"parentCustomerId": "",
+	"contactId": "0035r000002WGy6AAG",
+	"individualId": "0PK5r000000HHxoGAG",
+	"firstName": "Klaasie",
+	"lastName": "Vaak",
+	"salutation": "",
+	"communicationLanguage": "NL",
+	"communicationPreference": "email",
+	"email": "tbergie123987@gmail.comma.invalid",
+	"lastModifiedDate": "2021-02-19T13:04:40.000Z",
+	"subscriptions": [
+		{
+			"subscription": "newsletter",
+			"enabled": "false"
+		},
+		{
+			"subscription": "advice",
+			"enabled": "true"
+		},
+		{
+			"subscription": "promotional",
+			"enabled": "false"
+		}
+	]
+}

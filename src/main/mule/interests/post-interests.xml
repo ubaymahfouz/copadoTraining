@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</json-logger:logger>
 		<set-variable value="#[payload]" doc:name="Set Variable originalPayload" doc:id="a7874268-d9fe-4a5e-99fc-04c031bfdf22" variableName="originalPayload"/>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
 				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 				<http:query-params ><![CDATA[#[output application/java
 ---
@@ -60,7 +60,7 @@ output application/json
 					</ee:message>
 				</ee:transform>
 				<json-logger:logger-scope doc:name="Logger scope" doc:id="47b8e755-1066-4ba2-bc4e-b2074a889823" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 						<http:query-params ><![CDATA[#[output application/java
 ---
@@ -81,6 +81,32 @@ output application/json
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
+				<ee:transform doc:name="Request mapping" doc:id="fd3cdafc-160d-4b78-8682-684a73b80210" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json skipNullOn = "everywhere"
+---
+{
+	customerId: payload.customerId,
+	customerType: payload.customerType,
+	globalCustomerId: payload.globalCustomerId,
+	parentCustomerId: payload.parentCustomerId,
+	contactId: payload.contactId,
+	individualId: payload.individualId,
+	firstName: payload.firstName,
+	lastName: payload.lastName,
+	salutation: payload.salutation,
+	communicationLanguage: payload.communicationLanguage,
+	communicationPreference: payload.communicationPreference,
+	email: payload.email,
+	lastModifiedDate: payload.lastModifiedDate,
+	subscriptions: payload.subscriptions map ( subscription , indexOfSubscription ) -> {
+		subscription: subscription.subscription,
+		enabled: subscription.enabled as Boolean
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
 			</when>
 			<when expression='#[payload.customerType == "lead"]'>
 				<json-logger:logger doc:name="Functional Log" doc:id="5a70e179-7ce7-4b2e-bfeb-136aa3fec52b" config-ref="JSON_Logger_Config" message="Doing PATCH for Lead." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
@@ -89,6 +115,30 @@ output application/json
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
+				<ee:transform doc:name="Request mapping" doc:id="b9db35a1-f65d-40d8-b5ed-1a2f0a920172" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json skipNullOn = "everywhere"
+---
+{
+	customerId: payload.customerId,
+	customerType: payload.customerType,
+	globalCustomerId: payload.globalCustomerId,
+	individualId: payload.individualId,
+	firstName: payload.firstName,
+	lastName: payload.lastName,
+	salutation: payload.salutation,
+	communicationLanguage: payload.communicationLanguage,
+	communicationPreference: payload.communicationPreference,
+	email: payload.email,
+	lastModifiedDate: payload.lastModifiedDate,
+	subscriptions: payload.subscriptions map ( subscription , indexOfSubscription ) -> {
+		subscription: subscription.subscription,
+		enabled: subscription.enabled as Boolean
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
 			</when>
 			<otherwise >
 				<json-logger:logger doc:name="Functional Log" doc:id="3e6bbd62-50c0-4bb0-bc1e-3f3610549d51" config-ref="JSON_Logger_Config" message="Unknown customerType." tracePoint="EXCEPTION" category="nl.swisssense.attributes">
@@ -107,5 +157,15 @@ output application/json
 				<raise-error doc:name="Raise error" doc:id="96ff3fd1-dc97-4902-b870-682c4ba0b738" type="SWISS_SENSE:MULE_CHOICE_ERROR" description='#["Default choice route taken: This should not happen!"]' />
 			</otherwise>
 		</choice>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="ebbe05f9-eaa4-40af-b717-2b3dbfc583c6" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
+			<http:request method="PATCH" doc:name="PATCH Customer by SalesforceCustomerId @ Salesforce SL" doc:id="5956c698-f06c-40e3-86ab-5fac26fbda10" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.salesforce-sl.customers.salesforcecustomerid.path}" >
+				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
+				<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"salesforcecustomerid" : payload.customerId
+}]]]></http:uri-params>
+			</http:request>
+		</json-logger:logger-scope>
 	</sub-flow>
 </mule>
