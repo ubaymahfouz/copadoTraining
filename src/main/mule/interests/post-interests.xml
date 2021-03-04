@@ -60,7 +60,7 @@ output application/json
 					</ee:message>
 				</ee:transform>
 				<json-logger:logger-scope doc:name="Logger scope" doc:id="47b8e755-1066-4ba2-bc4e-b2074a889823" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 						<http:query-params ><![CDATA[#[output application/java
 ---
