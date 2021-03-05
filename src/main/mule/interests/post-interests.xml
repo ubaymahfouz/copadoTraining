@@ -25,6 +25,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></http:query-params>
 			</http:request>
 		</json-logger:logger-scope>
+		<set-variable value="#[(payload.customers orderBy ($.lastModifiedDate))[-1]]" doc:name="Set Variable lastModifiedGetCustomersResponse" doc:id="e41787e7-641c-4d71-b04b-48391bcfbe13" variableName="lastModifiedGetCustomersResponse"/>
 		<choice doc:name="Choice" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5" >
 			<when expression="#[payload.customers != []]">
 				<json-logger:logger doc:name="Functional Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config" message="Response received from Customers PL, processing each of the returned Customer(s) belonging to the input values." tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes">
@@ -53,9 +54,44 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:transform doc:name="Request mapping" doc:id="fec5f4d6-7242-4ab5-b140-045f2029b3e7">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
+output application/json skipNullOn = "everywhere"
 ---
 {
+	Customer: {
+		customerType: "lead",
+		legalEntity: {
+			(contact: ([{
+				email: vars.originalPayload.email,
+                (vars.originalPayload.phoneNumbers map ( phoneNumber , indexOfPhoneNumber ) -> {
+                    (mobilePhone: phoneNumber.number) if (phoneNumber."type" == "mobile"),
+                    (fixedPhone: phoneNumber.number) if (phoneNumber."type" == "home")
+			    })
+			}])) if (vars.originalPayload.email != null or vars.originalPayload.phoneNumbers != null),
+			address: vars.originalPayload.addresses map ( address , indexOfAddress ) -> {
+				streetName: address.street,
+				houseNumber: address.houseNumber,
+				houseNumberSuffix: address.houseNumberSuffix,
+				postalCode: address.postalCode,
+				city: address.city,
+				country: {
+					code: address.countryCode
+				}
+			},
+			lastName: vars.originalPayload.lastName,
+			firstName: vars.originalPayload.firstName,
+			salutation: vars.originalPayload.salutation
+		},
+		preferences: {
+			communication: {
+				subscriptions: vars.originalPayload.subscriptions map ( subscription , indexOfSubscription ) -> {
+					subscription: subscription.subscription,
+					enabled: subscription.enabled
+				},
+				preferredChannel: vars.originalPayload.preferredChannel,
+				language: vars.originalPayload.language
+			}
+		}
+	}
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -69,6 +105,60 @@ output application/json
 }]]]></http:query-params>
 					</http:request>
 				</json-logger:logger-scope>
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50" >
+			<when expression="#[vars.originalPayload.interestData != null]">
+				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Logger_Config" message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now." tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+				<ee:transform doc:name="Request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json skipNullOn = "everywhere"
+---
+{
+	origin: attributes.queryParams.origin,
+	source: {
+		"type": vars.originalPayload.source."type",
+		name: vars.originalPayload.source.name,
+		campaign: vars.originalPayload.source.campaign
+	},
+	email: vars.originalPayload.email,
+	salesforceContactKey: {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
+	globalCustomerId: vars.lastModifiedGetCustomersResponse.globalCustomerId,
+	firstName: vars.originalPayload.firstName,
+	lastName: vars.originalPayload.lastName,
+	interestData: vars.originalPayload.interestData map ( interestDatum , indexOfInterestDatum ) -> {
+		key: interestDatum.key,
+		value: interestDatum.value
+	},
+	productData: vars.originalPayload.productData map ( productDatum , indexOfProductDatum ) -> {
+		productId: productDatum.productId,
+		quantity: productDatum.quantity,
+		price: productDatum.price,
+		discountedPrice: productDatum.discountedPrice,
+		matchingPercentage: productDatum.matchingPercentage
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="175c4768-b32c-47b0-ac14-f96241317bd0" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
+				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
+			</http:request>
+		</json-logger:logger-scope>
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Functional Log" doc:id="a11ea97b-8f42-47f5-a7e4-37d7b6807c3e" config-ref="JSON_Logger_Config" message="No InterestData found for SFMC, flow execution finalized." tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" >
+					<json-logger:content ><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+				</json-logger:logger>
 			</otherwise>
 		</choice>
 	</sub-flow>

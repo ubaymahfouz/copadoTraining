@@ -52,6 +52,26 @@ https:
         salesforcecustomerid:
           path: "/customers/{salesforcecustomerid}"
 
+## HTTPS Request Config for connection to Salesforce Marketing Cloud SL ##
+    salesforce-marketing-cloud-sl:
+      basepath: "/api/v1"
+      protocol: "HTTPS"
+      host: "mule-worker-internal-qa-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
+      timeout:
+        response: "60000"
+        idle: "60000"
+      ## Salesforce Marketing Cloud SL Endpoints ##
+      configurators:
+        path: "/configurators"
+      data-extensions:
+        path:   "/data-extensions" ## Not (yet) in use.
+        dataExtensionKey:
+          path: "/data-extensions/{dataExtensionKey}" ## Not (yet) in use.
+          rows: "/data-extensions/{dataExtensionKey}/rows"
+      metadata:
+        path: "/metadata"
+
 ## HTTP Reconnection Strategy Config ##
   reconnection:
     frequency:  "2000" # This is in ms (2 seconds).
@@ -69,6 +89,12 @@ jsonlogger:
 basic:
   auth:
     customers-pl:
+      username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
+      password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
+    salesforce-sl:
+      username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
+      password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
+    salesforce-marketing-cloud-sl:
       username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
       password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
 
