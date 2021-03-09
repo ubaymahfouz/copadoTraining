@@ -2,7 +2,8 @@ apiId: "438328"
 
 ## HTTPS Config ##
 https:
-  port: "8092"
+  private:
+    port: "8092"
   inbound:
     listener: "/api/v1/*"
   request:
