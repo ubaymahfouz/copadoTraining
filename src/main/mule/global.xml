@@ -5,7 +5,7 @@
     </secure-properties:config>
     <global-property doc:name="Global Property" doc:id="84e17808-05e7-4718-a498-ec25e79a92a5" name="mule.ch.env" value="dev" />
     <http:listener-config name="HTTPS_Listener_config" doc:name="HTTP Listener config" doc:id="649dcc0a-7492-406c-8c77-9562961edfa2">
-        <http:listener-connection host="0.0.0.0" port="${secure::https.port}" tlsContext="TLS_Context_Inbound_Listener" protocol="HTTPS" />
+        <http:listener-connection host="0.0.0.0" port="${secure::https.private.port}" tlsContext="TLS_Context_Inbound_Listener" protocol="HTTPS" />
     </http:listener-config>
     <tls:context name="TLS_Context_Inbound_Listener" doc:name="TLS Context" doc:id="61b9b499-7427-4754-b4a0-0b29d4bd545e">
         <tls:key-store type="${secure::keystore.type}" path="${secure::keystore.path}" alias="${secure::keystore.alias}" keyPassword="${secure::keystore.password}" password="${secure::keystore.password}" />
