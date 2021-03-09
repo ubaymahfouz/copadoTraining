@@ -2,7 +2,7 @@ apiId: "438328"
 
 ## HTTPS Config ##
 https:
-  port: "8094" # Replace by the intended port for the new application. See: https://dms.glomidco.com/s/dts38kMHoLDMnkt for an overview and make sure to add this new application there.
+  port: "8092"
   inbound:
     listener: "/api/v1/*"
   request:
