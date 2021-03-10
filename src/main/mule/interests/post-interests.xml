@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<set-variable value="#[payload]" doc:name="Set Variable originalPayload" doc:id="a7874268-d9fe-4a5e-99fc-04c031bfdf22" variableName="originalPayload"/>
 		<set-variable value="#[attributes.queryParams.origin]" doc:name="Set Variable origin" doc:id="642d4cb5-1efc-4b24-b422-b54f47660958" variableName="origin"/>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
 				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 				<http:query-params ><![CDATA[#[output application/java
 ---
@@ -148,7 +148,7 @@ output application/json skipNullOn = "everywhere"
 			</ee:message>
 		</ee:transform>
 				<json-logger:logger-scope doc:name="Logger scope" doc:id="175c4768-b32c-47b0-ac14-f96241317bd0" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-			<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
+			<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
 				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 			</http:request>
 		</json-logger:logger-scope>
