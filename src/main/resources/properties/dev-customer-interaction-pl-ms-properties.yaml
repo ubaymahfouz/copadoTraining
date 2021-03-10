@@ -3,7 +3,8 @@ apiId: "0"        # To enable local execution, having the apiId set to 0 is requ
 
 ## HTTPS Config ##
 https:
-  port: "8094"
+  private:
+    port: "8094"
   inbound:
     listener: "/api/v1/*"
   request:
