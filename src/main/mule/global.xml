@@ -11,7 +11,7 @@
         <tls:key-store type="${secure::keystore.type}" path="${secure::keystore.path}" alias="${secure::keystore.alias}" keyPassword="${secure::keystore.password}" password="${secure::keystore.password}" />
     </tls:context>
     <tls:context name="TLS_Context_Requester" doc:name="TLS Context" doc:id="3304eaea-2efa-4444-9e34-717ce21cd3f5">
-        <tls:trust-store path="${secure::truststore.path}" password="${secure::truststore.password}" type="${secure::truststore.type}" />
+        <tls:trust-store path="${secure::truststore.path}" password="${secure::truststore.password}" type="${secure::truststore.type}" insecure="${secure::truststore.insecure}" />
     </tls:context>
     <configuration-properties doc:name="Configuration properties" doc:id="e79fdf2d-6ceb-4ae6-9849-a251d936986d" file="properties/global.yaml" />
     <json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8" applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}" contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
