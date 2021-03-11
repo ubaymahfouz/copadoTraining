@@ -36,7 +36,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></json-logger:content>
 		</json-logger:logger>
 				<foreach doc:name="For Each" doc:id="7ff4f1b3-15a8-4953-ab4a-53a2784767c6" collection="#[payload.customers]" counterVariableName="customerCounter" rootMessageVariableName="customers" >
-					<json-logger:logger doc:name="Functional Log" doc:id="2e97296b-b180-4e73-a2ae-0d6306b5fa08" config-ref="JSON_Logger_Config" message='#["Processing PATCH Customer for: " ++ payload.customerId default "" ++ "."]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+					<json-logger:logger doc:name="Functional Log" doc:id="2e97296b-b180-4e73-a2ae-0d6306b5fa08" config-ref="JSON_Logger_Config" message='#["Processing PATCH Customer for: " ++ payload.globalCustomerId default "" ++ " (globalCustomerId)."]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 						<json-logger:content ><![CDATA[#[output application/json ---
 {
  	attributes: attributes
@@ -165,6 +165,49 @@ output application/json skipNullOn = "everywhere"
 	</sub-flow>
 	<sub-flow name="post-interests_patch-customer" doc:id="193d4ca7-ccb4-4028-9902-29ffd62e2b39" >
 		<choice doc:name="Choice" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507" >
+			<when expression='#[(payload.systemCustomerIds.*customerType contains ("lead")) or (payload.systemCustomerIds.*customerType contains ("customer"))]'>
+				<json-logger:logger doc:name="Functional Log" doc:id="4b3e7120-19df-4fff-aba5-053d30b6ca4a" config-ref="JSON_Logger_Config" message="Doing PATCH for Customer (Lead or Account)." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+					<json-logger:content ><![CDATA[#[output application/json ---
+{
+ 	attributes: attributes
+}]]]></json-logger:content>
+				</json-logger:logger>
+				<ee:transform doc:name="Request mapping" doc:id="76768bcd-855e-45bc-992a-5ef0a89d39db" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var salesforceData = {(payload.systemCustomerIds filter ((value, index) -> (value.system == "salesforce")))}
+---
+{
+	customerId: salesforceData.id,
+	customerType:
+        if (salesforceData.customerType == "customer") "account"
+        else if (salesforceData.customerType == "lead") "lead"
+        else "other",
+	globalCustomerId: payload.globalCustomerId,
+	contactId: salesforceData.contactId,
+	individualId: payload.individualId,
+	firstName: payload.firstName,
+	lastName: payload.lastName,
+	salutation: payload.salutation,
+	email: payload.email,
+	lastModifiedDate: payload.lastModifiedDate
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="b701ff34-0326-4446-be8d-cb88d9442675" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
+					<http:request method="PATCH" doc:name="PATCH Customer by SalesforceCustomerId @ Salesforce SL" doc:id="d2abf1be-23b9-4ee4-aab7-04233ee96d93" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.salesforce-sl.customers.salesforcecustomerid.path}" >
+						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
+						<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"salesforcecustomerid" : payload.customerId
+}]]]></http:uri-params>
+					</http:request>
+				</json-logger:logger-scope>
+			
+</when>
 			<when expression='#[payload.customerType == "account"]'>
 				<json-logger:logger doc:name="Functional Log" doc:id="db981716-b22d-45c6-929f-eb51c6138e32" config-ref="JSON_Logger_Config" message='Doing PATCH for Account.' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 					<json-logger:content ><![CDATA[#[output application/json ---

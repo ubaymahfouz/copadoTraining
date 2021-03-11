@@ -187,6 +187,22 @@ type POST_configurators_to_salesforce_marketing_cloud_sl_request_payload = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="GET_customers-from-customers-pl-response-payload_in-for-each-payload" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload_in-for-each-payload.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
+  globalCustomerId: String, 
+  individualId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  email: String, 
+  systemCustomerIds: Array<{|    system: String,     id: String,     customerType: String,     contactId: String  |}>, 
+  lastModifiedDate: String
+|} {"example": "{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"individualId\\\":\\\"0PK4E000002jaXaWAI\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#a7874268-d9fe-4a5e-99fc-04c031bfdf22">
     <types:processor-declaration>
@@ -259,6 +275,20 @@ type POST_configurators_to_salesforce_marketing_cloud_sl_request_payload = {|
           <types:payload type="GET_customers-from-customers-pl-response-payload"/>
         </types:message>
       </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#06df814a-52ce-4892-8e24-0e54f8c1ef53">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload_in-for-each-payload"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
 </types:mule>
