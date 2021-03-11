@@ -291,4 +291,18 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#76768bcd-855e-45bc-992a-5ef0a89d39db">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload_in-for-each-payload"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
