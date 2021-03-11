@@ -297,6 +297,9 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
         <types:message>
           <types:payload type="GET_customers-from-customers-pl-response-payload_in-for-each-payload"/>
         </types:message>
+        <types:variables>
+          <types:variable name="originalPayload" type="POST_interests-request-payload"/>
+        </types:variables>
       </types:input-event>
       <types:output-event>
         <types:message>
