@@ -5,10 +5,10 @@
       <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload.json"><![CDATA[%dw 2.0
 
 type GET_customers_from_customers_pl_response_payload = {|
-  customers: Array<{|    globalCustomerId: String,     firstName: String,     lastName: String,     salutation: String,     email: String,     systemCustomerIds: Array<{|      system: String,       id: String,       customerType: String,       contactId: String    |}>, 
+  customers: Array<{|    globalCustomerId: String,     individualId: String,     firstName: String,     lastName: String,     salutation: String,     email: String,     systemCustomerIds: Array<{|      system: String,       id: String,       customerType: String,       contactId: String    |}>, 
     lastModifiedDate: String
   |}>
-|} {"example": "{\\\"customers\\\":[{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}]}"}
+|} {"example": "{\\\"customers\\\":[{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"individualId\\\":\\\"0PK4E000002jaXaWAI\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}]}"}
 
 ]]></types:shape>
     </types:type>
@@ -63,11 +63,9 @@ type PATCH_customer_by_salesforcecustomerid_to_salesforce_sl_request_payload = {
   city: String, 
   state: String, 
   postalCode: String, 
-  country: String, 
-  stateCode: String, 
   countryCode: String, 
   subscriptions: Array<{|    subscription: String,     enabled: Boolean  |}>
-|} {"example": "{\\\"customerId\\\":\\\"123456789\\\",\\\"customerType\\\":\\\"\\\",\\\"globalCustomerId\\\":\\\"2568974\\\",\\\"parentCustomerId\\\":\\\"987456321\\\",\\\"contactId\\\":\\\"00Z0Q000123wAAxfKpe\\\",\\\"individualId\\\":\\\"0PK4E000002jaXaWAI\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"title\\\":\\\"dr.\\\",\\\"suffix\\\":\\\"MSc\\\",\\\"phone\\\":\\\"0478-542639\\\",\\\"mobilePhone\\\":\\\"06-12345678\\\",\\\"communicationLanguage\\\":\\\"NL\\\",\\\"communicationPreference\\\":\\\"email\\\",\\\"gender\\\":\\\"\\\",\\\"birthdate\\\":\\\"1980-10-20\\\",\\\"email\\\":\\\"test@provider.nl\\\",\\\"lastModifiedDate\\\":\\\"2016-02-28T16:41:41.090Z\\\",\\\"street\\\":\\\"Hoofdweg\\\",\\\"city\\\":\\\"Amsterdam\\\",\\\"state\\\":\\\"Noord-Holland\\\",\\\"postalCode\\\":\\\"1111 AA\\\",\\\"country\\\":\\\"The Netherlands\\\",\\\"stateCode\\\":\\\"NH\\\",\\\"countryCode\\\":\\\"NL\\\",\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"\\\",\\\"enabled\\\":false}]}"}
+|} {"example": "{\\\"customerId\\\":\\\"0015r000003RtVfAAK\\\",\\\"customerType\\\":\\\"\\\",\\\"globalCustomerId\\\":\\\"2568974\\\",\\\"parentCustomerId\\\":\\\"987456321\\\",\\\"contactId\\\":\\\"00Z0Q000123wAAxfKpe\\\",\\\"individualId\\\":\\\"0PK5r000000HHxoGAG\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"title\\\":\\\"dr.\\\",\\\"suffix\\\":\\\"MSc\\\",\\\"phone\\\":\\\"0478-542639\\\",\\\"mobilePhone\\\":\\\"06-12345678\\\",\\\"communicationLanguage\\\":\\\"NL\\\",\\\"communicationPreference\\\":\\\"email\\\",\\\"gender\\\":\\\"\\\",\\\"birthdate\\\":\\\"1980-10-20\\\",\\\"email\\\":\\\"test@provider.nl\\\",\\\"lastModifiedDate\\\":\\\"2016-02-28T16:41:41.090Z\\\",\\\"street\\\":\\\"Hoofdweg\\\",\\\"city\\\":\\\"Amsterdam\\\",\\\"state\\\":\\\"Noord-Holland\\\",\\\"postalCode\\\":\\\"1111 AA\\\",\\\"countryCode\\\":\\\"NL\\\",\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":false}]}"}
 
 ]]></types:shape>
     </types:type>
@@ -246,6 +244,15 @@ type POST_configurators_to_salesforce_marketing_cloud_sl_request_payload = {|
     </types:processor-declaration>
   </types:enrichment>
   <types:enrichment select="#e41787e7-641c-4d71-b04b-48391bcfbe13">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#7ff4f1b3-15a8-4953-ab4a-53a2784767c6">
     <types:processor-declaration>
       <types:input-event>
         <types:message>
