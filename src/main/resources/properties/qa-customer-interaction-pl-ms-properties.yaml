@@ -57,7 +57,7 @@ https:
     salesforce-marketing-cloud-sl:
       basepath: "/api/v1"
       protocol: "HTTPS"
-      host: "mule-worker-internal-qa-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
+      host: "mule-worker-internal-qa-salesforce-marketing-cloud-sl-ms.de-c1.eu1.cloudhub.io"
       port: "8092"
       timeout:
         response: "60000"
