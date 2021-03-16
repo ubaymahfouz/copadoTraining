@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-apikit-module/1.5.0"/>
 	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/628dd124-53a0-4efa-9453-7ee7109dfdf0/customer-interaction-pl-ms/0.1.2"/>
-	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-apikit-module/1.4.1"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.modules/mule-secure-configuration-property-module/1.2.3"/>
 	<classpathentry kind="con" path="MULE_LIB/628dd124-53a0-4efa-9453-7ee7109dfdf0/json-logger/2.0.1"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-http-connector/1.5.23"/>
