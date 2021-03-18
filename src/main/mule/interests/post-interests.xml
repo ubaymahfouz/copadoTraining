@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<sub-flow name="post-interests" doc:id="0b682ab6-3c82-4b00-8cd9-68d7ab8bf457" >
-		<json-logger:logger doc:name="Functional Log" doc:id="ba214598-90f0-4d72-8ed0-3d17f8d6ff16" config-ref="JSON_Logger_Config" message="Message to POST interests received, about to check if the interests are for a new or existing Customer." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
-			<json-logger:content ><![CDATA[#[output application/json ---
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
+	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/json-logger 
+	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+	http://www.mulesoft.org/schema/mule/http 
+	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+	http://www.mulesoft.org/schema/mule/ee/core 
+	http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="post-interests" doc:id="0b682ab6-3c82-4b00-8cd9-68d7ab8bf457">
+		<json-logger:logger doc:name="Functional Log" doc:id="ba214598-90f0-4d72-8ed0-3d17f8d6ff16" config-ref="JSON_Logger_Config"
+			message="Message to POST interests received, about to check if the interests are for a new or existing Customer." tracePoint="BEFORE_REQUEST"
+			category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
 		</json-logger:logger>
-		<set-variable value="#[payload]" doc:name="Set Variable originalPayload" doc:id="a7874268-d9fe-4a5e-99fc-04c031bfdf22" variableName="originalPayload"/>
-		<set-variable value="#[attributes.queryParams.origin]" doc:name="Set Variable origin" doc:id="642d4cb5-1efc-4b24-b422-b54f47660958" variableName="origin"/>
-		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+		<ee:transform doc:name="Set origin and originalPayload variables" doc:id="a850c87b-f0a3-45ea-8809-58e7c07033fb" >
+			<ee:variables >
+				<ee:set-variable variableName="origin" ><![CDATA[attributes.queryParams.origin]]></ee:set-variable>
+				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb"
+			configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972"
+				config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}">
 				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
-				<http:query-params ><![CDATA[#[output application/java
+				<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"email" : payload.email,
@@ -26,8 +38,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></http:query-params>
 			</http:request>
 		</json-logger:logger-scope>
-		<set-variable value="#[(payload.customers orderBy ($.lastModifiedDate))[-1]]" doc:name="Set Variable lastModifiedGetCustomersResponse" doc:id="e41787e7-641c-4d71-b04b-48391bcfbe13" variableName="lastModifiedGetCustomersResponse"/>
-		<json-logger:logger doc:name="DEBUG Logger" doc:id="bf277ba4-9304-487d-9f72-aeea21e1f800" config-ref="JSON_Logger_Config" message="The full message before determining whether a new Customer needs to be created." tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload">
+		<set-variable value="#[(payload.customers orderBy ($.lastModifiedDate))[-1]]" doc:name="Set Variable lastModifiedGetCustomersResponse"
+			doc:id="e41787e7-641c-4d71-b04b-48391bcfbe13" variableName="lastModifiedGetCustomersResponse" />
+		<json-logger:logger doc:name="DEBUG Logger" doc:id="bf277ba4-9304-487d-9f72-aeea21e1f800" config-ref="JSON_Logger_Config"
+			message="The full message before determining whether a new Customer needs to be created." tracePoint="AFTER_REQUEST" priority="DEBUG"
+			category="nl.swisssense.payload">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -37,79 +52,49 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     (lastModifiedCustomer: vars.lastModifiedGetCustomersResponse) if (vars.lastModifiedGetCustomersResponse != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
-		<choice doc:name="Choice" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5" >
+		<choice doc:name="Choice" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5">
 			<when expression="#[payload.customers != []]">
-				<json-logger:logger doc:name="Functional Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config" message="Response received from Customers PL, processing each of the returned Customer(s) belonging to the input values." tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes">
-			<json-logger:content><![CDATA[#[output application/json ---
+				<json-logger:logger doc:name="Functional Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config"
+					message="Response received from Customers PL, processing each of the returned Customer(s) belonging to the input values."
+					tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes">
+					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
-		</json-logger:logger>
-				<foreach doc:name="For Each" doc:id="7ff4f1b3-15a8-4953-ab4a-53a2784767c6" collection="#[payload.customers]" counterVariableName="customerCounter" rootMessageVariableName="customers" >
-					<json-logger:logger doc:name="Functional Log" doc:id="2e97296b-b180-4e73-a2ae-0d6306b5fa08" config-ref="JSON_Logger_Config" message='#["Processing PATCH Customer for: " ++ payload.globalCustomerId default "" ++ " (globalCustomerId)."]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
-						<json-logger:content ><![CDATA[#[output application/json ---
+				</json-logger:logger>
+				<foreach doc:name="For Each" doc:id="7ff4f1b3-15a8-4953-ab4a-53a2784767c6" collection="#[payload.customers]"
+					counterVariableName="customerCounter" rootMessageVariableName="customers">
+					<json-logger:logger doc:name="Functional Log" doc:id="2e97296b-b180-4e73-a2ae-0d6306b5fa08" config-ref="JSON_Logger_Config"
+						message='#["Processing PATCH Customer for: " ++ payload.globalCustomerId default "" ++ " (globalCustomerId)."]' tracePoint="BEFORE_REQUEST"
+						category="nl.swisssense.attributes">
+						<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
 					</json-logger:logger>
-					<flow-ref doc:name="post-interests_patch-customer" doc:id="e9a08b07-0b86-40e3-ab45-80e25d1ebcd9" name="post-interests_patch-customer"/>
+					<flow-ref doc:name="post-interests_patch-customer" doc:id="e9a08b07-0b86-40e3-ab45-80e25d1ebcd9" name="post-interests_patch-customer" />
 				</foreach>
 			</when>
-			<otherwise >
-				<json-logger:logger doc:name="Functional Log" doc:id="7bdda85c-f2a5-4d0c-872a-43a56f12d778" config-ref="JSON_Logger_Config" message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)." tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" >
-					<json-logger:content ><![CDATA[#[output application/json ---
+			<otherwise>
+				<json-logger:logger doc:name="Functional Log" doc:id="7bdda85c-f2a5-4d0c-872a-43a56f12d778" config-ref="JSON_Logger_Config"
+					message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)."
+					tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
+					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
 				<ee:transform doc:name="Request mapping" doc:id="fec5f4d6-7242-4ab5-b140-045f2029b3e7">
 					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json skipNullOn = "everywhere"
----
-{
-	Customer: {
-		customerType: "lead",
-		legalEntity: {
-			(contact: ([{
-				email: vars.originalPayload.email,
-                (vars.originalPayload.phoneNumbers map ( phoneNumber , indexOfPhoneNumber ) -> {
-                    (mobilePhone: phoneNumber.number) if (phoneNumber."type" == "mobile"),
-                    (fixedPhone: phoneNumber.number) if (phoneNumber."type" == "home")
-			    })
-			}])) if (vars.originalPayload.email != null or vars.originalPayload.phoneNumbers != null),
-			address: vars.originalPayload.addresses map ( address , indexOfAddress ) -> {
-				streetName: address.street,
-				houseNumber: address.houseNumber,
-				houseNumberSuffix: address.houseNumberSuffix,
-				postalCode: address.postalCode,
-				city: address.city,
-				country: {
-					code: address.countryCode
-				}
-			},
-			lastName: vars.originalPayload.lastName,
-			firstName: vars.originalPayload.firstName,
-			salutation: vars.originalPayload.salutation
-		},
-		preferences: {
-			communication: {
-				subscriptions: vars.originalPayload.subscriptions map ( subscription , indexOfSubscription ) -> {
-					subscription: subscription.subscription,
-					enabled: subscription.enabled
-				},
-				preferredChannel: vars.originalPayload.preferredChannel,
-				language: vars.originalPayload.language
-			}
-		}
-	}
-}]]></ee:set-payload>
+						<ee:set-payload resource="dwl/post-customers-to-customers-pl-request-mapping.dwl" />
 					</ee:message>
 				</ee:transform>
-				<json-logger:logger-scope doc:name="Logger scope" doc:id="47b8e755-1066-4ba2-bc4e-b2074a889823" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad" config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}" >
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="47b8e755-1066-4ba2-bc4e-b2074a889823"
+					configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="POST" doc:name="POST Customers @ Customers PL" doc:id="012858a9-b002-41c8-8dbf-c75de7f571ad"
+						config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}">
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
-						<http:query-params ><![CDATA[#[output application/java
+						<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"origin" : vars.origin
@@ -118,54 +103,34 @@ output application/json skipNullOn = "everywhere"
 				</json-logger:logger-scope>
 			</otherwise>
 		</choice>
-		<choice doc:name="Choice" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50" >
+		<choice doc:name="Choice" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50">
 			<when expression="#[vars.originalPayload.interestData != null]">
-				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Logger_Config" message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now." tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
-			<json-logger:content><![CDATA[#[output application/json ---
+				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Logger_Config"
+					message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now."
+					tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
+					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
-		</json-logger:logger>
+				</json-logger:logger>
 				<ee:transform doc:name="Request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json skipNullOn = "everywhere"
----
-{
-	origin: vars.origin,
-	source: {
-		"type": vars.originalPayload.source."type",
-		name: vars.originalPayload.source.name,
-		campaign: vars.originalPayload.source.campaign
-	},
-	email: vars.originalPayload.email,
-	salesforceContactKey: {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
-	globalCustomerId: vars.lastModifiedGetCustomersResponse.globalCustomerId,
-	firstName: vars.originalPayload.firstName,
-	lastName: vars.originalPayload.lastName,
-	interestData: vars.originalPayload.interestData map ( interestDatum , indexOfInterestDatum ) -> {
-		key: interestDatum.key,
-		value: interestDatum.value
-	},
-	productData: vars.originalPayload.productData map ( productDatum , indexOfProductDatum ) -> {
-		productId: productDatum.productId,
-		quantity: productDatum.quantity,
-		price: productDatum.price,
-		discountedPrice: productDatum.discountedPrice,
-		matchingPercentage: productDatum.matchingPercentage
-	}
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-				<json-logger:logger-scope doc:name="Logger scope" doc:id="175c4768-b32c-47b0-ac14-f96241317bd0" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-			<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
-				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
-			</http:request>
-		</json-logger:logger-scope>
+					<ee:message>
+						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />
+					</ee:message>
+				</ee:transform>
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="175c4768-b32c-47b0-ac14-f96241317bd0"
+					configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL"
+						doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration"
+						path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
+						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
+					</http:request>
+				</json-logger:logger-scope>
 			</when>
-			<otherwise >
-				<json-logger:logger doc:name="Functional Log" doc:id="a11ea97b-8f42-47f5-a7e4-37d7b6807c3e" config-ref="JSON_Logger_Config" message="No InterestData found for SFMC, flow execution finalized." tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" >
-					<json-logger:content ><![CDATA[#[output application/json ---
+			<otherwise>
+				<json-logger:logger doc:name="Functional Log" doc:id="a11ea97b-8f42-47f5-a7e4-37d7b6807c3e" config-ref="JSON_Logger_Config"
+					message="No InterestData found for SFMC, flow execution finalized." tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes">
+					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
@@ -173,72 +138,55 @@ output application/json skipNullOn = "everywhere"
 			</otherwise>
 		</choice>
 	</sub-flow>
-	<sub-flow name="post-interests_patch-customer" doc:id="193d4ca7-ccb4-4028-9902-29ffd62e2b39" >
-		<choice doc:name="Choice" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507" >
-			<when expression='#[(payload.systemCustomerIds.*customerType contains ("lead")) or (payload.systemCustomerIds.*customerType contains ("customer"))]'>
-				<json-logger:logger doc:name="Functional Log" doc:id="4b3e7120-19df-4fff-aba5-053d30b6ca4a" config-ref="JSON_Logger_Config" message="Doing PATCH for Customer (Lead or Account)." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
-					<json-logger:content ><![CDATA[#[output application/json ---
+	<sub-flow name="post-interests_patch-customer" doc:id="193d4ca7-ccb4-4028-9902-29ffd62e2b39">
+		<choice doc:name="Choice" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507">
+			<when
+				expression='#[(payload.systemCustomerIds.*customerType contains ("lead")) or (payload.systemCustomerIds.*customerType contains ("customer"))]'>
+				<json-logger:logger doc:name="Functional Log" doc:id="4b3e7120-19df-4fff-aba5-053d30b6ca4a" config-ref="JSON_Logger_Config"
+					message="Doing PATCH for Customer (Lead or Account)." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<ee:transform doc:name="Request mapping" doc:id="76768bcd-855e-45bc-992a-5ef0a89d39db" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-output application/json skipNullOn = "everywhere"
-var salesforceData = {
-	(payload.systemCustomerIds filter ((value, index) -> (value.system == "salesforce")))
-}
----
-{
-	customerId: salesforceData.id,
-	customerType: if ( salesforceData.customerType == "customer" ) "account"
-        else if ( salesforceData.customerType == "lead" ) "lead"
-        else "other",
-	globalCustomerId: payload.globalCustomerId,
-	contactId: salesforceData.contactId,
-	individualId: payload.individualId,
-	firstName: payload.firstName,
-	lastName: payload.lastName,
-	salutation: payload.salutation,
-	communicationLanguage: vars.originalPayload.language,
-	communicationPreference: vars.originalPayload.preferredChannel,
-	email: payload.email,
-	lastModifiedDate: payload.lastModifiedDate,
-	subscriptions: vars.originalPayload.subscriptions map ( subscription , indexOfSubscription ) -> {
-		subscription: subscription.subscription,
-		enabled: subscription.enabled
-	}
-}]]></ee:set-payload>
-					</ee:message>
+				<ee:transform doc:name="Request mapping" doc:id="76768bcd-855e-45bc-992a-5ef0a89d39db">
+					<ee:message>
+						<ee:set-payload resource="dwl/patch-customer-to-salesforce-sl-request-mapping.dwl" />
+					
+</ee:message>
 				</ee:transform>
-				<json-logger:logger-scope doc:name="Logger scope" doc:id="b701ff34-0326-4446-be8d-cb88d9442675" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-					<http:request method="PATCH" doc:name="PATCH Customer by SalesforceCustomerId @ Salesforce SL" doc:id="d2abf1be-23b9-4ee4-aab7-04233ee96d93" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${secure::https.request.salesforce-sl.customers.salesforcecustomerid.path}" >
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="b701ff34-0326-4446-be8d-cb88d9442675"
+					configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="PATCH" doc:name="PATCH Customer by SalesforceCustomerId @ Salesforce SL"
+						doc:id="d2abf1be-23b9-4ee4-aab7-04233ee96d93" config-ref="HTTPS_Request_Salesforce_SL_configuration"
+						path="${secure::https.request.salesforce-sl.customers.salesforcecustomerid.path}">
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
-						<http:uri-params ><![CDATA[#[output application/java
+						<http:uri-params><![CDATA[#[output application/java
 ---
 {
 	"salesforcecustomerid" : payload.customerId
 }]]]></http:uri-params>
 					</http:request>
 				</json-logger:logger-scope>
-			
-</when>
-			<otherwise >
-				<json-logger:logger doc:name="Functional Log" doc:id="3e6bbd62-50c0-4bb0-bc1e-3f3610549d51" config-ref="JSON_Logger_Config" message="Unknown customerType." tracePoint="EXCEPTION" category="nl.swisssense.attributes">
+			</when>
+			<otherwise>
+				<json-logger:logger doc:name="Functional Log" doc:id="3e6bbd62-50c0-4bb0-bc1e-3f3610549d51" config-ref="JSON_Logger_Config"
+					message="Unknown customerType." tracePoint="EXCEPTION" category="nl.swisssense.attributes">
 					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<json-logger:logger doc:name="DEBUG Log" doc:id="dced8fd7-18d0-4ff2-88f1-4fb86d754701" config-ref="JSON_Logger_Config" message="Default choice route taken, incorrect/invalid customerType." tracePoint="EXCEPTION" priority="DEBUG" category="nl.swisssense.payload">
+				<json-logger:logger doc:name="DEBUG Log" doc:id="dced8fd7-18d0-4ff2-88f1-4fb86d754701" config-ref="JSON_Logger_Config"
+					message="Default choice route taken, incorrect/invalid customerType." tracePoint="EXCEPTION" priority="DEBUG" category="nl.swisssense.payload">
 					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<raise-error doc:name="Raise error" doc:id="96ff3fd1-dc97-4902-b870-682c4ba0b738" type="SWISS_SENSE:MULE_CHOICE_ERROR" description='#["Default choice route taken: This should not happen!"]' />
+				<raise-error doc:name="Raise error" doc:id="96ff3fd1-dc97-4902-b870-682c4ba0b738" type="SWISS_SENSE:MULE_CHOICE_ERROR"
+					description='#["Default choice route taken: This should not happen!"]' />
 			</otherwise>
 		</choice>
 	</sub-flow>

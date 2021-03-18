@@ -204,15 +204,6 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
 ]]></types:shape>
     </types:type>
   </types:catalog>
-  <types:enrichment select="#a7874268-d9fe-4a5e-99fc-04c031bfdf22">
-    <types:processor-declaration>
-      <types:input-event>
-        <types:message>
-          <types:payload type="POST_interests-request-payload"/>
-        </types:message>
-      </types:input-event>
-    </types:processor-declaration>
-  </types:enrichment>
   <types:enrichment select="#fd3cdafc-160d-4b78-8682-684a73b80210">
     <types:processor-declaration>
       <types:input-event>
@@ -308,4 +299,5 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#a850c87b-f0a3-45ea-8809-58e7c07033fb"/>
 </types:mule>
