@@ -204,6 +204,21 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="POST_customers-to-customers-pl-response-payload" format="json">
+      <types:shape format="weave" example="examples/POST_customers-to-customers-pl-response-payload.json"><![CDATA[%dw 2.0
+
+type POST_customers_to_customers_pl_response_payload = {|
+  globalCustomerId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  email: String, 
+  systemCustomerIds: Array<{|    system: String,     id: String,     customerType: String,     contactId: String  |}>, 
+  lastModifiedDate: String
+|} {"example": "{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#fd3cdafc-160d-4b78-8682-684a73b80210">
     <types:processor-declaration>
@@ -310,6 +325,15 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
       <types:output-event>
         <types:variables>
           <types:variable name="originalPayload" type="POST_interests-request-payload"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#47b8e755-1066-4ba2-bc4e-b2074a889823">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="postCustomersResponse" type="POST_customers-to-customers-pl-response-payload"/>
         </types:variables>
       </types:output-event>
     </types:processor-declaration>

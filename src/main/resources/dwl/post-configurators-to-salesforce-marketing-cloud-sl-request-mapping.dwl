@@ -9,8 +9,9 @@ output application/json skipNullOn = "everywhere"
 		campaign: vars.originalPayload.source.campaign
 	},
 	email: vars.originalPayload.email,
-	salesforceContactKey: {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
-	globalCustomerId: vars.lastModifiedGetCustomersResponse.globalCustomerId,
+	salesforceContactKey: if (vars.lastModifiedGetCustomersResponse != null) {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id
+	else {(vars.postCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
+	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
 	firstName: vars.originalPayload.firstName,
 	lastName: vars.originalPayload.lastName,
 	interestData: vars.originalPayload.interestData map ( interestDatum , indexOfInterestDatum ) -> {
