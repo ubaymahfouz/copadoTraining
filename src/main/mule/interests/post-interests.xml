@@ -21,7 +21,7 @@
 		</json-logger:logger>
 		<ee:transform doc:name="Set origin and originalPayload variables" doc:id="a850c87b-f0a3-45ea-8809-58e7c07033fb" >
 			<ee:variables >
-				<ee:set-variable variableName="origin" ><![CDATA[attributes.queryParams.origin]]></ee:set-variable>
+				<ee:set-variable variableName="origin" ><![CDATA[attributes.queryParams.origin default ""]]></ee:set-variable>
 				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>

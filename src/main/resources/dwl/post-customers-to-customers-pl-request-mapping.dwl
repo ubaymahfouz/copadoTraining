@@ -4,13 +4,14 @@ output application/json skipNullOn = "everywhere"
 {
 	Customer: {
 		customerType: "lead",
+		customerSourceType: vars.originalPayload.source."type",
 		legalEntity: {
 			(contact: ([{
 				email: vars.originalPayload.email,
-                (vars.originalPayload.phoneNumbers map ( phoneNumber , indexOfPhoneNumber ) -> {
-                    (mobilePhone: phoneNumber.number) if (phoneNumber."type" == "mobile"),
-                    (fixedPhone: phoneNumber.number) if (phoneNumber."type" == "home")
-			    })
+				(vars.originalPayload.phoneNumbers map ( phoneNumber , indexOfPhoneNumber ) -> {
+					(mobilePhone: phoneNumber.number) if (phoneNumber."type" == "mobile"),
+					(fixedPhone: phoneNumber.number) if (phoneNumber."type" == "home")
+				})
 			}])) if (vars.originalPayload.email != null or vars.originalPayload.phoneNumbers != null),
 			address: vars.originalPayload.addresses map ( address , indexOfAddress ) -> {
 				streetName: address.street,

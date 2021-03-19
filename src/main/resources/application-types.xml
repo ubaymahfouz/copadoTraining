@@ -123,6 +123,7 @@ type POST_customers_to_customers_pl_request_payload = {|
       id: String
     |}, 
     customerType: String, 
+    customerSourceType: String, 
     legalEntity: {|
       contact: Array<{|        mobilePhone: String,         fixedPhone: String,         email: String,         ipAddress: String,         social: Array<{|          "type": String,           handle: String        |}>
       |}>, 
@@ -162,7 +163,7 @@ type POST_customers_to_customers_pl_request_payload = {|
       |}
     |}
   |}
-|} {"example": "{\\\"Customer\\\":{\\\"globalCustomerId\\\":1003564875,\\\"changeType\\\":\\\"update\\\",\\\"origin\\\":{\\\"system\\\":\\\"sap\\\",\\\"id\\\":\\\"001KDLWOLDKJF923ks\\\"},\\\"customerType\\\":\\\"customer\\\",\\\"legalEntity\\\":{\\\"contact\\\":[{\\\"mobilePhone\\\":\\\"\\\",\\\"fixedPhone\\\":\\\"\\\",\\\"email\\\":\\\"\\\",\\\"ipAddress\\\":\\\"\\\",\\\"social\\\":[{\\\"type\\\":\\\"\\\",\\\"handle\\\":\\\"\\\"}]}],\\\"dateOfBirth\\\":\\\"\\\",\\\"address\\\":[{\\\"addressUsage\\\":\\\"\\\",\\\"streetName\\\":\\\"\\\",\\\"houseNumber\\\":0,\\\"houseNumberSuffix\\\":\\\"\\\",\\\"postalCode\\\":\\\"\\\",\\\"city\\\":\\\"\\\",\\\"country\\\":{\\\"name\\\":\\\"\\\",\\\"code\\\":\\\"\\\"},\\\"designation\\\":{\\\"salutation\\\":\\\"\\\",\\\"firstName\\\":\\\"\\\",\\\"lastNameAffix\\\":\\\"\\\",\\\"lastName\\\":\\\"\\\"}}],\\\"lastName\\\":\\\"\\\",\\\"firstName\\\":\\\"\\\",\\\"characteristics\\\":{\\\"weight\\\":0,\\\"height\\\":0},\\\"salutation\\\":\\\"\\\",\\\"lastNameAffix\\\":\\\"\\\",\\\"gender\\\":\\\"\\\",\\\"bankAccount\\\":{\\\"iban\\\":\\\"NL11ABNA0123521255\\\",\\\"ascription\\\":\\\"Klaas Vaak\\\"}},\\\"locale\\\":{\\\"languageCode\\\":\\\"nl\\\",\\\"countryCode\\\":\\\"NL\\\"},\\\"status\\\":\\\"Known\\\",\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\",\\\"preferences\\\":{\\\"communication\\\":{\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}],\\\"preferredChannel\\\":\\\"\\\",\\\"language\\\":\\\"\\\"},\\\"privacy\\\":{\\\"allowTracking\\\":true,\\\"allowMarketing\\\":true,\\\"invokedRightToBeForgotten\\\":false,\\\"allowExternalStorage\\\":false}}}}"}
+|} {"example": "{\\\"Customer\\\":{\\\"globalCustomerId\\\":1003564875,\\\"changeType\\\":\\\"update\\\",\\\"origin\\\":{\\\"system\\\":\\\"sap\\\",\\\"id\\\":\\\"001KDLWOLDKJF923ks\\\"},\\\"customerType\\\":\\\"customer\\\",\\\"customerSourceType\\\":\\\"website\\\",\\\"legalEntity\\\":{\\\"contact\\\":[{\\\"mobilePhone\\\":\\\"+31612345678\\\",\\\"fixedPhone\\\":\\\"+31307600456\\\",\\\"email\\\":\\\"klaas.vandervaak+swiss-webshop@snurken.com\\\",\\\"ipAddress\\\":\\\"\\\",\\\"social\\\":[{\\\"type\\\":\\\"\\\",\\\"handle\\\":\\\"\\\"}]}],\\\"dateOfBirth\\\":\\\"\\\",\\\"address\\\":[{\\\"addressUsage\\\":\\\"\\\",\\\"streetName\\\":\\\"Jagersveld\\\",\\\"houseNumber\\\":15,\\\"houseNumberSuffix\\\":\\\"a\\\",\\\"postalCode\\\":\\\"5405 BW\\\",\\\"city\\\":\\\"Uden\\\",\\\"country\\\":{\\\"name\\\":\\\"\\\",\\\"code\\\":\\\"NL\\\"},\\\"designation\\\":{\\\"salutation\\\":\\\"Ms.\\\",\\\"firstName\\\":\\\"Klasiena\\\",\\\"lastNameAffix\\\":\\\"van\\\",\\\"lastName\\\":\\\"Vaak\\\"}}],\\\"lastName\\\":\\\"Vaak\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"characteristics\\\":{\\\"weight\\\":0,\\\"height\\\":0},\\\"salutation\\\":\\\"Ms.\\\",\\\"lastNameAffix\\\":\\\"van der\\\",\\\"gender\\\":\\\"\\\",\\\"bankAccount\\\":{\\\"iban\\\":\\\"NL11ABNA0123521255\\\",\\\"ascription\\\":\\\"Klaas Vaak\\\"}},\\\"locale\\\":{\\\"languageCode\\\":\\\"nl\\\",\\\"countryCode\\\":\\\"NL\\\"},\\\"status\\\":\\\"Known\\\",\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\",\\\"preferences\\\":{\\\"communication\\\":{\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}],\\\"preferredChannel\\\":\\\"\\\",\\\"language\\\":\\\"\\\"},\\\"privacy\\\":{\\\"allowTracking\\\":true,\\\"allowMarketing\\\":true,\\\"invokedRightToBeForgotten\\\":false,\\\"allowExternalStorage\\\":false}}}}"}
 
 ]]></types:shape>
     </types:type>
@@ -299,5 +300,18 @@ type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
-  <types:enrichment select="#a850c87b-f0a3-45ea-8809-58e7c07033fb"/>
+  <types:enrichment select="#a850c87b-f0a3-45ea-8809-58e7c07033fb">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="POST_interests-request-payload"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="originalPayload" type="POST_interests-request-payload"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
