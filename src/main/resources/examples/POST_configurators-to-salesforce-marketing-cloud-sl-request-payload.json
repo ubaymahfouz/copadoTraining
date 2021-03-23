@@ -1,0 +1,32 @@
+{
+	"origin": "magento",
+	"source": {
+		"type": "website",
+		"name": "website-nl",
+		"campaign": "boxspring-configurator"
+	},
+	"email": "johndoe@mail.com",
+	"salesforceContactKey": "A12345",
+	"globalCustomerId": "1000593325",
+	"firstName": "John",
+	"lastName": "Doe",
+	"interestData": [
+		{
+			"key": "url",
+			"value": "https://swisssense.nl/123"
+		},
+		{
+			"key": "someAttribute",
+			"value": "someValue"
+		}
+	],
+	"productData": [
+		{
+			"productId": "139289001",
+			"quantity": 2,
+			"price": 999,
+			"discountedPrice": 825,
+			"matchingPercentage": 85
+		}
+	]
+}

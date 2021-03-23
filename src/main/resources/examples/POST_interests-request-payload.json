@@ -1,0 +1,50 @@
+{
+	"source": {
+		"type": "store",
+		"name": "Leidschendam",
+		"campaign": "kussenwijzer"
+	},
+	"salutation": "Ms.",
+	"firstName": "Klaas",
+	"lastName": "van der Vaak",
+	"addresses": [
+		{
+			"street": "Jagersveld",
+			"houseNumber": 15,
+			"houseNumberSuffix": "a",
+			"postalCode": "5405 BW",
+			"city": "Uden",
+			"countryCode": "NL"
+		}
+	],
+	"phoneNumbers": [
+		{
+			"number": "+31612345678",
+			"type": "mobile"
+		}
+	],
+	"email": "klaas.vandervaak+alias@snurken.com",
+	"language": "nl",
+	"preferredChannel": "email",
+	"interestData": [
+		{
+			"key": "",
+			"value": ""
+		}
+	],
+	"productData": [
+		{
+			"productId": "139289001",
+			"quantity": 2,
+			"price": 999,
+			"discountedPrice": 825,
+			"matchingPercentage": 85
+		}
+	],
+	"subscriptions": [
+		{
+			"subscription": "newsletter",
+			"enabled": true
+		}
+	]
+}

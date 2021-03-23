@@ -1,21 +1,77 @@
 apiId: "438328"
 
+## HTTPS Config ##
 https:
-  port: "8094" # Replace by the intended port for the new application. See: https://dms.glomidco.com/s/dts38kMHoLDMnkt for an overview and make sure to add this new application there.
+  private:
+    port: "8092"
   inbound:
     listener: "/api/v1/*"
   request:
 
-## HTTPS Request Config for connection to Example System ##
-    examplesystem:
-      basepath: "/api"
-      path: "/someEndpointToGetSomething"
-      port: "443"
-      host: "invalid.thiswillneverwork.butweneedtoenterahosthere.invalid"
+## HTTPS Request Config for connection to Customers PL ##
+    customers-pl:
+      basepath: "/api/v1"
       protocol: "HTTPS"
+      host: "mule-worker-internal-qa-customers-pl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
       timeout:
-        response: "30000"
-        idle: "30000"
+        response: "60000"
+        idle: "60000"
+      ## Customers PL Endpoints ##
+      customers:
+        path:             "/customers"
+        customerid:
+          path:           "/customers/{customerid}"
+          deliveries:     "/customers/{customerid}/deliveries"
+          subscriptions:  "/customers/{customerid}/subscriptions"
+
+## HTTPS Request Config for connection to Salesforce SL ##
+    salesforce-sl:
+      basepath: "/api/v1"
+      protocol: "HTTPS"
+      host:     "mule-worker-internal-qa-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
+      port:     "8092"
+      timeout:
+        response: "60000"
+        idle:     "60000"
+      ## Salesforce SL Endpoints ##
+      leads:
+        path:         "/leads"
+        salesforceleadid: 
+          path:       "/leads/{salesforceleadid}"
+          individual: "/leads/{salesforceleadid}/personindividual"
+      accounts:
+        path:               "/accounts"
+        salesforcecustomerid:
+          path:             "/accounts/{salesforcecustomerid}"
+          personindividual: "/accounts/{salesforcecustomerid}/personindividual"
+          subscriptions:    "/accounts/{salesforcecustomerid}/subscriptions"
+          relationship:     "/accounts/{salesforcecustomerid}/relationship"
+          personas:         "/accounts/{salesforcecustomerid}/personas"
+      customers:
+        path:   "/customers"
+        salesforcecustomerid:
+          path: "/customers/{salesforcecustomerid}"
+
+## HTTPS Request Config for connection to Salesforce Marketing Cloud SL ##
+    salesforce-marketing-cloud-sl:
+      basepath: "/api/v1"
+      protocol: "HTTPS"
+      host: "mule-worker-internal-qa-salesforce-marketing-cloud-sl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
+      timeout:
+        response: "60000"
+        idle: "60000"
+      ## Salesforce Marketing Cloud SL Endpoints ##
+      configurators:
+        path: "/configurators"
+      data-extensions:
+        path:   "/data-extensions" ## Not (yet) in use.
+        dataExtensionKey:
+          path: "/data-extensions/{dataExtensionKey}" ## Not (yet) in use.
+          rows: "/data-extensions/{dataExtensionKey}/rows"
+      metadata:
+        path: "/metadata"
 
 ## HTTP Reconnection Strategy Config ##
   reconnection:
@@ -33,17 +89,24 @@ jsonlogger:
 ## Connection Credentials ##
 basic:
   auth:
-    examplesystem:
-      username: "exampleuser" # Don't forget to encrypt the Username! When encrypting, this comment must be removed because comments break the encryptor.
-      password: "examplepass" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
+    customers-pl:
+      username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
+      password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
+    salesforce-sl:
+      username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
+      password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
+    salesforce-marketing-cloud-sl:
+      username: "![znYT2SrxmdycRNEAN1ediMQQ7jWYO9wkyCiWhyT74grXnLtkJwjz6g==]"
+      password: "![79jR1B62rLdIUUm23ewEHxZhR4iGu+Gi3d1KAj9v+wyCz5FCP0cpRw==]"
 
 ## Keystores Config ##
 keystore:
   type: "JKS"
   path: "keystore/keystore.jks"
   alias: "mule"
-  password: "![+nsCidMRvo9N6qn3ROR1UQ==]" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
+  password: "![+nsCidMRvo9N6qn3ROR1UQ==]"
 truststore:
   type: "JKS"
   path: "keystore/truststore.jks"
-  password: "![+nsCidMRvo9N6qn3ROR1UQ==]" # Don't forget to encrypt the Password! When encrypting, this comment must be removed because comments break the encryptor.
+  password: "![+nsCidMRvo9N6qn3ROR1UQ==]"
+  insecure: "true"
