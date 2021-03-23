@@ -27,7 +27,7 @@
 		</ee:transform>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb"
 			configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-			<http:request method="GET" doc:name="GET Customers @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972"
+			<http:request method="GET" doc:name="GET Customers by email @ Customers PL" doc:id="8adc5fb3-ac73-46f0-bbfe-eacecbc49972"
 				config-ref="HTTPS_Request_Customers_PL_configuration" path="${secure::https.request.customers-pl.customers.path}">
 				<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 				<http:query-params><![CDATA[#[output application/java
@@ -52,7 +52,7 @@
     (lastModifiedCustomer: vars.lastModifiedGetCustomersResponse) if (vars.lastModifiedGetCustomersResponse != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
-		<choice doc:name="Choice" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5">
+		<choice doc:name="Is the customer known (update) or unknown (create)?" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5">
 			<when expression="#[payload.customers != []]">
 				<json-logger:logger doc:name="Functional Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config"
 					message="Response received from Customers PL, processing each of the returned Customer(s) belonging to the input values."
@@ -84,7 +84,7 @@
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<ee:transform doc:name="Request mapping" doc:id="fec5f4d6-7242-4ab5-b140-045f2029b3e7">
+				<ee:transform doc:name="POST customer (lead) request mapping" doc:id="fec5f4d6-7242-4ab5-b140-045f2029b3e7">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-customers-to-customers-pl-request-mapping.dwl" />
 					</ee:message>
@@ -103,7 +103,7 @@
 				</json-logger:logger-scope>
 			</otherwise>
 		</choice>
-		<choice doc:name="Choice" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50">
+		<choice doc:name="Does the request contain a configurator?" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50">
 			<when expression="#[vars.originalPayload.interestData != null]">
 				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Logger_Config"
 					message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now."
@@ -113,7 +113,7 @@
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<ee:transform doc:name="Request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
+				<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />
 					</ee:message>
@@ -139,7 +139,7 @@
 		</choice>
 	</sub-flow>
 	<sub-flow name="post-interests_patch-customer" doc:id="193d4ca7-ccb4-4028-9902-29ffd62e2b39">
-		<choice doc:name="Choice" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507">
+		<choice doc:name="Is the customerType known?" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507">
 			<when
 				expression='#[(payload.systemCustomerIds.*customerType contains ("lead")) or (payload.systemCustomerIds.*customerType contains ("customer"))]'>
 				<json-logger:logger doc:name="Functional Log" doc:id="4b3e7120-19df-4fff-aba5-053d30b6ca4a" config-ref="JSON_Logger_Config"
@@ -149,7 +149,7 @@
  	attributes: attributes
 }]]]></json-logger:content>
 				</json-logger:logger>
-				<ee:transform doc:name="Request mapping" doc:id="76768bcd-855e-45bc-992a-5ef0a89d39db">
+				<ee:transform doc:name="PATCH customer request mapping" doc:id="76768bcd-855e-45bc-992a-5ef0a89d39db">
 					<ee:message>
 						<ee:set-payload resource="dwl/patch-customer-to-salesforce-sl-request-mapping.dwl" />
 					

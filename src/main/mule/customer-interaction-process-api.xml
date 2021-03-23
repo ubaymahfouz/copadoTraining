@@ -57,33 +57,6 @@
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="customer-interaction-process-api-console">
-        <http:listener config-ref="HTTPS_Listener_config" path="/console/*">
-            <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
-            </http:response>
-            <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
-            </http:error-response>
-        </http:listener>
-        <apikit:console config-ref="customer-interaction-process-api-config" />
-        <error-handler>
-            <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
-            </on-error-propagate>
-        </error-handler>
-    </flow>
     <flow name="post:\interests:application\json:customer-interaction-process-api-config">
         <flow-ref doc:name="post-interests" doc:id="2088a73a-d9f0-4561-820e-808554f1870f" name="post-interests" />
         <json-logger:logger doc:name="Exit Log" doc:id="477ff11c-9e5e-4d80-9dbc-6b3018d3b13b" config-ref="JSON_Logger_Config" message="End" tracePoint="END" category="nl.swisssense.attributes">

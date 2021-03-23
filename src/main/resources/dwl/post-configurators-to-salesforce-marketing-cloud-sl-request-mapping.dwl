@@ -14,15 +14,15 @@ output application/json skipNullOn = "everywhere"
 	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
 	firstName: vars.originalPayload.firstName,
 	lastName: vars.originalPayload.lastName,
-	interestData: vars.originalPayload.interestData map ( interestDatum , indexOfInterestDatum ) -> {
-		key: interestDatum.key,
-		value: interestDatum.value
+	interestData: vars.originalPayload.interestData map ( interestData , indexOfInterestData ) -> {
+		key: interestData.key,
+		value: interestData.value
 	},
-	productData: vars.originalPayload.productData map ( productDatum , indexOfProductDatum ) -> {
-		productId: productDatum.productId,
-		quantity: productDatum.quantity,
-		price: productDatum.price,
-		discountedPrice: productDatum.discountedPrice,
-		matchingPercentage: productDatum.matchingPercentage
+	productData: vars.originalPayload.productData map ( productData , indexOfProductData ) -> {
+		productId: productData.productId,
+		quantity: productData.quantity,
+		price: productData.price,
+		discountedPrice: productData.discountedPrice,
+		matchingPercentage: productData.matchingPercentage
 	}
 }
