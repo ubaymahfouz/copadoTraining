@@ -54,9 +54,9 @@
 		</json-logger:logger>
 		<choice doc:name="Is the customer known (update) or unknown (create)?" doc:id="c04ca90f-1423-4a8e-ac4c-b094d82e4dc5">
 			<when expression="#[payload.customers != []]">
-				<json-logger:logger doc:name="Functional Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config"
+				<json-logger:logger doc:name="Debug Log" doc:id="0644f322-d33d-42e8-b8f9-822ad201d4cb" config-ref="JSON_Logger_Config"
 					message="Response received from Customers PL, processing each of the returned Customer(s) belonging to the input values."
-					tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes">
+					tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" priority="DEBUG">
 					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
@@ -76,9 +76,9 @@
 				</foreach>
 			</when>
 			<otherwise>
-				<json-logger:logger doc:name="Functional Log" doc:id="7bdda85c-f2a5-4d0c-872a-43a56f12d778" config-ref="JSON_Logger_Config"
+				<json-logger:logger doc:name="Debug Log" doc:id="7bdda85c-f2a5-4d0c-872a-43a56f12d778" config-ref="JSON_Logger_Config"
 					message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)."
-					tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
+					tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" priority="DEBUG">
 					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
@@ -107,7 +107,7 @@
 			<when expression="#[vars.originalPayload.interestData != null]">
 				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Logger_Config"
 					message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now."
-					tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes">
+					tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 					<json-logger:content><![CDATA[#[output application/json ---
 {
  	attributes: attributes
@@ -170,7 +170,7 @@
 				</json-logger:logger-scope>
 			</when>
 			<otherwise>
-				<json-logger:logger doc:name="Functional Log" doc:id="3e6bbd62-50c0-4bb0-bc1e-3f3610549d51" config-ref="JSON_Logger_Config"
+				<json-logger:logger doc:name="Error Log" doc:id="3e6bbd62-50c0-4bb0-bc1e-3f3610549d51" config-ref="JSON_Logger_Config"
 					message="Unknown customerType." tracePoint="EXCEPTION" category="nl.swisssense.attributes">
 					<json-logger:content><![CDATA[#[output application/json ---
 {
@@ -186,7 +186,7 @@
 }]]]></json-logger:content>
 				</json-logger:logger>
 				<raise-error doc:name="Raise error" doc:id="96ff3fd1-dc97-4902-b870-682c4ba0b738" type="SWISS_SENSE:MULE_CHOICE_ERROR"
-					description='#["Default choice route taken: This should not happen!"]' />
+					description='#["Default choice route taken, incorrect/invalid customerType."]' />
 			</otherwise>
 		</choice>
 	</sub-flow>
