@@ -56,7 +56,7 @@
 						<password>${password}</password> <!-- CloudHub password. -->
 						<!-- Injected at deployment! -->
 						<!-- REQUIRED! -->
-						<applicationName>${cloudhub.application.name}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
+						<applicationName>${muleenv}-${project.artifactId}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
 						<!-- Injected at deployment! -->
 						<!-- REQUIRED! -->
 						<environment>${chenv}</environment>
