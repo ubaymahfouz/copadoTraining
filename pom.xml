@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -22,14 +22,7 @@
 	
 	<!-- Description of the application. This can be used to state the purpose and give some details/information in a human readable text format. -->
 	<description>This a Process Layer application for Swiss Sense.</description>
-	
-	<properties>
-		<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
-		<api.version>0.1.3</api.version>
-	</properties>
 
-
-	
 	<build>
 		<resources>
 			<resource>
