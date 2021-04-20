@@ -106,7 +106,4 @@ keystore:
   alias: "mule"
   password: "![+nsCidMRvo9N6qn3ROR1UQ==]"
 truststore:
-  type: "JKS"
-  path: "keystore/truststore.jks"
-  password: "![+nsCidMRvo9N6qn3ROR1UQ==]"
   insecure: "true"
