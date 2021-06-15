@@ -15,7 +15,7 @@ var salesforceData = {
 	firstName: payload.firstName,
 	lastName: payload.lastName,
 	salutation: payload.salutation,
-	communicationLanguage: vars.originalPayload.language,
+	communicationLanguage: upper(vars.originalPayload.language),
 	communicationPreference: vars.originalPayload.preferredChannel,
 	email: payload.email,
 	lastModifiedDate: payload.lastModifiedDate,
