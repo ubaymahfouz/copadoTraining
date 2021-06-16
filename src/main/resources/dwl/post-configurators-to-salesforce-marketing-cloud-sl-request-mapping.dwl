@@ -14,6 +14,7 @@ output application/json skipNullOn = "everywhere"
 	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
 	firstName: vars.originalPayload.firstName,
 	lastName: vars.originalPayload.lastName,
+	language: vars.originalPayload.language,
 	interestData: vars.originalPayload.interestData map ( interestData , indexOfInterestData ) -> {
 		key: interestData.key,
 		value: interestData.value
