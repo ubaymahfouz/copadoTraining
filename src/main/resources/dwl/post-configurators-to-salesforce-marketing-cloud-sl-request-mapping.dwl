@@ -1,5 +1,6 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
+var filterSF = {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}
 ---
 {
 	origin: vars.origin,
@@ -9,7 +10,8 @@ output application/json skipNullOn = "everywhere"
 		campaign: vars.originalPayload.source.campaign
 	},
 	email: vars.originalPayload.email,
-	salesforceContactKey: if (vars.lastModifiedGetCustomersResponse != null) {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id
+	salesforceContactKey: if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "lead") filterSF.id
+	else if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "customer") filterSF.contactId
 	else {(vars.postCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
 	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
 	firstName: vars.originalPayload.firstName,
