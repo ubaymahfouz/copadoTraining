@@ -90,14 +90,14 @@ jsonlogger:
 basic:
   auth:
     customers-pl:
-      username: "![Fm/OnVGxoqnxBcWPhEOsDwG1TBqP93jyTZqk4/z7CYd/wO1vyV/Tdg==]"
-      password: "![5vTICm0xCYtUsBEPcd06E5AhaDcWzNauOi9cTuTW0eGgYVyepqqDig==]"
+      username: "![2PJMx5U0NQeoLVY6S9YoK40eyZ1Czqn5AAc4cgwtVSBWacHICDpJSw==]"
+      password: "![q3jQzblGNoRDk/CLNRQ41yXMMADKeMa7OA8upY4uygct4vLfMbvJ9Q==]"
     salesforce-sl:
-      username: "![Fm/OnVGxoqnxBcWPhEOsDwG1TBqP93jyTZqk4/z7CYd/wO1vyV/Tdg==]"
-      password: "![5vTICm0xCYtUsBEPcd06E5AhaDcWzNauOi9cTuTW0eGgYVyepqqDig==]"
+      username: "![2PJMx5U0NQeoLVY6S9YoK40eyZ1Czqn5AAc4cgwtVSBWacHICDpJSw==]"
+      password: "![q3jQzblGNoRDk/CLNRQ41yXMMADKeMa7OA8upY4uygct4vLfMbvJ9Q==]"
     salesforce-marketing-cloud-sl:
-      username: "![Fm/OnVGxoqnxBcWPhEOsDwG1TBqP93jyTZqk4/z7CYd/wO1vyV/Tdg==]"
-      password: "![5vTICm0xCYtUsBEPcd06E5AhaDcWzNauOi9cTuTW0eGgYVyepqqDig==]"
+      username: "![2PJMx5U0NQeoLVY6S9YoK40eyZ1Czqn5AAc4cgwtVSBWacHICDpJSw==]"
+      password: "![q3jQzblGNoRDk/CLNRQ41yXMMADKeMa7OA8upY4uygct4vLfMbvJ9Q==]"
 
 ## Keystores Config ##
 keystore:
