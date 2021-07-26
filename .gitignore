@@ -2,10 +2,12 @@
 # Java defaults (https://github.com/github/gitignore/blob/master/Java.gitignore) #
 # ------------------------------------------------------------------------------ #
 *.class
+
 # Package Files #
 *.jar
 *.war
 *.ear
+
 # ------------------------------------------------------------------------------------------- #
 # Eclipse-specific (https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore) #
 # ------------------------------------------------------------------------------------------- #
@@ -21,16 +23,21 @@ tmp/**/*
 local.properties
 .settings/
 .loadpath
-.project
-.classpath
+#.project
+#.classpath
+
 # External tool builders
 .externalToolBuilders/
+
 # Locally stored "Eclipse launch configurations"
 *.launch
+
 # CDT-specific
 .cproject
+
 # PDT-specific
 .buildpath
+
 # --------------- #
 # Studio-specific #
 # --------------- #

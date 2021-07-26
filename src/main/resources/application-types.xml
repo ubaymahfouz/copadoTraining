@@ -1,0 +1,341 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="GET_customers-from-customers-pl-response-payload" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload = {|
+  customers: Array<{|    globalCustomerId: String,     individualId: String,     firstName: String,     lastName: String,     salutation: String,     email: String,     systemCustomerIds: Array<{|      system: String,       id: String,       customerType: String,       contactId: String    |}>, 
+    lastModifiedDate: String
+  |}>
+|} {"example": "{\\\"customers\\\":[{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"individualId\\\":\\\"0PK4E000002jaXaWAI\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="POST_interests-request-payload" format="json">
+      <types:shape format="weave" example="examples/POST_interests-request-payload.json"><![CDATA[%dw 2.0
+
+type POST_interests_request_payload = {|
+  source: {|
+    "type": String, 
+    name: String, 
+    campaign: String
+  |}, 
+  salutation: String, 
+  firstName: String, 
+  lastName: String, 
+  addresses: Array<{|    street: String,     houseNumber: Number {"typeId": "int"},     houseNumberSuffix: String,     postalCode: String,     city: String,     countryCode: String  |}>, 
+  phoneNumbers: Array<{|    number: String,     "type": String  |}>, 
+  email: String, 
+  language: String, 
+  preferredChannel: String, 
+  interestData: Array<{|    key: String,     value: String  |}>, 
+  productData: Array<{|    productId: String,     quantity: Number {"typeId": "int"},     price: Number {"typeId": "int"},     discountedPrice: Number {"typeId": "int"},     matchingPercentage: Number {"typeId": "int"}  |}>, 
+  subscriptions: Array<{|    subscription: String,     enabled: Boolean  |}>
+|} {"example": "{\\\"source\\\":{\\\"type\\\":\\\"store\\\",\\\"name\\\":\\\"Leidschendam\\\",\\\"campaign\\\":\\\"kussenwijzer\\\"},\\\"salutation\\\":\\\"Ms.\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaak\\\",\\\"addresses\\\":[{\\\"street\\\":\\\"Jagersveld\\\",\\\"houseNumber\\\":15,\\\"houseNumberSuffix\\\":\\\"a\\\",\\\"postalCode\\\":\\\"5405 BW\\\",\\\"city\\\":\\\"Uden\\\",\\\"countryCode\\\":\\\"NL\\\"}],\\\"phoneNumbers\\\":[{\\\"number\\\":\\\"+31612345678\\\",\\\"type\\\":\\\"mobile\\\"}],\\\"email\\\":\\\"klaas.vandervaak+alias@snurken.com\\\",\\\"language\\\":\\\"nl\\\",\\\"preferredChannel\\\":\\\"email\\\",\\\"interestData\\\":[{\\\"key\\\":\\\"\\\",\\\"value\\\":\\\"\\\"}],\\\"productData\\\":[{\\\"productId\\\":\\\"139289001\\\",\\\"quantity\\\":2,\\\"price\\\":999,\\\"discountedPrice\\\":825,\\\"matchingPercentage\\\":85}],\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload" format="json">
+      <types:shape format="weave" example="examples/PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload.json"><![CDATA[%dw 2.0
+
+type PATCH_customer_by_salesforcecustomerid_to_salesforce_sl_request_payload = {|
+  customerId: String, 
+  customerType: String, 
+  globalCustomerId: String, 
+  parentCustomerId: String, 
+  contactId: String, 
+  individualId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  title: String, 
+  suffix: String, 
+  phone: String, 
+  mobilePhone: String, 
+  communicationLanguage: String, 
+  communicationPreference: String, 
+  gender: String, 
+  birthdate: String, 
+  email: String, 
+  lastModifiedDate: String, 
+  street: String, 
+  city: String, 
+  state: String, 
+  postalCode: String, 
+  countryCode: String, 
+  subscriptions: Array<{|    subscription: String,     enabled: Boolean  |}>
+|} {"example": "{\\\"customerId\\\":\\\"0015r000003RtVfAAK\\\",\\\"customerType\\\":\\\"\\\",\\\"globalCustomerId\\\":\\\"2568974\\\",\\\"parentCustomerId\\\":\\\"987456321\\\",\\\"contactId\\\":\\\"00Z0Q000123wAAxfKpe\\\",\\\"individualId\\\":\\\"0PK5r000000HHxoGAG\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"title\\\":\\\"dr.\\\",\\\"suffix\\\":\\\"MSc\\\",\\\"phone\\\":\\\"0478-542639\\\",\\\"mobilePhone\\\":\\\"06-12345678\\\",\\\"communicationLanguage\\\":\\\"NL\\\",\\\"communicationPreference\\\":\\\"email\\\",\\\"gender\\\":\\\"\\\",\\\"birthdate\\\":\\\"1980-10-20\\\",\\\"email\\\":\\\"test@provider.nl\\\",\\\"lastModifiedDate\\\":\\\"2016-02-28T16:41:41.090Z\\\",\\\"street\\\":\\\"Hoofdweg\\\",\\\"city\\\":\\\"Amsterdam\\\",\\\"state\\\":\\\"Noord-Holland\\\",\\\"postalCode\\\":\\\"1111 AA\\\",\\\"countryCode\\\":\\\"NL\\\",\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":false}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="GET_customers-from-customers-pl-response-payload-account" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload-account.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload_account = {|
+  customerId: String, 
+  customerType: String, 
+  globalCustomerId: String, 
+  parentCustomerId: String, 
+  contactId: String, 
+  individualId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  communicationLanguage: String, 
+  communicationPreference: String, 
+  email: String, 
+  lastModifiedDate: String, 
+  subscriptions: Array<{|    subscription: String,     enabled: String  |}>
+|} {"example": "{\\\"customerId\\\":\\\"0015r000003RtV2AAK\\\",\\\"customerType\\\":\\\"account\\\",\\\"globalCustomerId\\\":\\\"1000094897\\\",\\\"parentCustomerId\\\":\\\"\\\",\\\"contactId\\\":\\\"0035r000002WGy6AAG\\\",\\\"individualId\\\":\\\"0PK5r000000HHxoGAG\\\",\\\"firstName\\\":\\\"Klaasie\\\",\\\"lastName\\\":\\\"Vaak\\\",\\\"salutation\\\":\\\"\\\",\\\"communicationLanguage\\\":\\\"NL\\\",\\\"communicationPreference\\\":\\\"email\\\",\\\"email\\\":\\\"tbergie123987@gmail.comma.invalid\\\",\\\"lastModifiedDate\\\":\\\"2021-02-19T13:04:40.000Z\\\",\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":\\\"false\\\"},{\\\"subscription\\\":\\\"advice\\\",\\\"enabled\\\":\\\"true\\\"},{\\\"subscription\\\":\\\"promotional\\\",\\\"enabled\\\":\\\"false\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="GET_customers-from-customers-pl-response-payload-lead" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload-lead.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload_lead = {|
+  customerId: String, 
+  customerType: String, 
+  globalCustomerId: String, 
+  individualId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  communicationLanguage: String, 
+  communicationPreference: String, 
+  email: String, 
+  lastModifiedDate: String, 
+  subscriptions: Array<{|    subscription: String,     enabled: String  |}>
+|} {"example": "{\\\"customerId\\\":\\\"00Q5r0000011ePFEAY\\\",\\\"customerType\\\":\\\"lead\\\",\\\"globalCustomerId\\\":\\\"12345\\\",\\\"individualId\\\":\\\"0PK5r000000HKLLGA4\\\",\\\"firstName\\\":\\\"Test\\\",\\\"lastName\\\":\\\"Lead\\\",\\\"salutation\\\":\\\"Mr.\\\",\\\"communicationLanguage\\\":\\\"NL\\\",\\\"communicationPreference\\\":\\\"email\\\",\\\"email\\\":\\\"sjoerd.santegoets@swisssense.nl.invalid\\\",\\\"lastModifiedDate\\\":\\\"2021-02-15T12:33:54.000Z\\\",\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":\\\"true\\\"},{\\\"subscription\\\":\\\"advice\\\",\\\"enabled\\\":\\\"true\\\"},{\\\"subscription\\\":\\\"promotional\\\",\\\"enabled\\\":\\\"false\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="POST_customers-to-customers-pl-request-payload" format="json">
+      <types:shape format="weave" example="examples/POST_customers-to-customers-pl-request-payload.json"><![CDATA[%dw 2.0
+
+type POST_customers_to_customers_pl_request_payload = {|
+  Customer: {|
+    globalCustomerId: Number {"typeId": "int"}, 
+    changeType: String, 
+    origin: {|
+      system: String, 
+      id: String
+    |}, 
+    customerType: String, 
+    customerSourceType: String, 
+    legalEntity: {|
+      contact: Array<{|        mobilePhone: String,         fixedPhone: String,         email: String,         ipAddress: String,         social: Array<{|          "type": String,           handle: String        |}>
+      |}>, 
+      dateOfBirth: String, 
+      address: Array<{|        addressUsage: String,         streetName: String,         houseNumber: Number {"typeId": "int"},         houseNumberSuffix: String,         postalCode: String,         city: String,         country: {|          name: String,           code: String        |},         designation: {|          salutation: String,           firstName: String,           lastNameAffix: String,           lastName: String        |}      |}>, 
+      lastName: String, 
+      firstName: String, 
+      characteristics: {|
+        weight: Number {"typeId": "int"}, 
+        height: Number {"typeId": "int"}
+      |}, 
+      salutation: String, 
+      lastNameAffix: String, 
+      gender: String, 
+      bankAccount: {|
+        iban: String, 
+        ascription: String
+      |}
+    |}, 
+    locale: {|
+      languageCode: String, 
+      countryCode: String
+    |}, 
+    status: String, 
+    lastModifiedDate: String, 
+    preferences: {|
+      communication: {|
+        subscriptions: Array<{|          subscription: String,           enabled: Boolean        |}>, 
+        preferredChannel: String, 
+        language: String
+      |}, 
+      privacy: {|
+        allowTracking: Boolean, 
+        allowMarketing: Boolean, 
+        invokedRightToBeForgotten: Boolean, 
+        allowExternalStorage: Boolean
+      |}
+    |}
+  |}
+|} {"example": "{\\\"Customer\\\":{\\\"globalCustomerId\\\":1003564875,\\\"changeType\\\":\\\"update\\\",\\\"origin\\\":{\\\"system\\\":\\\"sap\\\",\\\"id\\\":\\\"001KDLWOLDKJF923ks\\\"},\\\"customerType\\\":\\\"customer\\\",\\\"customerSourceType\\\":\\\"website\\\",\\\"legalEntity\\\":{\\\"contact\\\":[{\\\"mobilePhone\\\":\\\"+31612345678\\\",\\\"fixedPhone\\\":\\\"+31307600456\\\",\\\"email\\\":\\\"klaas.vandervaak+swiss-webshop@snurken.com\\\",\\\"ipAddress\\\":\\\"\\\",\\\"social\\\":[{\\\"type\\\":\\\"\\\",\\\"handle\\\":\\\"\\\"}]}],\\\"dateOfBirth\\\":\\\"\\\",\\\"address\\\":[{\\\"addressUsage\\\":\\\"\\\",\\\"streetName\\\":\\\"Jagersveld\\\",\\\"houseNumber\\\":15,\\\"houseNumberSuffix\\\":\\\"a\\\",\\\"postalCode\\\":\\\"5405 BW\\\",\\\"city\\\":\\\"Uden\\\",\\\"country\\\":{\\\"name\\\":\\\"\\\",\\\"code\\\":\\\"NL\\\"},\\\"designation\\\":{\\\"salutation\\\":\\\"Ms.\\\",\\\"firstName\\\":\\\"Klasiena\\\",\\\"lastNameAffix\\\":\\\"van\\\",\\\"lastName\\\":\\\"Vaak\\\"}}],\\\"lastName\\\":\\\"Vaak\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"characteristics\\\":{\\\"weight\\\":0,\\\"height\\\":0},\\\"salutation\\\":\\\"Ms.\\\",\\\"lastNameAffix\\\":\\\"van der\\\",\\\"gender\\\":\\\"\\\",\\\"bankAccount\\\":{\\\"iban\\\":\\\"NL11ABNA0123521255\\\",\\\"ascription\\\":\\\"Klaas Vaak\\\"}},\\\"locale\\\":{\\\"languageCode\\\":\\\"nl\\\",\\\"countryCode\\\":\\\"NL\\\"},\\\"status\\\":\\\"Known\\\",\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\",\\\"preferences\\\":{\\\"communication\\\":{\\\"subscriptions\\\":[{\\\"subscription\\\":\\\"newsletter\\\",\\\"enabled\\\":true}],\\\"preferredChannel\\\":\\\"\\\",\\\"language\\\":\\\"\\\"},\\\"privacy\\\":{\\\"allowTracking\\\":true,\\\"allowMarketing\\\":true,\\\"invokedRightToBeForgotten\\\":false,\\\"allowExternalStorage\\\":false}}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="POST_configurators-to-salesforce-marketing-cloud-sl-request-payload" format="json">
+      <types:shape format="weave" example="examples/POST_configurators-to-salesforce-marketing-cloud-sl-request-payload.json"><![CDATA[%dw 2.0
+
+type POST_configurators_to_salesforce_marketing_cloud_sl_request_payload = {|
+  origin: String, 
+  source: {|
+    "type": String, 
+    name: String, 
+    campaign: String
+  |}, 
+  email: String, 
+  salesforceContactKey: String, 
+  globalCustomerId: String, 
+  firstName: String, 
+  lastName: String, 
+  interestData: Array<{|    key: String,     value: String  |}>, 
+  productData: Array<{|    productId: String,     quantity: Number {"typeId": "int"},     price: Number {"typeId": "int"},     discountedPrice: Number {"typeId": "int"},     matchingPercentage: Number {"typeId": "int"}  |}>
+|} {"example": "{\\\"origin\\\":\\\"magento\\\",\\\"source\\\":{\\\"type\\\":\\\"website\\\",\\\"name\\\":\\\"website-nl\\\",\\\"campaign\\\":\\\"boxspring-configurator\\\"},\\\"email\\\":\\\"johndoe@mail.com\\\",\\\"salesforceContactKey\\\":\\\"A12345\\\",\\\"globalCustomerId\\\":\\\"1000593325\\\",\\\"firstName\\\":\\\"John\\\",\\\"lastName\\\":\\\"Doe\\\",\\\"interestData\\\":[{\\\"key\\\":\\\"url\\\",\\\"value\\\":\\\"https:\\/\\/swisssense.nl\\/123\\\"},{\\\"key\\\":\\\"someAttribute\\\",\\\"value\\\":\\\"someValue\\\"}],\\\"productData\\\":[{\\\"productId\\\":\\\"139289001\\\",\\\"quantity\\\":2,\\\"price\\\":999,\\\"discountedPrice\\\":825,\\\"matchingPercentage\\\":85}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="GET_customers-from-customers-pl-response-payload_in-for-each-payload" format="json">
+      <types:shape format="weave" example="examples/GET_customers-from-customers-pl-response-payload_in-for-each-payload.json"><![CDATA[%dw 2.0
+
+type GET_customers_from_customers_pl_response_payload_in_for_each_payload = {|
+  globalCustomerId: String, 
+  individualId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  email: String, 
+  systemCustomerIds: Array<{|    system: String,     id: String,     customerType: String,     contactId: String  |}>, 
+  lastModifiedDate: String
+|} {"example": "{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"individualId\\\":\\\"0PK4E000002jaXaWAI\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="POST_customers-to-customers-pl-response-payload" format="json">
+      <types:shape format="weave" example="examples/POST_customers-to-customers-pl-response-payload.json"><![CDATA[%dw 2.0
+
+type POST_customers_to_customers_pl_response_payload = {|
+  globalCustomerId: String, 
+  firstName: String, 
+  lastName: String, 
+  salutation: String, 
+  email: String, 
+  systemCustomerIds: Array<{|    system: String,     id: String,     customerType: String,     contactId: String  |}>, 
+  lastModifiedDate: String
+|} {"example": "{\\\"globalCustomerId\\\":\\\"10048422\\\",\\\"firstName\\\":\\\"Klaas\\\",\\\"lastName\\\":\\\"van der Vaaker\\\",\\\"salutation\\\":\\\"Dhr.\\\",\\\"email\\\":\\\"testreply@provider.nl\\\",\\\"systemCustomerIds\\\":[{\\\"system\\\":\\\"salesforce\\\",\\\"id\\\":\\\"0SP4E0000000ROxWAM\\\",\\\"customerType\\\":\\\"customer\\\",\\\"contactId\\\":\\\"1MF4L0000001KWvMLP\\\"}],\\\"lastModifiedDate\\\":\\\"2020-03-01T21:00:00\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#fd3cdafc-160d-4b78-8682-684a73b80210">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload-account"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#b9db35a1-f65d-40d8-b5ed-1a2f0a920172">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload-lead"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fec5f4d6-7242-4ab5-b140-045f2029b3e7">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="POST_customers-to-customers-pl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#365de60e-ea00-4de0-b64b-6226211395ae">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="POST_configurators-to-salesforce-marketing-cloud-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#e41787e7-641c-4d71-b04b-48391bcfbe13">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#7ff4f1b3-15a8-4953-ab4a-53a2784767c6">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#06df814a-52ce-4892-8e24-0e54f8c1ef53">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload_in-for-each-payload"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#76768bcd-855e-45bc-992a-5ef0a89d39db">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="GET_customers-from-customers-pl-response-payload_in-for-each-payload"/>
+        </types:message>
+        <types:variables>
+          <types:variable name="originalPayload" type="POST_interests-request-payload"/>
+        </types:variables>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="PATCH_customer-by-salesforcecustomerid-to-salesforce-sl-request-payload"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a850c87b-f0a3-45ea-8809-58e7c07033fb">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="POST_interests-request-payload"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="originalPayload" type="POST_interests-request-payload"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#47b8e755-1066-4ba2-bc4e-b2074a889823">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="postCustomersResponse" type="POST_customers-to-customers-pl-response-payload"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

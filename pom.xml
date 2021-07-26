@@ -14,7 +14,7 @@
 	
 	<!-- The name of the artifact within the 'group' which results from compiling this POM. -->
 	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.0-SNAPSHOT</version> 
+	<version>1.0.0</version> 
 	<packaging>mule-application</packaging>
 
 	<!-- Application Name -->
@@ -22,7 +22,7 @@
 	
 	<!-- Description of the application. This can be used to state the purpose and give some details/information in a human readable text format. -->
 	<description>This a Process Layer application for Swiss Sense.</description>
-	
+
 	<build>
 		<resources>
 			<resource>
@@ -49,13 +49,14 @@
 						<password>${password}</password> <!-- CloudHub password. -->
 						<!-- Injected at deployment! -->
 						<!-- REQUIRED! -->
-						<applicationName>${cloudhub.application.name}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
+						<applicationName>${muleenv}-${project.artifactId}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
 						<!-- Injected at deployment! -->
 						<!-- REQUIRED! -->
 						<environment>${chenv}</environment>
 						<!-- Injected at deployment! -->
 						<properties>
 							<mule.ch.env>${muleenv}</mule.ch.env>
+							<anypoint.platform.config.analytics.agent.enabled>true</anypoint.platform.config.analytics.agent.enabled> <!-- Enables the application monitoring, see: https://docs.mulesoft.com/monitoring/enable-apps-deployed-to-cloud. -->
 							<anypoint.platform.analytics_base_uri>https://analytics-ingest.eu1.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
 							<anypoint.platform.base_uri>https://eu1.anypoint.mulesoft.com</anypoint.platform.base_uri>
 							<anypoint.platform.client_id>${envclientid}</anypoint.platform.client_id>
@@ -64,6 +65,10 @@
 							<!-- Injected at deployment! -->
 							<customer-interaction-pl-ms-encryption-key>${customer-interaction-pl-ms-encryption-key}</customer-interaction-pl-ms-encryption-key>
 							<!-- Injected at deployment! -->
+							<anypoint.platform.visualizer.displayName>${project.artifactId}</anypoint.platform.visualizer.displayName> <!-- Sets the displayname (how the application is shown) in CloudHub Visualizer. -->
+							<anypoint.platform.visualizer.layer>Process</anypoint.platform.visualizer.layer> <!-- Sets the layer within the CloudHub Visualizer on which this application is shown, can be freely edited although it is advised to use the suggestion values below. -->
+							<anypoint.platform.visualizer.tags>Created-from-development-template</anypoint.platform.visualizer.tags> <!-- Adds a tag to the application in the CloudHub Visualizer indicating that it was built from this development-template. -->
+							<!-- The "tags" above is an immutable comma-separated list, tags added through here CANNOT be edited in the CloudHub Visualizer UI. -->
 						</properties>
 						<workers>${workers}</workers> <!-- Sets the amount of CloudHub workers for this application. -->
 						<!-- Injected at deployment! -->
@@ -209,10 +214,10 @@
 			<artifactId>json-logger</artifactId>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		<dependency>
+    	<dependency>
             <groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
             <artifactId>customer-interaction-pl-ms</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.3</version>
             <classifier>raml</classifier>
             <type>zip</type>
         </dependency>

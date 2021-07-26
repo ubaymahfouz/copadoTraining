@@ -1,0 +1,27 @@
+{
+	"customerId": "00Q5r0000011ePFEAY",
+	"customerType": "lead",
+	"globalCustomerId": "12345",
+	"individualId": "0PK5r000000HKLLGA4",
+	"firstName": "Test",
+	"lastName": "Lead",
+	"salutation": "Mr.",
+	"communicationLanguage": "NL",
+	"communicationPreference": "email",
+	"email": "sjoerd.santegoets@swisssense.nl.invalid",
+	"lastModifiedDate": "2021-02-15T12:33:54.000Z",
+	"subscriptions": [
+		{
+			"subscription": "newsletter",
+			"enabled": "true"
+		},
+		{
+			"subscription": "advice",
+			"enabled": "true"
+		},
+		{
+			"subscription": "promotional",
+			"enabled": "false"
+		}
+	]
+}
