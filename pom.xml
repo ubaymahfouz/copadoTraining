@@ -217,7 +217,7 @@
     	<dependency>
             <groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
             <artifactId>customer-interaction-pl-ms</artifactId>
-            <version>0.1.3</version>
+            <version>0.1.4</version>
             <classifier>raml</classifier>
             <type>zip</type>
         </dependency>
