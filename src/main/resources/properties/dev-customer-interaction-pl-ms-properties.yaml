@@ -88,6 +88,8 @@ jsonlogger:
     name: "customer-interaction-pl-ms"
     version: "1"
   maskedfields: "$.attributes.headers.authorization" # Any fields which should not be shown in the logging output need to be entered here.
+  functional:
+    disable: "content"
 
 ## Connection Credentials ##
 basic:

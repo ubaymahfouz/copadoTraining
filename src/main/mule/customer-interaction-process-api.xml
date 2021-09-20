@@ -12,9 +12,10 @@
             </http:error-response>
         </http:listener>
         <json-logger:logger doc:name="Entry log" doc:id="fa8af29c-c3cd-4b0a-a72a-ee3edd6447ff" config-ref="JSON_Logger_Config" message="Entry" category="nl.swisssense.attributes">
-            <json-logger:content><![CDATA[#[output application/json ---
+            <json-logger:content><![CDATA[#[output application/json skipNullOn="everywhere"---
 {
- 	attributes: attributes
+	rawRequestUri: attributes.rawRequestUri,
+	method: attributes.method
 }]]]></json-logger:content>
         </json-logger:logger>
         <apikit:router config-ref="customer-interaction-process-api-config" />
@@ -60,9 +61,10 @@
     <flow name="post:\interests:application\json:customer-interaction-process-api-config">
         <flow-ref doc:name="post-interests" doc:id="2088a73a-d9f0-4561-820e-808554f1870f" name="post-interests" />
         <json-logger:logger doc:name="Exit Log" doc:id="477ff11c-9e5e-4d80-9dbc-6b3018d3b13b" config-ref="JSON_Logger_Config" message="End" tracePoint="END" category="nl.swisssense.attributes">
-            <json-logger:content><![CDATA[#[output application/json ---
+            <json-logger:content><![CDATA[#[output application/json skipNullOn="everywhere"---
 {
- 	attributes: attributes
+ 	reasonPhrase: attributes.reasonPhrase,
+ 	statusCode: attributes.statusCode
 }]]]></json-logger:content>
         </json-logger:logger>
     </flow>
@@ -78,9 +80,10 @@ output application/json
             </ee:message>
         </ee:transform>
         <json-logger:logger doc:name="Exit Log" doc:id="9a6a7304-e56a-4dc4-80e6-db57ed68bcf3" config-ref="JSON_Logger_Config" message="End" tracePoint="END" category="nl.swisssense.attributes">
-            <json-logger:content><![CDATA[#[output application/json ---
+            <json-logger:content><![CDATA[#[output application/json skipNullOn="everywhere"---
 {
- 	attributes: attributes
+ 	reasonPhrase: attributes.reasonPhrase,
+ 	statusCode: attributes.statusCode
 }]]]></json-logger:content>
         </json-logger:logger>
     </flow>
