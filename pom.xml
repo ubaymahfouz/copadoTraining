@@ -14,7 +14,7 @@
 	
 	<!-- The name of the artifact within the 'group' which results from compiling this POM. -->
 	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.1-SNAPSHOT</version> 
+	<version>1.0.2-SNAPSHOT</version> 
 	<packaging>mule-application</packaging>
 
 	<!-- Application Name -->

@@ -35,6 +35,10 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8"
 		applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
 		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
+	
+	<json-logger:config name="JSON_Functional_Logger_Config" doc:name="JSON Logger Config" doc:id="ce267879-72bb-4b6d-9715-e1a4754cd16c"
+		applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
+		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" disabledFields="${secure::jsonlogger.functional.disable}"/>
 
 	<api-gateway:autodiscovery apiId="${secure::apiId}" doc:name="API Autodiscovery"
 		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true" />
