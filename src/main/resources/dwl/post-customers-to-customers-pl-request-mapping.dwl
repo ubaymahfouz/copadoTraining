@@ -1,20 +1,19 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
+var telephoneTypes = ["home", "office"]
 ---
 {
 	customerType: "lead",
 	customerSourceType: vars.originalPayload.source."type",
 	legalEntity: {
-		(contact: ([{
-			email: vars.originalPayload.email,
-			(vars.originalPayload.phoneNumbers map ( phoneNumber , indexOfPhoneNumber ) -> {
-				(mobilePhone: phoneNumber.number) if (phoneNumber."type" == "mobile"),
-				(fixedPhone: phoneNumber.number) if (phoneNumber."type" == "home")
-			})
-		}])) if (vars.originalPayload.email != null or vars.originalPayload.phoneNumbers != null),
+		contact: [{
+                mobilePhone: (vars.originalPayload.phoneNumbers filter $."type" == "mobile").number[0],
+                fixedPhone: (vars.originalPayload.phoneNumbers filter (telephoneTypes contains $."type")).number[0],
+                email: vars.originalPayload.email,
+            }],
 		address: vars.originalPayload.addresses map ( address , indexOfAddress ) -> {
 			streetName: address.street,
-			houseNumber: address.houseNumber,
+			houseNumber: (address.houseNumber as String) default null,
 			houseNumberSuffix: address.houseNumberSuffix,
 			postalCode: address.postalCode,
 			city: address.city,

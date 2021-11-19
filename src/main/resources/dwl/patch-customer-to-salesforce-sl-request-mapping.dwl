@@ -10,8 +10,8 @@ var salesforceData = {
         else if ( salesforceData.customerType == "lead" ) "lead"
         else "other",
 	globalCustomerId: payload.globalCustomerId,
-	contactId: salesforceData.systemCustomerIds.contactId,
-	individualId: payload.systemCustomerIds.individualId,
+	contactId: salesforceData.contactId,
+	individualId: salesforceData.individualId,
 	firstName: payload.legalEntity.firstName,
 	lastName: payload.legalEntity.lastName,
 	salutation: payload.legalEntity.salutation,
