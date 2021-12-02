@@ -1,8 +1,24 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
 var telephoneTypes = ["home", "office"]
+
+// function to delete all empty objects and arrays from the input
+fun treeFilter(value: Any, predicate: (value:Any) -> Boolean) =
+    value  match {
+            case object is Object ->  do {
+               object mapObject ((value, key, index) -> 
+                    (key): treeFilter(value, predicate)
+                )
+                filterObject ((value, key, index) -> predicate(value))
+            }
+            case array is Array -> do {
+                    array map ((item, index) -> treeFilter(item, predicate))
+                                         filter ((item, index) -> predicate(item))                 
+            }
+            else -> $
+    }
 ---
-{
+({
 	customerType: "lead",
 	customerSourceType: vars.originalPayload.source."type",
 	legalEntity: {
@@ -35,4 +51,12 @@ var telephoneTypes = ["home", "office"]
 			language: vars.originalPayload.language
 		}
 	}
-}
+})
+
+// output from mapping above as input for treeFilter function
+treeFilter ((value) -> 
+    value match {
+        case v is Array| Object | Null -> !isEmpty(v)
+        else -> true
+    }
+)
