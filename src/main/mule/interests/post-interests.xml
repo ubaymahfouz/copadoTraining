@@ -12,7 +12,7 @@
 	http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<sub-flow name="post-interests" doc:id="0b682ab6-3c82-4b00-8cd9-68d7ab8bf457">
 		<json-logger:logger doc:name="Functional Log" doc:id="ba214598-90f0-4d72-8ed0-3d17f8d6ff16" config-ref="JSON_Functional_Logger_Config"
-			message="Message to POST interests received, about to check if the interests are for a new or existing Customer." tracePoint="BEFORE_REQUEST"
+			message='#["Message to POST interests received, about to check if the interests are for a new or existing Customer."]' tracePoint="BEFORE_REQUEST"
 			category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
@@ -106,6 +106,15 @@
 					tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 					<json-logger:content><![CDATA[null]]></json-logger:content>
 				</json-logger:logger>
+				<json-logger:logger-scope doc:name="Logger scope" doc:id="a7390475-225d-494b-9bc1-2dd082ba33c4" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="GET" doc:name="GET customerids by globalCustomerId @ Customer Reference SL" doc:id="2f6018c7-3519-48d8-ac43-9ad7b70642a5" config-ref="HTTP_Request_Customer-Reference_SL_configuration" path="${secure::https.request.customer-reference-sl.global.id.path}" target="customerRefResponse">
+						<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"globalcustomerid" : if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId
+}]]]></http:uri-params>
+					</http:request>
+				</json-logger:logger-scope>
 				<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />

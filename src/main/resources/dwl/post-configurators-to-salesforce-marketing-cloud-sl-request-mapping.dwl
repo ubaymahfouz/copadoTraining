@@ -12,7 +12,7 @@ var filterSF = {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter 
 	email: vars.originalPayload.email,
 	salesforceContactKey: if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "lead") filterSF.id
 	else if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "customer") filterSF.contactId
-	else {(vars.postCustomersResponse.systemCustomerIds filter ((item, index) -> item.system == "salesforce"))}.id,
+	else vars.customerRefResponse.salesforceCustomerId,
 	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
 	firstName: vars.originalPayload.firstName,
 	lastName: vars.originalPayload.lastName,
