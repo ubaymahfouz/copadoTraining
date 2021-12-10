@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- Parent POM reference. -->
+	<artifactId>customer-interaction-pl-ms</artifactId>
+	<version>1.0.4</version>
+	<packaging>mule-application</packaging>
+	<name>customer-interaction-pl-ms</name>
+	<description>This a Process Layer application for Swiss Sense.</description>
+	
 	<parent>
-		<!-- The main 'group' under which the result of compilation will be stored. This follows Java Package naming convention. (See: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html 
-		for more information) -->
 		<groupId>nl.swisssense</groupId>
 		<artifactId>parent-pom</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../parent-pom/parent-pom.xml</relativePath>
 	</parent>
 	
-	<!-- The name of the artifact within the 'group' which results from compiling this POM. -->
-	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.2</version> 
-	<packaging>mule-application</packaging>
-
-	<!-- Application Name -->
-	<name>customer-interaction-pl-ms</name>
+	<properties>
+		<organisation.groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</organisation.groupId>
+		<scm.repo>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</scm.repo>
+		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
+		<visualizer.layer>Process</visualizer.layer>
+		<mule.maven.plugin.version>3.5.2</mule.maven.plugin.version>
+	</properties>
 	
-	<!-- Description of the application. This can be used to state the purpose and give some details/information in a human readable text format. -->
-	<description>This a Process Layer application for Swiss Sense.</description>
-
 	<build>
 		<resources>
 			<resource>
@@ -35,59 +35,33 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions> <!-- This enables the Mule Maven plugin. -->
+				<extensions>true</extensions>
 				<configuration>
-					<cloudHubDeployment> <!-- See: https://docs.mulesoft.com/mule-runtime/4.3/deploy-to-cloudhub for information. -->
-					<!-- Above each element which is required, a comment "REQUIRED!" will be placed, this increases traceability of errors during deployment. -->
-						<uri>https://eu1.anypoint.mulesoft.com/</uri> <!-- Anypoint Platform URI; If not set, defaults to "https://anypoint.mulesoft.com". -->
-						<!-- REQUIRED! -->
-						<muleVersion>${app.runtime}</muleVersion> <!-- muleVersion is the runtime version as it appears on the CloudHub interface. -->
-						<!-- REQUIRED! (When using Anypoint Platform credentials to login) -->
-						<username>${username}</username> <!-- CloudHub username. -->
-						<!-- Injected at deployment! -->
-						<!-- REQUIRED! (When using Anypoint Platform credentials to login) -->
-						<password>${password}</password> <!-- CloudHub password. -->
-						<!-- Injected at deployment! -->
-						<!-- REQUIRED! -->
-						<applicationName>${muleenv}-${project.artifactId}</applicationName> <!-- Constructs the application name as it is shown on the CloudHub interface. -->
-						<!-- Injected at deployment! -->
-						<!-- REQUIRED! -->
+					<cloudHubDeployment>
+						<uri>https://eu1.anypoint.mulesoft.com/</uri>
+						<muleVersion>${app.runtime}</muleVersion>
+						<username>${username}</username>
+						<password>${password}</password>
+						<applicationName>${muleenv}-${project.artifactId}</applicationName>
 						<environment>${chenv}</environment>
-						<!-- Injected at deployment! -->
 						<properties>
 							<mule.ch.env>${muleenv}</mule.ch.env>
-							<anypoint.platform.config.analytics.agent.enabled>true</anypoint.platform.config.analytics.agent.enabled> <!-- Enables the application monitoring, see: https://docs.mulesoft.com/monitoring/enable-apps-deployed-to-cloud. -->
+							<anypoint.platform.config.analytics.agent.enabled>true</anypoint.platform.config.analytics.agent.enabled>
 							<anypoint.platform.analytics_base_uri>https://analytics-ingest.eu1.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
 							<anypoint.platform.base_uri>https://eu1.anypoint.mulesoft.com</anypoint.platform.base_uri>
 							<anypoint.platform.client_id>${envclientid}</anypoint.platform.client_id>
-							<!-- Injected at deployment! -->
 							<anypoint.platform.client_secret>${envclientsecret}</anypoint.platform.client_secret>
-							<!-- Injected at deployment! -->
 							<customer-interaction-pl-ms-encryption-key>${customer-interaction-pl-ms-encryption-key}</customer-interaction-pl-ms-encryption-key>
-							<!-- Injected at deployment! -->
-							<anypoint.platform.visualizer.displayName>${project.artifactId}</anypoint.platform.visualizer.displayName> <!-- Sets the displayname (how the application is shown) in CloudHub Visualizer. -->
-							<anypoint.platform.visualizer.layer>Process</anypoint.platform.visualizer.layer> <!-- Sets the layer within the CloudHub Visualizer on which this application is shown, can be freely edited although it is advised to use the suggestion values below. -->
-							<anypoint.platform.visualizer.tags>Created-from-development-template</anypoint.platform.visualizer.tags> <!-- Adds a tag to the application in the CloudHub Visualizer indicating that it was built from this development-template. -->
-							<!-- The "tags" above is an immutable comma-separated list, tags added through here CANNOT be edited in the CloudHub Visualizer UI. -->
+							<anypoint.platform.visualizer.displayName>${visualizer.displayName}</anypoint.platform.visualizer.displayName>
+							<anypoint.platform.visualizer.layer>${visualizer.layer}</anypoint.platform.visualizer.layer>
 						</properties>
-						<workers>${workers}</workers> <!-- Sets the amount of CloudHub workers for this application. -->
-						<!-- Injected at deployment! -->
-						<workerType>${workertype}</workerType> <!-- Size of each worker; one of the following values: -->
-						<!-- Injected at deployment! -->
-						<!-- 	MICRO 	(default; 0.1 vCores)
-							    SMALL 	(0.2 vCores)
-							    MEDIUM 	(1 vCore)
-							    LARGE 	(2 vCores)
-							    XLARGE 	(4 vCores)
-							    XXLARGE (8 vCores)
-							    4XLARGE (16 vCores) -->
-						<region>${workerregion}</region> <!-- Sets the region/datacenter in which the application will be deployed. -->
-						<!-- Injected at deployment! -->
+						<workers>${workers}</workers>
+						<workerType>${workertype}</workerType>
+						<region>${workerregion}</region>
 						<objectStoreV2>true</objectStoreV2>
 						<businessGroup>Swiss Sense\Swiss Sense ICT</businessGroup>
 						<deploymentTimeout>2000000</deploymentTimeout>
 						<skipDeploymentVerification>${skipVerify}</skipDeploymentVerification>
-						<!-- Injected at deployment! -->
 					</cloudHubDeployment>
 				</configuration>
 				<executions>
@@ -114,8 +88,7 @@
 					<squash>false</squash>
 					<eol>native</eol>
 					<allowUntracked>true</allowUntracked>
-					<defaultOriginUrl>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</defaultOriginUrl>
-					<!-- The GIT repository URL for this application. -->
+					<defaultOriginUrl>${scm.repo}</defaultOriginUrl>
 					<enableSshAgent>true</enableSshAgent>
 					<alwaysUpdateOrigin>true</alwaysUpdateOrigin>
 					<pullDevelop>true</pullDevelop>
@@ -214,12 +187,12 @@
 			<artifactId>json-logger</artifactId>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-    	<dependency>
-            <groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
-            <artifactId>customer-interaction-pl-ms</artifactId>
-            <version>0.1.4</version>
-            <classifier>raml</classifier>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
+			<artifactId>customer-interaction-pl-ms</artifactId>
+			<version>0.1.5</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
+		</dependency>
+	</dependencies>
 </project>

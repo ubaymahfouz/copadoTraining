@@ -17,39 +17,19 @@ https:
       timeout:
         response: "60000"
         idle: "60000"
-      ## Customers PL Endpoints ##
       customers:
-        path:             "/customers"
-        customerid:
-          path:           "/customers/{customerid}"
-          deliveries:     "/customers/{customerid}/deliveries"
-          subscriptions:  "/customers/{customerid}/subscriptions"
+        path: "/customers"
 
 ## HTTPS Request Config for connection to Salesforce SL ##
     salesforce-sl:
       basepath: "/api/v1"
       protocol: "HTTPS"
-      host:     "mule-worker-internal-tst-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
-      port:     "8092"
+      host: "mule-worker-internal-tst-salesforce-sl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
       timeout:
         response: "60000"
-        idle:     "60000"
-      ## Salesforce SL Endpoints ##
-      leads:
-        path:         "/leads"
-        salesforceleadid: 
-          path:       "/leads/{salesforceleadid}"
-          individual: "/leads/{salesforceleadid}/personindividual"
-      accounts:
-        path:               "/accounts"
-        salesforcecustomerid:
-          path:             "/accounts/{salesforcecustomerid}"
-          personindividual: "/accounts/{salesforcecustomerid}/personindividual"
-          subscriptions:    "/accounts/{salesforcecustomerid}/subscriptions"
-          relationship:     "/accounts/{salesforcecustomerid}/relationship"
-          personas:         "/accounts/{salesforcecustomerid}/personas"
+        idle: "60000"
       customers:
-        path:   "/customers"
         salesforcecustomerid:
           path: "/customers/{salesforcecustomerid}"
 
@@ -62,44 +42,41 @@ https:
       timeout:
         response: "60000"
         idle: "60000"
-      ## Salesforce Marketing Cloud SL Endpoints ##
       configurators:
         path: "/configurators"
-      data-extensions:
-        path:   "/data-extensions" ## Not (yet) in use.
-        dataExtensionKey:
-          path: "/data-extensions/{dataExtensionKey}" ## Not (yet) in use.
-          rows: "/data-extensions/{dataExtensionKey}/rows"
-      metadata:
-        path: "/metadata"
-
+        
+## HTTPS Request Config for connection to Customer Reference SL ##
+    customer-reference-sl:
+      basepath: "/api/v1"
+      protocol: "HTTPS"
+      host: "mule-worker-internal-tst-customer-reference-sl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
+      timeout:
+        response: "60000"
+        idle: "60000"
+      global:
+        id:
+          path: "/customers/global/{globalcustomerid}"
+          
 ## HTTP Reconnection Strategy Config ##
   reconnection:
-    frequency:  "2000" # This is in ms (2 seconds).
-    attempts:   "2"
+    frequency: "2000" # This is in ms (2 seconds).
+    attempts: "2"
 
 ## JSON Logger Config ##
-# See: https://blogs.mulesoft.com/dev/api-dev/json-logging-in-mule-4/ for information about the configuration.
 jsonlogger:
   application:
     name: "customer-interaction-pl-ms"
     version: "1"
-  maskedfields: "$.attributes.headers.authorization" # Any fields which should not be shown in the logging output need to be entered here.
+  maskedfields: "$.attributes.headers.authorization"
   functional:
     disable: "content"
 
 ## Connection Credentials ##
 basic:
   auth:
-    customers-pl:
-      username: "![lLmgbll7DcWx/z6GJTBq/tD7mfKDWBM0qsJIwdsEwTm4+u8aq4cmxg==]"
-      password: "![wQ8KGvsaU+PeATa810StZiiwpszhal5c2B5MmEEur4S3RnNAQ0fesA==]"
-    salesforce-sl:
-      username: "![lLmgbll7DcWx/z6GJTBq/tD7mfKDWBM0qsJIwdsEwTm4+u8aq4cmxg==]"
-      password: "![wQ8KGvsaU+PeATa810StZiiwpszhal5c2B5MmEEur4S3RnNAQ0fesA==]"
-    salesforce-marketing-cloud-sl:
-      username: "![lLmgbll7DcWx/z6GJTBq/tD7mfKDWBM0qsJIwdsEwTm4+u8aq4cmxg==]"
-      password: "![wQ8KGvsaU+PeATa810StZiiwpszhal5c2B5MmEEur4S3RnNAQ0fesA==]"
+    username: "![lLmgbll7DcWx/z6GJTBq/tD7mfKDWBM0qsJIwdsEwTm4+u8aq4cmxg==]"
+    password: "![wQ8KGvsaU+PeATa810StZiiwpszhal5c2B5MmEEur4S3RnNAQ0fesA==]"
 
 ## Keystores Config ##
 keystore:
