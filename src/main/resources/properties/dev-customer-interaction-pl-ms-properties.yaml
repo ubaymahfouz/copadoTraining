@@ -86,6 +86,28 @@ basic:
     username: "![lLmgbll7DcWx/z6GJTBq/tD7mfKDWBM0qsJIwdsEwTm4+u8aq4cmxg==]"
     password: "![wQ8KGvsaU+PeATa810StZiiwpszhal5c2B5MmEEur4S3RnNAQ0fesA==]"
 
+## Azure Service Bus Config ##
+azure:
+  servicebus:
+    namespace: "dev-swiss-sense"
+
+## Azure Service Bus Reconnection Strategy Config ##
+    reconnection:
+      frequency:  "2000" # This is in ms (2 seconds).
+      attempts:   "2"
+      
+## Azure Service Bus Queues Config ##
+    destination:
+      quote:
+        step1:
+          q: "customer-interaction-pl.quote.post.step1.inbound.queue"
+          dlq: "customer-interaction-pl.quote.post.step1.inbound.queue/$DeadLetterQueue"
+          maxConcurrency: "4"
+        step2:
+          q: "customer-interaction-pl.quote.post.step2.inbound.queue"
+          dlq: "customer-interaction-pl.quote.post.step2.inbound.queue/$DeadLetterQueue"
+          maxConcurrency: "4"
+
 ## Keystores Config ##
 keystore:
   type: "JKS"

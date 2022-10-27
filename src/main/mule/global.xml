@@ -1,65 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit   http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd   http://www.mulesoft.org/schema/mule/mule-apikit   http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd   http://www.mulesoft.org/schema/mule/api-gateway   http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd   http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd  http://www.mulesoft.org/schema/mule/http   http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd  http://www.mulesoft.org/schema/mule/secure-properties   http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd  http://www.mulesoft.org/schema/mule/tls   http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd  http://www.mulesoft.org/schema/mule/json-logger   http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
-    
-    <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="13dd3969-9104-4db0-baa6-d72ffbb838a9" file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml" key="${customer-interaction-pl-ms-encryption-key}">
-        <secure-properties:encrypt algorithm="Blowfish" />
-    </secure-properties:config>
-    
-    <global-property doc:name="Global Property" doc:id="84e17808-05e7-4718-a498-ec25e79a92a5" name="mule.ch.env" value="dev" />
-    
-    <http:listener-config name="HTTPS_Listener_config" doc:name="HTTP Listener config" doc:id="649dcc0a-7492-406c-8c77-9562961edfa2">
-        <http:listener-connection host="0.0.0.0" port="${secure::https.private.port}" tlsContext="TLS_Context_Inbound_Listener" protocol="HTTPS" />
-    </http:listener-config>
-   
-    <tls:context name="TLS_Context_Inbound_Listener" doc:name="TLS Context" doc:id="61b9b499-7427-4754-b4a0-0b29d4bd545e">
-        <tls:key-store type="${secure::keystore.type}" path="${secure::keystore.path}" alias="${secure::keystore.alias}" keyPassword="${secure::keystore.password}" password="${secure::keystore.password}" />
-    </tls:context>
-   
-    <tls:context name="TLS_Context_Requester" doc:name="TLS Context" doc:id="3304eaea-2efa-4444-9e34-717ce21cd3f5">
-        <tls:trust-store insecure="${secure::truststore.insecure}" />
-    </tls:context>
-   
-    <configuration-properties doc:name="Configuration properties" doc:id="e79fdf2d-6ceb-4ae6-9849-a251d936986d" file="properties/global.yaml" />
-    
-    <json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8" applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}" contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
-    
-    <json-logger:config name="JSON_Functional_Logger_Config" doc:name="JSON Logger Config" doc:id="ce267879-72bb-4b6d-9715-e1a4754cd16c" applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}" contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" disabledFields="${secure::jsonlogger.functional.disable}" />
-    
-    <api-gateway:autodiscovery apiId="${secure::apiId}" doc:name="API Autodiscovery" doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true" />
-    
-    <configuration doc:name="Configuration" doc:id="acea7b07-dd62-4f94-a0b9-bda0ba581c3e" defaultErrorHandler-ref="GlobalErrorHandling" />
-    
-    <apikit:config name="customer-interaction-process-api-config" api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.1.5:raml:zip:customer-interaction-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    
-    <http:request-config name="HTTPS_Request_Customers_PL_configuration" doc:name="HTTP Request configuration" doc:id="9b2b1fc9-e500-4b9b-a65c-7b1f1a702dd9" basePath="${secure::https.request.customers-pl.basepath}" responseTimeout="${secure::https.request.customers-pl.timeout.response}">
-        <http:request-connection host="${secure::https.request.customers-pl.host}" port="${secure::https.request.customers-pl.port}" connectionIdleTimeout="${secure::https.request.customers-pl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
-            <http:authentication>
-                <http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
-            </http:authentication>
-        </http:request-connection>
-    </http:request-config>
-    
-    <http:request-config name="HTTPS_Request_Salesforce_SL_configuration" doc:name="HTTP Request configuration" doc:id="12524b02-344e-40e8-b6e7-da241b919fbb" basePath="${secure::https.request.salesforce-sl.basepath}" responseTimeout="${secure::https.request.salesforce-sl.timeout.response}">
-        <http:request-connection host="${secure::https.request.salesforce-sl.host}" port="${secure::https.request.salesforce-sl.port}" connectionIdleTimeout="${secure::https.request.salesforce-sl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
-            <http:authentication>
-                <http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
-            </http:authentication>
-        </http:request-connection>
-    </http:request-config>
-    
-    <http:request-config name="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" doc:name="HTTP Request configuration" doc:id="12524b02-344e-40e8-b6e7-da241b919fbb" basePath="${secure::https.request.salesforce-marketing-cloud-sl.basepath}" responseTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.response}">
-        <http:request-connection host="${secure::https.request.salesforce-marketing-cloud-sl.host}" port="${secure::https.request.salesforce-marketing-cloud-sl.port}" connectionIdleTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
-            <http:authentication>
-                <http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
-            </http:authentication>
-        </http:request-connection>
-    </http:request-config>
-    
-    <http:request-config name="HTTP_Request_Customer-Reference_SL_configuration" doc:name="HTTP Request configuration" doc:id="9a53dedf-ac24-42b7-946e-563ef4ec4890" basePath="${secure::https.request.customer-reference-sl.basepath}" responseTimeout="${secure::https.request.customer-reference-sl.timeout.response}">
-        <http:request-connection protocol="${secure::https.request.customer-reference-sl.protocol}" host="${secure::https.request.customer-reference-sl.host}" port="${secure::https.request.customer-reference-sl.port}" tlsContext="TLS_Context_Requester" connectionIdleTimeout="${secure::https.request.customer-reference-sl.timeout.idle}">
-            <http:authentication>
-                <http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
-            </http:authentication>
-        </http:request-connection>
-    </http:request-config>
+<mule xmlns:azure-vault-property-provider="http://www.mulesoft.org/schema/mule/azure-vault-property-provider"
+	xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit   http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway   http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/http   http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/secure-properties   http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/tls   http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/json-logger   http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd
+http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mulesoft.org/schema/mule/azure-vault-property-provider/current/mule-azure-vault-property-provider.xsd">
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config"
+		doc:id="13dd3969-9104-4db0-baa6-d72ffbb838a9" file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml"
+		key="${customer-interaction-pl-ms-encryption-key}">
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<global-property doc:name="Global Property" doc:id="84e17808-05e7-4718-a498-ec25e79a92a5" name="mule.ch.env" value="dev" />
+	<http:listener-config name="HTTPS_Listener_config" doc:name="HTTP Listener config" doc:id="649dcc0a-7492-406c-8c77-9562961edfa2">
+		<http:listener-connection host="0.0.0.0" port="${secure::https.private.port}" tlsContext="TLS_Context_Inbound_Listener"
+			protocol="HTTPS" />
+	</http:listener-config>
+	<tls:context name="TLS_Context_Inbound_Listener" doc:name="TLS Context" doc:id="61b9b499-7427-4754-b4a0-0b29d4bd545e">
+		<tls:key-store type="${secure::keystore.type}" path="${secure::keystore.path}" alias="${secure::keystore.alias}"
+			keyPassword="${secure::keystore.password}" password="${secure::keystore.password}" />
+	</tls:context>
+	<tls:context name="TLS_Context_Requester" doc:name="TLS Context" doc:id="3304eaea-2efa-4444-9e34-717ce21cd3f5">
+		<tls:trust-store insecure="${secure::truststore.insecure}" />
+	</tls:context>
+	<configuration-properties doc:name="Configuration properties" doc:id="e79fdf2d-6ceb-4ae6-9849-a251d936986d"
+		file="properties/global.yaml" />
+	<configuration-properties doc:name="Env configuration properties" doc:id="a0610267-b731-470b-96b6-122b31c62ef1" 
+		file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8"
+		applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
+		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
+	<json-logger:config name="JSON_Functional_Logger_Config" doc:name="JSON Logger Config"
+		doc:id="ce267879-72bb-4b6d-9715-e1a4754cd16c" applicationName="${secure::jsonlogger.application.name}"
+		applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
+		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" disabledFields="${secure::jsonlogger.functional.disable}" />
+	<api-gateway:autodiscovery apiId="${secure::apiId}" doc:name="API Autodiscovery"
+		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true" />
+	<configuration doc:name="Configuration" doc:id="acea7b07-dd62-4f94-a0b9-bda0ba581c3e" defaultErrorHandler-ref="GlobalErrorHandling" />
+	<apikit:config name="customer-interaction-process-api-config"
+		api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.2.0:raml:zip:customer-interaction-process-api.raml"
+		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<http:request-config name="HTTPS_Request_Customers_PL_configuration" doc:name="HTTP Request configuration"
+		doc:id="9b2b1fc9-e500-4b9b-a65c-7b1f1a702dd9" basePath="${secure::https.request.customers-pl.basepath}"
+		responseTimeout="${secure::https.request.customers-pl.timeout.response}">
+		<http:request-connection host="${secure::https.request.customers-pl.host}" port="${secure::https.request.customers-pl.port}"
+			connectionIdleTimeout="${secure::https.request.customers-pl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
+			<http:authentication>
+				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="HTTPS_Request_Salesforce_SL_configuration" doc:name="HTTP Request configuration"
+		doc:id="12524b02-344e-40e8-b6e7-da241b919fbb" basePath="${secure::https.request.salesforce-sl.basepath}"
+		responseTimeout="${secure::https.request.salesforce-sl.timeout.response}">
+		<http:request-connection host="${secure::https.request.salesforce-sl.host}"
+			port="${secure::https.request.salesforce-sl.port}" connectionIdleTimeout="${secure::https.request.salesforce-sl.timeout.idle}"
+			tlsContext="TLS_Context_Requester" protocol="HTTPS">
+			<http:authentication>
+				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" doc:name="HTTP Request configuration"
+		doc:id="12524b02-344e-40e8-b6e7-da241b919fbb" basePath="${secure::https.request.salesforce-marketing-cloud-sl.basepath}"
+		responseTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.response}">
+		<http:request-connection host="${secure::https.request.salesforce-marketing-cloud-sl.host}"
+			port="${secure::https.request.salesforce-marketing-cloud-sl.port}"
+			connectionIdleTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
+			<http:authentication>
+				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="HTTP_Request_Customer-Reference_SL_configuration" doc:name="HTTP Request configuration"
+		doc:id="9a53dedf-ac24-42b7-946e-563ef4ec4890" basePath="${secure::https.request.customer-reference-sl.basepath}"
+		responseTimeout="${secure::https.request.customer-reference-sl.timeout.response}">
+		<http:request-connection protocol="${secure::https.request.customer-reference-sl.protocol}"
+			host="${secure::https.request.customer-reference-sl.host}" port="${secure::https.request.customer-reference-sl.port}"
+			tlsContext="TLS_Context_Requester" connectionIdleTimeout="${secure::https.request.customer-reference-sl.timeout.idle}">
+			<http:authentication>
+				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+
+	<azure-vault-property-provider:config name="Azure_Vault_Property_Provider_Config"
+		doc:name="Azure Vault Property Provider Config" doc:id="62a24abf-6bf7-4f49-b486-7b19c8285257">
+		<azure-vault-property-provider:azure-vault applicationClientId="${azure.clientid}"
+			applicationSecretKey="${azure.clientsecret}" azureVaultName="${azure.vaultname}" encryptKey="${azure.encryptkey}" 
+			localfile="${azure.localfile}" localPropertyProvider="${azure.bypassflag}" />
+	</azure-vault-property-provider:config>
+
+	<azure-service-bus-messaging:config name="Azure_Service_Bus_Messaging_Connector_Config"
+		doc:name="Azure Service Bus Messaging Connector Config" doc:id="3a2ab0c4-2e73-408a-8791-9ed8f3498338">
+		<azure-service-bus-messaging:sas-connection namespace="${azure.servicebus.namespace}"
+			sharedAccessKeyName="${azure-vault::azure-servicebus-sharedaccesspolicy-name}"
+			sharedAccessKey="${azure-vault::azure-servicebus-sharedaccesspolicy-key}" />
+	</azure-service-bus-messaging:config>
 </mule>
