@@ -38,9 +38,9 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 	<configuration-properties doc:name="Env configuration properties" doc:id="a0610267-b731-470b-96b6-122b31c62ef1" 
 		file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml" />
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8"
-		applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
-		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
-	<json-logger:config name="JSON_Functional_Logger_Config" doc:name="JSON Logger Config"
+		applicationName="${secure::jsonlogger.application.name}" applicationVersion="${secure::jsonlogger.application.version}" 
+		environment="${mule.ch.env}" contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" />
+	<json-logger:config name="JSON_Functional_Logger_Config" doc:name="JSON Logger Config" 
 		doc:id="ce267879-72bb-4b6d-9715-e1a4754cd16c" applicationName="${secure::jsonlogger.application.name}"
 		applicationVersion="${secure::jsonlogger.application.version}" environment="${mule.ch.env}"
 		contentFieldsDataMasking="${secure::jsonlogger.maskedfields}" disabledFields="${secure::jsonlogger.functional.disable}" />
@@ -76,7 +76,8 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 		responseTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.response}">
 		<http:request-connection host="${secure::https.request.salesforce-marketing-cloud-sl.host}"
 			port="${secure::https.request.salesforce-marketing-cloud-sl.port}"
-			connectionIdleTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.idle}" tlsContext="TLS_Context_Requester" protocol="HTTPS">
+			connectionIdleTimeout="${secure::https.request.salesforce-marketing-cloud-sl.timeout.idle}" 
+			tlsContext="TLS_Context_Requester" protocol="HTTPS">
 			<http:authentication>
 				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
 			</http:authentication>
@@ -88,6 +89,18 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 		<http:request-connection protocol="${secure::https.request.customer-reference-sl.protocol}"
 			host="${secure::https.request.customer-reference-sl.host}" port="${secure::https.request.customer-reference-sl.port}"
 			tlsContext="TLS_Context_Requester" connectionIdleTimeout="${secure::https.request.customer-reference-sl.timeout.idle}">
+			<http:authentication>
+				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+
+	<http:request-config name="HTTPS_Request_Document-Generation-SL_configuration" doc:name="HTTP Request configuration"
+		doc:id="8dbd60dd-3f47-41e2-9da4-d240c48b1397" basePath="${https.request.document-generation-sl.basepath}"
+		responseTimeout="${https.request.document-generation-sl.timeout.response}">
+		<http:request-connection protocol="${https.request.document-generation-sl.protocol}"
+			host="${https.request.document-generation-sl.host}" port="${https.request.document-generation-sl.port}"
+			tlsContext="TLS_Context_Requester" connectionIdleTimeout="${https.request.document-generation-sl.timeout.idle}">
 			<http:authentication>
 				<http:basic-authentication username="${secure::basic.auth.username}" password="${secure::basic.auth.password}" />
 			</http:authentication>

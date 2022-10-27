@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging" 
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
-http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd">
+http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<sub-flow name="post-quotes-orchestration" doc:id="ede4e939-60c4-4c8f-bbd8-619eab42a7e2">
-		<json-logger:logger doc:name="Functional Log" doc:id="fb70de2a-dca0-46c3-94e8-4385620026fb" config-ref="JSON_Functional_Logger_Config" message='About to POST quote @ Document Generation System API' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Functional Log" doc:id="fb70de2a-dca0-46c3-94e8-4385620026fb" config-ref="JSON_Functional_Logger_Config" 
+				message='About to POST quote @ Document Generation System API' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="e8bb74d4-b7d9-48ad-8078-793c58514af5" configurationRef="JSON_Logger_Config" priority="DEBUG">
-			<set-variable value='#[output application/json&#10;---  &#10;{&#10;  "id": "9d04b8fb-d86b-43fb-9a8d-2557744a030d",&#10;  "status": "success",&#10;  "permanent_link": "https://files.pdfmonkey.io/share/1caef29e-b250-4465-a982-b8d67d2aa963/Mule-test.pdf"&#10;}]' doc:name="Document Generation System API - Create Document - MOCK vars.documentResponse" doc:id="f22909c1-418a-40bf-9f4e-12a965249f4d" variableName="documentResponse" />
+			<http:request method="POST" doc:name="Document Generation System API - Create Document" doc:id="ee24afa4-071a-4e82-b540-2bd82899bdd8" 
+				config-ref="HTTPS_Request_Document-Generation-SL_configuration" path="${https.request.document-generation-sl.documents.path}"/>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="DEBUG Log - TO CHANGE PRIORITY TO DEBUG" doc:id="dfc786f6-c2b8-43c1-b306-802cd166c88e" config-ref="JSON_Logger_Config" message='#["POST quote response in vars.documentResponse"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload">
+		<json-logger:logger doc:name="DEBUG" doc:id="dfc786f6-c2b8-43c1-b306-802cd166c88e" config-ref="JSON_Logger_Config" 
+				message='#["POST quote response in vars.documentResponse"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" priority="DEBUG">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -30,7 +35,8 @@ output application/json
 payload ++ {"pdf-permanent-link": vars.documentResponse.permanent_link}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<json-logger:logger doc:name="Functional Log" doc:id="2c879461-2195-472a-a272-3e17ec9db7d0" config-ref="JSON_Functional_Logger_Config" message="About to send quote's payload with URL to ASB queue" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Functional Log" doc:id="2c879461-2195-472a-a272-3e17ec9db7d0" config-ref="JSON_Functional_Logger_Config" 
+				message="About to send quote's payload with URL to ASB queue" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<azure-service-bus-messaging:send doc:name="Send Quote Step 1" doc:id="cf45b8d1-9399-4f8f-9761-e330e8ea19fb"
@@ -38,7 +44,8 @@ payload ++ {"pdf-permanent-link": vars.documentResponse.permanent_link}]]></ee:s
 			config-ref="Azure_Service_Bus_Messaging_Connector_Config">
 			<reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
 		</azure-service-bus-messaging:send>
-		<json-logger:logger doc:name="DEBUG Log - TO CHANGE PRIORITY TO DEBUG" doc:id="395519bd-b146-4696-b95c-9cc37e1062af" config-ref="JSON_Logger_Config" message='#["quote data with URL - after sending the payload to ASB queue"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload">
+		<json-logger:logger doc:name="DEBUG" doc:id="395519bd-b146-4696-b95c-9cc37e1062af" config-ref="JSON_Logger_Config" 
+				message='#["quote data with URL - after sending the payload to ASB queue"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" priority="DEBUG">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),

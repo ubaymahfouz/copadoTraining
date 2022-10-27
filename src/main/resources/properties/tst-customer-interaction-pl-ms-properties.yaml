@@ -57,7 +57,19 @@ https:
       global:
         id:
           path: "/customers/global/{globalcustomerid}"
-          
+
+## HTTPS Request Config for connection to Document Generation SL ##
+    document-generation-sl:
+      protocol: "HTTPS"
+      host: "mule-worker-tst-document-generation-sl-ms.de-c1.eu1.cloudhub.io"
+      port: "8092"
+      basepath: "/api/v1"
+      timeout:
+        response: "60000"
+        idle: "60000"
+      documents:
+        path: "/documents"
+
 ## HTTP Reconnection Strategy Config ##
   reconnection:
     frequency: "2000" # This is in ms (2 seconds).
