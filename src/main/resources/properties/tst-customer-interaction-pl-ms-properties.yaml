@@ -19,6 +19,10 @@ https:
         idle: "60000"
       customers:
         path: "/customers"
+        id:
+          path: "/customers/{customerid}"
+      customerssync:
+        path: "/customers_sync"
 
 ## HTTPS Request Config for connection to Salesforce SL ##
     salesforce-sl:
@@ -32,6 +36,8 @@ https:
       customers:
         salesforcecustomerid:
           path: "/customers/{salesforcecustomerid}"
+      quotes:
+        path: "/quotes"
 
 ## HTTPS Request Config for connection to Salesforce Marketing Cloud SL ##
     salesforce-marketing-cloud-sl:
@@ -54,14 +60,19 @@ https:
       timeout:
         response: "60000"
         idle: "60000"
+      max-retries: "5"
+      millis-between: "10000"
       global:
         id:
           path: "/customers/global/{globalcustomerid}"
+      customers:
+        id:
+          path: "/customers/{customerid}"
 
 ## HTTPS Request Config for connection to Document Generation SL ##
     document-generation-sl:
       protocol: "HTTPS"
-      host: "mule-worker-tst-document-generation-sl-ms.de-c1.eu1.cloudhub.io"
+      host: "mule-worker-internal-tst-document-generation-sl-ms.de-c1.eu1.cloudhub.io"
       port: "8092"
       basepath: "/api/v1"
       timeout:
@@ -74,6 +85,17 @@ https:
   reconnection:
     frequency: "2000" # This is in ms (2 seconds).
     attempts: "2"
+
+## Data mappings ##
+legalentity:
+  salutation:
+    default: "Mr. and Mrs."
+communication:
+  language:
+    nl_nl: "nl"
+    nl_be: "nl"
+    de_de: "de"
+    de_at: "de"
 
 ## JSON Logger Config ##
 jsonlogger:

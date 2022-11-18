@@ -1,0 +1,17 @@
+trigger:
+- develop
+- master
+
+pool:
+  vmImage: ubuntu-latest
+  
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: git
+      name: pipeline-templates    
+  
+extends:
+  template: mulesoft-api.yml@pipeline-templates
+  parameters:
+    runtime: 4.4.0
