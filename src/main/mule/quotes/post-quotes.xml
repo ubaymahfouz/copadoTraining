@@ -9,6 +9,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
 	<sub-flow name="post-quotes-orchestration" doc:id="ede4e939-60c4-4c8f-bbd8-619eab42a7e2">
 		<json-logger:logger doc:name="Functional" doc:id="fb70de2a-dca0-46c3-94e8-4385620026fb"
 			config-ref="JSON_Functional_Logger_Config" message='About to POST quote @ Document Generation System API' tracePoint="BEFORE_REQUEST"
@@ -61,6 +62,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+
 	<flow name="listener-quote-step1" doc:id="3c20e8da-7beb-435c-992f-f57979b1f38d">
 		<azure-service-bus-messaging:message-listener doc:name="Quote Step 1"
 			doc:id="74864158-d047-4e0a-8350-66280c0b27f3" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO"
@@ -100,6 +102,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			<reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
 		</azure-service-bus-messaging:send>
 	</flow>
+
 	<sub-flow name="quote-step-1-create-customer-flow" doc:id="e95330b5-acc6-4d28-b349-29016de4c6ef" >
 		<ee:transform doc:name="Quote to CDM Customer - vars.cdmCustomerPost" doc:id="1f91eb72-b618-4ab8-96d3-f9ad738ba467">
 					<ee:message>
@@ -138,6 +141,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 					</ee:message>
 				</ee:transform>
 	</sub-flow>
+
 	<sub-flow name="quote-step-1-update-customer-flow" doc:id="71fdf872-5229-4a04-85ea-f9fd98c50a63" >
 		<json-logger:logger doc:name="Functional" doc:id="b2815d22-5f5d-4936-a9d1-d7e061d6d462" config-ref="JSON_Functional_Logger_Config" message="About to GET SF customerId @ Customer Reference System API - in Update Customer path in Quote Step 1" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
 					<json-logger:content><![CDATA[null]]></json-logger:content>
@@ -192,6 +196,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 					</http:request>
 				</json-logger:logger-scope>
 	</sub-flow>
+
 	<flow name="listener-quote-step-2" doc:id="8f63533d-677e-4b54-925d-abbf858d4806">
 		<azure-service-bus-messaging:message-listener ackMode="AUTO"
 			destinationName="${azure.servicebus.destination.quote.step2.q}" doc:name="Quote Step 2" doc:id="4e4dd8ff-cc68-4dc9-b32e-2b0c453f4521"
@@ -209,8 +214,8 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="quote-step-2-publish-event-flow" doc:id="fd2a8c74-a8cf-48b3-b677-dcb9c0ae9f67" name="quote-step-2-publish-event-flow" />
-<!-- [STUDIO:"quote-step-2-post-configurators-flow"]		<flow-ref doc:name="quote-step-2-post-configurators-flow" doc:id="79a00fa0-378b-48ed-92b1-03aeeda1ce9b" name="quote-step-2-post-configurators-flow"/> [STUDIO] -->
 	</flow>
+
 	<sub-flow name="quote-step-2-publish-event-flow" doc:id="dac1ef69-468d-4ffd-a0e2-4948fe5fbeec" >
 		<json-logger:logger doc:name="Functional" doc:id="8761c88d-7f5d-4a1b-866d-e5b28e0967d9" config-ref="JSON_Functional_Logger_Config" message="About to GET SF customerId @ Customer Reference System API - in Quote Step 2" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
 			<json-logger:content><![CDATA[null]]></json-logger:content>
@@ -263,5 +268,4 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></json-logger:content>
 			</json-logger:logger>
 	</sub-flow>
-<!-- [STUDIO:"quote-step-2-post-configurators-flow"]	<sub-flow name="quote-step-2-post-configurators-flow" doc:id="aa20601b-9f9f-4f3f-b110-64d92c7d70a0" /> [STUDIO] -->
 </mule>
