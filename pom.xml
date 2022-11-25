@@ -15,6 +15,7 @@
 	</parent>
 	<properties>
 		<organisation.groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</organisation.groupId>
+		<scm.repo>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</scm.repo>
 		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
 		<visualizer.layer>Process</visualizer.layer>
 		<app.runtime>4.4.0-20220922</app.runtime>
@@ -36,9 +37,8 @@
 					<cloudHubDeployment>
 						<uri>https://eu1.anypoint.mulesoft.com/</uri>
 						<muleVersion>${app.runtime}</muleVersion>
-						<connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
-						<connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
-						<connectedAppGrantType>client_credentials</connectedAppGrantType>
+						<username>${username}</username>
+						<password>${password}</password>
 						<applicationName>${muleenv}-${project.artifactId}</applicationName>
 						<environment>${chenv}</environment>
 						<properties>
@@ -76,6 +76,32 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>external.atlassian.jgitflow</groupId>
+				<artifactId>jgitflow-maven-plugin</artifactId>
+				<version>${jgitflow.maven.plugin.version}</version>
+				<configuration>
+					<pushReleases>true</pushReleases>
+					<keepBranch>false</keepBranch>
+					<localOnly>false</localOnly>
+					<noTag>false</noTag>
+					<noDeploy>false</noDeploy>
+					<noReleaseMerge>false</noReleaseMerge>
+					<squash>false</squash>
+					<eol>native</eol>
+					<allowUntracked>true</allowUntracked>
+					<defaultOriginUrl>${scm.repo}</defaultOriginUrl>
+					<enableSshAgent>true</enableSshAgent>
+					<alwaysUpdateOrigin>true</alwaysUpdateOrigin>
+					<pullDevelop>true</pullDevelop>
+					<pullMaster>true</pullMaster>
+					<allowSnapshots>true</allowSnapshots>
+					<flowInitContext>
+						<masterBranchName>master</masterBranchName>
+						<developBranchName>develop</developBranchName>
+					</flowInitContext>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
