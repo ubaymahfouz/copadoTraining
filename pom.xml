@@ -18,7 +18,6 @@
 		<scm.repo>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</scm.repo>
 		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
 		<visualizer.layer>Process</visualizer.layer>
-		<app.runtime>4.4.0</app.runtime>
 	</properties>
 	<build>
 		<resources>
