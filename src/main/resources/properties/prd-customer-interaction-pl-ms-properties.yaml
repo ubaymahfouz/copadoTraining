@@ -36,6 +36,8 @@ https:
       customers:
         salesforcecustomerid:
           path: "/customers/{salesforcecustomerid}"
+      quotes:
+        path: "/quotes"
 
 ## HTTPS Request Config for connection to Salesforce Marketing Cloud SL ##
     salesforce-marketing-cloud-sl:
@@ -58,6 +60,8 @@ https:
       timeout:
         response: "60000"
         idle: "60000"
+      max-retries: "5"
+      millis-between: "10000"
       global:
         id:
           path: "/customers/global/{globalcustomerid}"
