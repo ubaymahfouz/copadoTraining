@@ -1,28 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.8</version>
 	<packaging>mule-application</packaging>
 	<name>customer-interaction-pl-ms</name>
 	<description>This a Process Layer application for Swiss Sense.</description>
-	
+	<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
 	<parent>
 		<groupId>nl.swisssense</groupId>
 		<artifactId>parent-pom</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../parent-pom/parent-pom.xml</relativePath>
 	</parent>
-	
 	<properties>
 		<organisation.groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</organisation.groupId>
 		<scm.repo>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</scm.repo>
 		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
 		<visualizer.layer>Process</visualizer.layer>
-		<mule.maven.plugin.version>3.5.2</mule.maven.plugin.version>
 	</properties>
-	
 	<build>
 		<resources>
 			<resource>
@@ -54,6 +50,12 @@
 							<customer-interaction-pl-ms-encryption-key>${customer-interaction-pl-ms-encryption-key}</customer-interaction-pl-ms-encryption-key>
 							<anypoint.platform.visualizer.displayName>${visualizer.displayName}</anypoint.platform.visualizer.displayName>
 							<anypoint.platform.visualizer.layer>${visualizer.layer}</anypoint.platform.visualizer.layer>
+							<azure.clientid>${azure.clientid}</azure.clientid>
+							<azure.clientsecret>${azure.clientsecret}</azure.clientsecret>
+							<azure.vaultname>${azure.vaultname}</azure.vaultname>
+							<azure.encryptkey>${azure.encryptkey}</azure.encryptkey>
+							<azure.bypassflag>${azure.bypassflag}</azure.bypassflag>
+							<azure.localfile>${azure.localfile}</azure.localfile>
 						</properties>
 						<workers>${workers}</workers>
 						<workerType>${workertype}</workerType>
@@ -128,49 +130,14 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.mulesoft.munit.tools</groupId>
-				<artifactId>munit-maven-plugin</artifactId>
-				<version>${munit.version}</version>
-				<executions>
-					<execution>
-						<id>test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-							<goal>coverage-report</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<coverage>
-						<runCoverage>true</runCoverage>
-						<formats>
-							<format>html</format>
-						</formats>
-					</coverage>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.mulesoft.munit</groupId>
-			<artifactId>munit-tools</artifactId>
-			<classifier>mule-plugin</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.mulesoft.modules</groupId>
 			<artifactId>mule-secure-configuration-property-module</artifactId>
 			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>com.mulesoft.munit</groupId>
-			<artifactId>munit-runner</artifactId>
-			<classifier>mule-plugin</classifier>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mule.modules</groupId>
@@ -189,10 +156,29 @@
 		</dependency>
 		<dependency>
 			<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
+			<artifactId>azure-vault-custom-properties-provider-encrypted---connected-app</artifactId>
+			<version>1.0.0</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>mule-azure-service-bus-connector</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
 			<artifactId>customer-interaction-pl-ms</artifactId>
-			<version>0.1.5</version>
+			<version>0.2.4</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>anypoint-exchange-v3</id>
+			<name>Anypoint Exchange V3</name>
+			<url>https://maven.eu1.anypoint.mulesoft.com/api/v3/maven</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 </project>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+	<sub-flow name="post-quotes-orchestration" doc:id="ede4e939-60c4-4c8f-bbd8-619eab42a7e2">
+		<json-logger:logger doc:name="Functional" doc:id="fb70de2a-dca0-46c3-94e8-4385620026fb"
+			config-ref="JSON_Functional_Logger_Config" message='About to POST quote @ Document Generation System API' tracePoint="BEFORE_REQUEST"
+			category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="e8bb74d4-b7d9-48ad-8078-793c58514af5"
+			configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="POST" doc:name="Document Generation System API - Create Document" doc:id="ee24afa4-071a-4e82-b540-2bd82899bdd8"
+				config-ref="HTTPS_Request_Document-Generation-SL_configuration" path="${https.request.document-generation-sl.documents.path}"
+				target="documentResponse" />
+		</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG" doc:id="dfc786f6-c2b8-43c1-b306-802cd166c88e" config-ref="JSON_Logger_Config"
+			message='#["POST quote response in vars.documentResponse"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" priority="DEBUG">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Add URL to quote's payload" doc:id="191cee14-cedb-4225-b25b-99902d7ea518">
+			<ee:message>
+				<ee:set-payload resource="dwl/post-quotes-add-url.dwl" />
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="2c879461-2195-472a-a272-3e17ec9db7d0"
+			config-ref="JSON_Functional_Logger_Config" message="About to send quote's payload with URL to ASB queue - Quote Step 1" 
+			tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<azure-service-bus-messaging:send doc:name="Send Quote Step 1" doc:id="cf45b8d1-9399-4f8f-9761-e330e8ea19fb"
+			destinationName="${azure.servicebus.destination.quote.step1.q}" sendCorrelationStrategy="ALWAYS"
+			config-ref="Azure_Service_Bus_Messaging_Connector_Config">
+			<reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
+		</azure-service-bus-messaging:send>
+		<json-logger:logger doc:name="DEBUG" doc:id="395519bd-b146-4696-b95c-9cc37e1062af" config-ref="JSON_Logger_Config"
+			message='#["quote data with URL - after sending the payload to ASB queue"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload"
+			priority="DEBUG">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Only URL in response payload" doc:id="57b76d50-726c-4613-9636-c5e7bfd1a83b">
+			<ee:message>
+				<ee:set-payload resource="dwl/post-quotes-only-url.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+
+	<flow name="listener-quote-step1" doc:id="3c20e8da-7beb-435c-992f-f57979b1f38d">
+		<azure-service-bus-messaging:message-listener doc:name="Quote Step 1"
+			doc:id="74864158-d047-4e0a-8350-66280c0b27f3" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO"
+			destinationName="${azure.servicebus.destination.quote.step1.q}" />
+		<set-variable value="#[attributes.correlationId]" doc:name="correlationId" doc:id="f77ae47d-d1fc-4cd2-86da-b7f8dbfa6a22" variableName="correlationId" />
+		<json-logger:logger doc:name="DEBUG" doc:id="fc07db9c-0ae9-45df-9409-8c8b7175f242" config-ref="JSON_Logger_Config"
+			message='#["Quote Step 1 - input payload"]' priority="DEBUG" category="nl.swisssense.payload" tracePoint="FLOW" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<choice doc:name="Choice" doc:id="cbcb84c1-c5e3-44ae-b6c0-572c372f424b">
+			<when expression='#[payload.customer.id == null or payload.customer.id == ""]'>
+				<flow-ref doc:name="quote-step-1-create-customer-flow" doc:id="24678f53-7527-4e91-931a-9c13aa4695c4" name="quote-step-1-create-customer-flow"/>
+			</when>
+			<otherwise>
+				<flow-ref doc:name="quote-step-1-update-customer-flow" doc:id="bb4e0db2-4f65-4960-a6c4-e4d817cd2bd1" name="quote-step-1-update-customer-flow"/>
+			</otherwise>
+		</choice>
+		<json-logger:logger doc:name="Functional" doc:id="171344b4-6e64-482b-8a08-031c8b03cecc" config-ref="JSON_Functional_Logger_Config" 
+				message="About to send quote's payload with URL to ASB queue - Quote Step 2" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger doc:name="DEBUG" doc:id="c82086db-4c69-4159-b971-b24f817a5fbd" config-ref="JSON_Logger_Config" message='Quote data with customer id - just before sending to the Queue quote step2' tracePoint="AFTER_TRANSFORM" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.step2.q}" doc:name="Send Quote Step 2" 
+				doc:id="3ecd23e4-e89b-4737-b452-1af1a769ecb4" config-ref="Azure_Service_Bus_Messaging_Connector_Config" sendCorrelationStrategy="ALWAYS" correlationId="#[vars.correlationId]">
+			<reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
+		</azure-service-bus-messaging:send>
+	</flow>
+
+	<sub-flow name="quote-step-1-create-customer-flow" doc:id="e95330b5-acc6-4d28-b349-29016de4c6ef" >
+		<ee:transform doc:name="Quote to CDM Customer - vars.cdmCustomerPost" doc:id="1f91eb72-b618-4ab8-96d3-f9ad738ba467">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable resource="dwl/post-quotes-mapping-to-post-cdm-customer.dwl" variableName="cdmCustomerPost" />
+					</ee:variables>
+				</ee:transform>
+		<json-logger:logger doc:name="DEBUG" doc:id="88c68f69-08fd-4fbf-a65a-c56894b2c3bb" config-ref="JSON_Logger_Config" message='#["CDM Customer object in vars.sapCdmCustomer"]' tracePoint="AFTER_TRANSFORM" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+				</json-logger:logger>
+		<json-logger:logger doc:name="Functional" doc:id="2e97a88b-14c6-4a9d-b657-85d2b1321f44" config-ref="JSON_Functional_Logger_Config" message="About to POST /customers_sync @ Customers Process API" category="nl.swisssense.attributes" tracePoint="BEFORE_REQUEST" correlationId="#[vars.correlationId]">
+					<json-logger:content><![CDATA[null]]></json-logger:content>
+				</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="e712c8de-790c-4889-a8c6-b3ff208da516" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="POST" doc:name="Customers Process API - Create Customer" doc:id="95b83241-7609-4e52-83c2-20d7bbf18af8" config-ref="HTTPS_Request_Customers_PL_configuration" path="${https.request.customers-pl.customerssync.path}" target="customersPostResponse" correlationId="#[vars.correlationId]">
+						<http:body><![CDATA[#[vars.cdmCustomerPost]]]></http:body>
+					</http:request>
+				</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG" doc:id="4ef9df82-4fd7-449f-adaa-674c8a370970" config-ref="JSON_Logger_Config" message='#["POST customers_sync response in vars.customersPostResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+				</json-logger:logger>
+		<ee:transform doc:name="Add SAP id to quote's payload" doc:id="d7668bc2-aa1d-4f9e-bf11-0dead0ab7906">
+					<ee:message>
+						<ee:set-payload resource="dwl/post-quotes-add-sap-id.dwl" />
+					</ee:message>
+				</ee:transform>
+	</sub-flow>
+
+	<sub-flow name="quote-step-1-update-customer-flow" doc:id="71fdf872-5229-4a04-85ea-f9fd98c50a63" >
+		<json-logger:logger doc:name="Functional" doc:id="b2815d22-5f5d-4936-a9d1-d7e061d6d462" config-ref="JSON_Functional_Logger_Config" message="About to GET SF customerId @ Customer Reference System API - in Update Customer path in Quote Step 1" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
+					<json-logger:content><![CDATA[null]]></json-logger:content>
+				</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="aa758b8e-9700-4e98-9920-c873a1b7893c" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="GET" doc:name="Customer Reference System API - GET Customer Id - target salesforce" doc:id="ba72bfc6-358c-4a1e-9c46-921097a86577" config-ref="HTTP_Request_Customer-Reference_SL_configuration" path="${https.request.customer-reference-sl.customers.id.path}" target="customerRefResponse" correlationId="#[vars.correlationId]">
+						<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerid" : payload.customer.id
+}]]]></http:uri-params>
+						<http:query-params><![CDATA[#[output application/java
+---
+{
+	"target" : "salesforce"
+}]]]></http:query-params>
+					</http:request>
+				</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG" doc:id="5a35e02c-8f4d-4f94-8d4c-b9616801d096" config-ref="JSON_Logger_Config" message='#["GET customer id response in vars.customerRefResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+				</json-logger:logger>
+		<ee:transform doc:name="Add salesforce id to quote's payload" doc:id="e10db97c-fe9d-405c-9be2-7ef947ea327d">
+					<ee:message>
+						<ee:set-payload resource="dwl/post-quotes-add-salesforce-id.dwl" />
+					</ee:message>
+				</ee:transform>
+		<ee:transform doc:name="Quote to CDM Customer - vars.cdmCustomerPatch" doc:id="3676d007-5818-49cc-b13d-598191975398">
+						<ee:message>
+						</ee:message>
+					<ee:variables>
+						<ee:set-variable resource="dwl/post-quotes-mapping-to-patch-cdm-customer.dwl" variableName="cdmCustomerPatch" />
+					</ee:variables>
+					</ee:transform>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="c93213b1-b43f-42ce-b1de-ab80c6a73a84" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+					<http:request method="PATCH" doc:name="Customers Process API - Update Customer" doc:id="d3bfe045-24c3-45d6-818c-4e926eb332d0" config-ref="HTTPS_Request_Customers_PL_configuration" path="${https.request.customers-pl.customers.id.path}" correlationId="#[vars.correlationId]" target="customersPatchResponse">
+						<http:body><![CDATA[#[vars.cdmCustomerPatch]]]></http:body>
+						<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerid" : payload.customer.id
+}]]]></http:uri-params>
+						<http:query-params><![CDATA[#[output application/java
+---
+{
+	"origin" : vars.cdmCustomerPatch.origin.system default payload.origin
+}]]]></http:query-params>
+					</http:request>
+				</json-logger:logger-scope>
+	</sub-flow>
+
+	<flow name="listener-quote-step-2" doc:id="8f63533d-677e-4b54-925d-abbf858d4806">
+		<azure-service-bus-messaging:message-listener ackMode="AUTO"
+			destinationName="${azure.servicebus.destination.quote.step2.q}" doc:name="Quote Step 2" doc:id="4e4dd8ff-cc68-4dc9-b32e-2b0c453f4521"
+			config-ref="Azure_Service_Bus_Messaging_Connector_Config" />
+		<set-variable value="#[attributes.correlationId]" doc:name="correlationId" doc:id="33cdcfc6-be66-4c4e-bb54-0c75e38971cc"
+			variableName="correlationId" />
+		<json-logger:logger doc:name="DEBUG" doc:id="9e511f53-90f1-4da8-90fc-5080f4d50dd0" config-ref="JSON_Logger_Config"
+			message='#["Quote Step 2 - input payload"]' tracePoint="FLOW" priority="DEBUG" category="nl.swisssense.payload"
+			correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="quote-step-2-publish-event-flow" doc:id="fd2a8c74-a8cf-48b3-b677-dcb9c0ae9f67" name="quote-step-2-publish-event-flow" />
+	</flow>
+
+	<sub-flow name="quote-step-2-publish-event-flow" doc:id="dac1ef69-468d-4ffd-a0e2-4948fe5fbeec" >
+		<json-logger:logger doc:name="Functional" doc:id="8761c88d-7f5d-4a1b-866d-e5b28e0967d9" config-ref="JSON_Functional_Logger_Config" message="About to GET SF customerId @ Customer Reference System API - in Quote Step 2" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<until-successful maxRetries="${https.request.customer-reference-sl.max-retries}" doc:name="Until Successful" doc:id="d9a5f2a0-65e7-491a-b6bf-8523f391bcb1" millisBetweenRetries="${https.request.customer-reference-sl.millis-between}">
+			<json-logger:logger-scope doc:name="Logger scope" doc:id="4e6d1c2e-5e43-4e5d-817f-22ac988f87c3" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+				<http:request method="GET" doc:name="Customer Reference System API - GET Customer Id - target salesforce" doc:id="e320aaf0-36f2-4092-9133-506a3fd5124b" config-ref="HTTP_Request_Customer-Reference_SL_configuration" path="${https.request.customer-reference-sl.customers.id.path}" correlationId="#[vars.correlationId]" target="customerRefSfIdResponse">
+					<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerid" : payload.customer.id
+}]]]></http:uri-params>
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	"target" : "salesforce"
+}]]]></http:query-params>
+				</http:request>
+			</json-logger:logger-scope>
+		</until-successful>
+		<json-logger:logger doc:name="DEBUG" doc:id="ba24a506-0e05-4803-ac9f-0035290aaa82" config-ref="JSON_Logger_Config" message='#["GET customer id response in vars.customerRefSfIdResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Quote to SF system - vars.postQuotesSF" doc:id="c755f624-9031-45d2-b282-78c2394eb0ff">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable resource="dwl/post-quotes-to-sf.dwl" variableName="postQuotesSF" />
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="cb029af8-a77e-4be4-b13a-4be4d45bce9f" config-ref="JSON_Functional_Logger_Config" message="About to POST Quote @ Salesforce System API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="6d4a7949-0ef6-4b64-b9c3-a37576f4cf65" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="POST" doc:name="Salesforce System API - POST Quote" doc:id="b4cb3d48-272e-4536-a5b5-fff92fbdc68d" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${https.request.salesforce-sl.quotes.path}" correlationId="#[vars.correlationId]" target="postQuotesSFResponse">
+				<http:body ><![CDATA[#[vars.postQuotesSF]]]></http:body>
+			</http:request>
+		</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG" doc:id="0bc75ac4-7d1b-405e-90f6-1c065cb6b5a3" config-ref="JSON_Logger_Config" message='#["POST quote SF response in vars.postQuotesSFResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+			</json-logger:logger>
+	</sub-flow>
+</mule>

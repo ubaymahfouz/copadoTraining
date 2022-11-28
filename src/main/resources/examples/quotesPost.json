@@ -1,0 +1,98 @@
+{
+    "customer": {
+        "city": "North Samirland",
+        "countryCode": "NL",
+        "houseNumber": "36",
+        "houseNumberSuffix": "",
+        "postalCode": "62821-9201",
+        "street": "Harvey Union",
+        "phone": "+1 (272) 523-1182",
+        "id": "",
+        "firstName": "Austin",
+        "lastName": "Smith",
+        "language": "nl_nl",
+        "email": "user@domain.tld"
+    },
+	"salesTotals": {
+		"subTotal": {
+			"value": 10,
+			"currency": "EUR"
+		},
+		"discountTotal": {
+			"value": 0,
+			"currency": "EUR"
+		},
+		"tax": {
+			"value": 0.86,
+			"currency": "EUR"
+		},
+		"shipping": {
+			"value": 4.95,
+			"currency": "EUR"
+		},
+		"grandTotal": {
+			"value": 14.95,
+			"currency": "EUR"
+		},
+        "discount": [
+            {
+                "type": "item",
+                "label": "Kortingen",
+                "value": 100,
+                "currency": "EUR"
+            },
+            {
+                "type": "header",
+                "label": "Showroom discount",
+                "value": 0,
+                "currency": "EUR"
+            }
+        ],
+        "additionalCosts": [
+            {
+                "label": "Milieubijdrage",
+                "value": 8.95
+            }
+        ]
+    },
+    "items": [
+        {
+            "productName": "SAP Test Product",
+            "sku": "123450",
+            "qty": 1,
+            "price": {
+                "value": 10,
+                "currency": "EUR"
+            },
+            "options": [
+                {
+                    "label": "Vulgewicht combinatie",
+                    "value": "Custom Climate 1 + 2"
+                }
+            ]
+        }
+    ],
+  "orderHeader": {
+    "type": "quote",
+    "salesOffice": {
+      "id": 1004,
+      "name": "Nijmegen",
+      "countryCode": "NL",
+      "street": "Woonboulevard Wijchenseweg",
+      "postalCode": "6538 SX",
+      "houseNumber": 170,
+      "houseNumberSuffix": ""
+    },
+    "salesOfficePhoneNumber": {
+      "number": "023456789"
+    },
+    "id": "4110024829",
+    "date": "2022-09-10",
+    "validTill": "2022-09-24"
+  },
+  "salesRep": {
+    "partnNumVe": 106,
+    "partnName": "Alexander Novak"
+  },
+  "origin": "magento"
+}

@@ -1,0 +1,33 @@
+{
+  "legalEntity": {
+    "salutation": "Mr.",
+    "firstName": "test-280922",
+    "lastName": "test-280922",
+    "address": [
+      {
+        "country": {"code": "NL"},
+        "city": "Deurne",
+        "houseNumberSuffix": "",
+        "postalCode": "5753 GH",
+        "houseNumber": "19",
+        "streetName": "Wilgenhof"
+      }
+    ],
+    "contact": [
+      {
+        "fixedPhone": "0622222222",
+        "mobilePhone": "",
+        "email": "test-280922@email.com"
+      }
+    ]
+  },
+  "preferences": {
+    "communication": {
+      "language": "nl"
+    }
+  },
+  "salesoffice": 1004,
+  "vatnum": ""
+}
+
+

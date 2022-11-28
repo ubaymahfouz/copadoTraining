@@ -67,4 +67,14 @@
 }]]]></json-logger:content>
         </json-logger:logger>
     </flow>
+    <flow name="post:\quotes:application\json:customer-interaction-process-api-config">
+		<flow-ref doc:name="post-quotes-orchestration" doc:id="3c53f98e-036d-4b16-a738-5307756b57aa" name="post-quotes-orchestration"/>
+		<json-logger:logger doc:name="Exit Log" doc:id="b71f96db-b128-4160-b991-13420b265c86" config-ref="JSON_Logger_Config" message="End post /quotes" tracePoint="END" category="nl.swisssense.attributes" >
+			<json-logger:content ><![CDATA[#[output application/json skipNullOn="everywhere"---
+{
+ 	reasonPhrase: attributes.reasonPhrase,
+ 	statusCode: attributes.statusCode
+}]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
 </mule>
