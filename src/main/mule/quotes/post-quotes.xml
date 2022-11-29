@@ -254,18 +254,23 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<json-logger:logger doc:name="Functional" doc:id="cb029af8-a77e-4be4-b13a-4be4d45bce9f" config-ref="JSON_Functional_Logger_Config" message="About to POST Quote @ Salesforce System API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
 			<json-logger:content><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
-		<json-logger:logger-scope doc:name="Logger scope" doc:id="6d4a7949-0ef6-4b64-b9c3-a37576f4cf65" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-			<http:request method="POST" doc:name="Salesforce System API - POST Quote" doc:id="b4cb3d48-272e-4536-a5b5-fff92fbdc68d" config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${https.request.salesforce-sl.quotes.path}" correlationId="#[vars.correlationId]" target="postQuotesSFResponse">
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="6d4a7949-0ef6-4b64-b9c3-a37576f4cf65" configurationRef="JSON_Logger_Config" 
+				priority="DEBUG" category="nl.swisssense.tracking.http">
+			<http:request method="POST" doc:name="Salesforce System API - POST Quote" doc:id="b4cb3d48-272e-4536-a5b5-fff92fbdc68d" 
+					config-ref="HTTPS_Request_Salesforce_SL_configuration" path="${https.request.salesforce-sl.quotes.path}" 
+					correlationId="#[vars.correlationId]">
 				<http:body ><![CDATA[#[vars.postQuotesSF]]]></http:body>
 			</http:request>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="DEBUG" doc:id="0bc75ac4-7d1b-405e-90f6-1c065cb6b5a3" config-ref="JSON_Logger_Config" message='#["POST quote SF response in vars.postQuotesSFResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
-				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+		<json-logger:logger doc:name="DEBUG" doc:id="0bc75ac4-7d1b-405e-90f6-1c065cb6b5a3" config-ref="JSON_Logger_Config" 
+				message='#["POST quote SF response"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" 
+				correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
-			</json-logger:logger>
+		</json-logger:logger>
 	</sub-flow>
 </mule>
