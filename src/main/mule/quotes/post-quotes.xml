@@ -262,15 +262,8 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<http:body ><![CDATA[#[vars.postQuotesSF]]]></http:body>
 			</http:request>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="DEBUG" doc:id="0bc75ac4-7d1b-405e-90f6-1c065cb6b5a3" config-ref="JSON_Logger_Config" 
-				message='#["POST quote SF response"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" 
-				correlationId="#[vars.correlationId]">
-			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-    attributes: attributes,
-    (vars: vars) if (vars != null)
-}]]]></json-logger:content>
+		<json-logger:logger doc:name="Functional" doc:id="cc97453d-dc7f-4caa-ad9f-197f30558884" config-ref="JSON_Functional_Logger_Config" message="Post Quote SF Response" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 	</sub-flow>
 </mule>
