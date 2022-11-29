@@ -235,6 +235,11 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></http:query-params>
 				</http:request>
 			</json-logger:logger-scope>
+			<choice doc:name="Choice" doc:id="3637a4dd-f895-46ce-8a61-4addb62c6ea3" >
+				<when expression='#[null == vars.customerRefSfIdResponse.targetCustomerId or "" == vars.customerRefSfIdResponse.targetCustomerId]'>
+					<raise-error doc:name="Raise error" doc:id="cd13f10f-b4fd-4c21-8666-f81b7554b657" type="SWISS_SENSE:CUSTOMER_ID_ERROR" description="The target customer id is not yet ready to retrieve."/>
+				</when>
+			</choice>
 		</until-successful>
 		<json-logger:logger doc:name="DEBUG" doc:id="ba24a506-0e05-4803-ac9f-0035290aaa82" config-ref="JSON_Logger_Config" message='#["GET customer id response in vars.customerRefSfIdResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
