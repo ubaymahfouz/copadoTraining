@@ -230,7 +230,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			<json-logger:content><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<until-successful maxRetries="${https.request.customer-reference-sl.max-retries}" doc:name="Until Successful" doc:id="d9a5f2a0-65e7-491a-b6bf-8523f391bcb1" millisBetweenRetries="${https.request.customer-reference-sl.millis-between}">
-			<json-logger:logger-scope doc:name="Logger scope" doc:id="4e6d1c2e-5e43-4e5d-817f-22ac988f87c3" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+			<json-logger:logger-scope doc:name="Logger scope" doc:id="4e6d1c2e-5e43-4e5d-817f-22ac988f87c3" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" correlationId="#[vars.correlationId]>
 				<http:request method="GET" doc:name="Customer Reference System API - GET Customer Id - target salesforce" doc:id="e320aaf0-36f2-4092-9133-506a3fd5124b" config-ref="HTTP_Request_Customer-Reference_SL_configuration" path="${https.request.customer-reference-sl.customers.id.path}" correlationId="#[vars.correlationId]" target="customerRefSfIdResponse">
 					<http:uri-params><![CDATA[#[output application/java
 ---
