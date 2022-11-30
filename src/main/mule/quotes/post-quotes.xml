@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Add URL to quote's payload" doc:id="191cee14-cedb-4225-b25b-99902d7ea518">
@@ -53,7 +53,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Only URL in response payload" doc:id="57b76d50-726c-4613-9636-c5e7bfd1a83b">
@@ -74,7 +74,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<choice doc:name="Choice" doc:id="cbcb84c1-c5e3-44ae-b6c0-572c372f424b">
@@ -94,7 +94,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.step2.q}" doc:name="Send Quote Step 2" 
@@ -116,7 +116,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 				</json-logger:logger>
 		<json-logger:logger doc:name="Functional" doc:id="2e97a88b-14c6-4a9d-b657-85d2b1321f44" config-ref="JSON_Functional_Logger_Config" message="About to POST /customers_sync @ Customers Process API" category="nl.swisssense.attributes" tracePoint="BEFORE_REQUEST" correlationId="#[vars.correlationId]">
@@ -132,7 +132,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 				</json-logger:logger>
 		<ee:transform doc:name="Add SAP id to quote's payload" doc:id="d7668bc2-aa1d-4f9e-bf11-0dead0ab7906">
@@ -165,7 +165,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 				</json-logger:logger>
 		<ee:transform doc:name="Add salesforce id to quote's payload" doc:id="e10db97c-fe9d-405c-9be2-7ef947ea327d">
@@ -180,11 +180,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 						<ee:set-variable resource="dwl/post-quotes-mapping-to-patch-cdm-customer.dwl" variableName="cdmCustomerPatch" />
 					</ee:variables>
 					</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="d21dff1d-7f52-40cb-b42b-919813ad83e2" config-ref="JSON_Functional_Logger_Config" message="About to PATCH customer @ Customers Process API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="c93213b1-b43f-42ce-b1de-ab80c6a73a84" configurationRef="JSON_Logger_Config" 
 				priority="DEBUG" category="nl.swisssense.tracking.http">
 			<http:request method="PATCH" doc:name="Customers Process API - Update Customer" doc:id="d3bfe045-24c3-45d6-818c-4e926eb332d0" 
 					config-ref="HTTPS_Request_Customers_PL_configuration" path="${https.request.customers-pl.customers.id.path}" 
-					correlationId="#[vars.correlationId]">
+					correlationId="#[vars.correlationId]" target="patchCustomerResponse">
 				<http:body><![CDATA[#[vars.cdmCustomerPatch]]]></http:body>
 				<http:uri-params><![CDATA[#[output application/java
 ---
@@ -198,6 +201,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></http:query-params>
 			</http:request>
 		</json-logger:logger-scope>
+		<json-logger:logger doc:name="Functional" doc:id="e741c149-1cef-4cb5-84dd-9b813659a2b8" config-ref="JSON_Functional_Logger_Config" message="After PATCH Customer call @ Customers Process API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
 	</sub-flow>
 
 	<flow name="listener-quote-step-2" doc:id="8f63533d-677e-4b54-925d-abbf858d4806">
@@ -213,7 +219,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="quote-step-2-publish-event-flow" doc:id="fd2a8c74-a8cf-48b3-b677-dcb9c0ae9f67" name="quote-step-2-publish-event-flow" />
@@ -249,7 +255,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
-    (vars: JSONLoggerModule::stringifyNonJSON(vars)) if (vars != null)
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Quote to SF system - vars.postQuotesSF" doc:id="c755f624-9031-45d2-b282-78c2394eb0ff">
@@ -271,7 +277,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			</http:request>
 		</json-logger:logger-scope>
 		<json-logger:logger doc:name="Functional" doc:id="cc97453d-dc7f-4caa-ad9f-197f30558884" config-ref="JSON_Functional_Logger_Config" 
-				message="Post Quote SF Response" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" 
+				message="After POST Quote call @ Salesforce System API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" 
 				correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>

@@ -25,7 +25,10 @@
     
 		<!-- Mule logger -->        
         <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="INFO"/>
- 
+
+		<!-- Swiss Sense logger -->        
+        <!-- <AsyncLogger name="nl.swisssense.payload" level="DEBUG"/> -->
+
         <AsyncRoot level="INFO">
             <AppenderRef ref="file" />
         </AsyncRoot>
