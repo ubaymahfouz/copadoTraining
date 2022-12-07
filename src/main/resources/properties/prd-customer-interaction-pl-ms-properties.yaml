@@ -61,7 +61,7 @@ https:
         response: "60000"
         idle: "60000"
       max-retries: "5"
-      millis-between: "10000"
+      millis-between: "28000"
       global:
         id:
           path: "/customers/global/{globalcustomerid}"
