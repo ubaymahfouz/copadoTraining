@@ -315,9 +315,10 @@ type quoteNotificationEventJSON = {|
   personAccountId: String, 
   storeName: String, 
   salesRepName: String, 
+  salesRepNumber: String, 
   urlQuote: String, 
   quoteValue: Number {"typeId": "int"}
-|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
+|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"salesRepNumber\\\":\\\"0\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
 
 ]]></types:shape>
     </types:type>
@@ -385,9 +386,10 @@ type auto_dac1ef69_468d_4ffd_a0e2_4948fe5fbeec_Output_Payload = {|
   personAccountId: String, 
   storeName: String, 
   salesRepName: String, 
+  salesRepNumber: String, 
   urlQuote: String, 
   quoteValue: Number {"typeId": "int"}
-|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
+|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"salesRepNumber\\\":\\\"0\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
 
 ]]></types:shape>
     </types:type>
@@ -470,9 +472,10 @@ type auto_aa20601b_9f9f_4f3f_b110_64d92c7d70a0_Input_Payload = {|
   personAccountId: String, 
   storeName: String, 
   salesRepName: String, 
+  salesRepNumber: String, 
   urlQuote: String, 
   quoteValue: Number {"typeId": "int"}
-|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
+|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"salesRepNumber\\\":\\\"0\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
 
 ]]></types:shape>
     </types:type>
@@ -549,9 +552,10 @@ type auto_aa20601b_9f9f_4f3f_b110_64d92c7d70a0_Output_Payload = {|
   personAccountId: String, 
   storeName: String, 
   salesRepName: String, 
+  salesRepNumber: String, 
   urlQuote: String, 
   quoteValue: Number {"typeId": "int"}
-|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
+|} {"example": "{\\\"quoteId\\\":\\\"quote-662202\\\",\\\"date\\\":\\\"15-11-2022\\\",\\\"personAccountId\\\":\\\"0017a000026V5ExAAK\\\",\\\"storeName\\\":\\\"1002\\\",\\\"salesRepName\\\":\\\"Alexander Pennings\\\",\\\"salesRepNumber\\\":\\\"0\\\",\\\"urlQuote\\\":\\\"https:\\/\\/files.pdfmonkey.io\\/share\\/9cef259b-00ad-452d-922a-ab9c9525301e\\/Mule-test.pdf\\\",\\\"quoteValue\\\":100}"}
 
 ]]></types:shape>
     </types:type>
