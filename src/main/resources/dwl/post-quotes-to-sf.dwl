@@ -7,6 +7,7 @@ output application/json
 	personAccountId: vars.customerRefSfIdResponse.targetCustomerId,
 	storeName: payload.orderHeader.salesOffice.id as String,
 	salesRepName: payload.salesRep.partnName,
+	salesRepNumber: payload.salesRep.partnNumVe as String,
 	urlQuote: payload.pdfPermanentLink,
 	quoteValue: payload.salesTotals.grandTotal.value
 }
