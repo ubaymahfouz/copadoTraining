@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
 	xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging"
 	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
@@ -244,11 +246,8 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></http:query-params>
 				</http:request>
 			</json-logger:logger-scope>
-			<choice doc:name="Choice" doc:id="3637a4dd-f895-46ce-8a61-4addb62c6ea3" >
-				<when expression='#[null == vars.customerRefSfIdResponse.targetCustomerId or "" == vars.customerRefSfIdResponse.targetCustomerId]'>
-					<raise-error doc:name="Raise error" doc:id="cd13f10f-b4fd-4c21-8666-f81b7554b657" type="SWISS_SENSE:CUSTOMER_ID_ERROR" description="The target customer id is not yet ready to retrieve."/>
-				</when>
-			</choice>
+			<validation:is-true doc:name="Is true" doc:id="e36e3892-2144-421c-9a78-43495b116a97" expression='#[startsWith(vars.customerRefSfIdResponse.targetCustomerId, "001")]' 
+				message='#["The salesforce customer id is not yet ready to retrieve. (salesforce customer id: " ++ vars.customerRefSfIdResponse.targetCustomerId ++ ")"]'/>
 		</until-successful>
 		<json-logger:logger doc:name="DEBUG" doc:id="ba24a506-0e05-4803-ac9f-0035290aaa82" config-ref="JSON_Logger_Config" message='#["GET customer id response in vars.customerRefSfIdResponse"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
