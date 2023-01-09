@@ -9,5 +9,6 @@ output application/json
 	salesRepName: payload.salesRep.partnName,
 	salesRepNumber: payload.salesRep.partnNumVe as String,
 	urlQuote: payload.pdfPermanentLink,
-	quoteValue: payload.salesTotals.grandTotal.value
+	quoteValue: payload.salesTotals.grandTotal.value,
+	hashedId: payload.orderHeader.hashedId
 }
