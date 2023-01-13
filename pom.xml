@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.12</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 	<name>customer-interaction-pl-ms</name>
 	<description>This a Process Layer application for Swiss Sense.</description>
@@ -15,9 +16,9 @@
 	</parent>
 	<properties>
 		<organisation.groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</organisation.groupId>
-		<scm.repo>git@bitbucket.org:glosws/customer-interaction-pl-ms.git</scm.repo>
 		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
 		<visualizer.layer>Process</visualizer.layer>
+		<app.runtime>4.4.0</app.runtime>
 	</properties>
 	<build>
 		<resources>
@@ -36,8 +37,10 @@
 					<cloudHubDeployment>
 						<uri>https://eu1.anypoint.mulesoft.com/</uri>
 						<muleVersion>${app.runtime}</muleVersion>
-						<username>${username}</username>
-						<password>${password}</password>
+						<connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
+						<connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
+						<connectedAppGrantType>client_credentials</connectedAppGrantType>
+						<applicationName>${cloudhub.application.name}</applicationName>
 						<applicationName>${muleenv}-${project.artifactId}</applicationName>
 						<environment>${chenv}</environment>
 						<properties>
@@ -75,32 +78,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>external.atlassian.jgitflow</groupId>
-				<artifactId>jgitflow-maven-plugin</artifactId>
-				<version>${jgitflow.maven.plugin.version}</version>
-				<configuration>
-					<pushReleases>true</pushReleases>
-					<keepBranch>false</keepBranch>
-					<localOnly>false</localOnly>
-					<noTag>false</noTag>
-					<noDeploy>false</noDeploy>
-					<noReleaseMerge>false</noReleaseMerge>
-					<squash>false</squash>
-					<eol>native</eol>
-					<allowUntracked>true</allowUntracked>
-					<defaultOriginUrl>${scm.repo}</defaultOriginUrl>
-					<enableSshAgent>true</enableSshAgent>
-					<alwaysUpdateOrigin>true</alwaysUpdateOrigin>
-					<pullDevelop>true</pullDevelop>
-					<pullMaster>true</pullMaster>
-					<allowSnapshots>true</allowSnapshots>
-					<flowInitContext>
-						<masterBranchName>master</masterBranchName>
-						<developBranchName>develop</developBranchName>
-					</flowInitContext>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -166,9 +143,15 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-validation-module</artifactId>
+			<version>2.0.2</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
 			<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
 			<artifactId>customer-interaction-pl-ms</artifactId>
-			<version>0.2.4</version>
+			<version>0.2.5</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
