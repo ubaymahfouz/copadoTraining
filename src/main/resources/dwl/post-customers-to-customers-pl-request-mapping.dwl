@@ -48,7 +48,7 @@ fun treeFilter(value: Any, predicate: (value:Any) -> Boolean) =
 				enabled: subscription.enabled
 			},
 			preferredChannel: vars.originalPayload.preferredChannel,
-			language: vars.originalPayload.language
+			language: upper(vars.originalPayload.language)
 		}
 	}
 })
