@@ -17,7 +17,6 @@
 		<organisation.groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</organisation.groupId>
 		<visualizer.displayName>Customer Interaction Process API</visualizer.displayName>
 		<visualizer.layer>Process</visualizer.layer>
-		<app.runtime>4.4.0</app.runtime>
 	</properties>
 	<build>
 		<resources>
@@ -58,6 +57,7 @@
 							<azure.encryptkey>${azure.encryptkey}</azure.encryptkey>
 							<azure.bypassflag>${azure.bypassflag}</azure.bypassflag>
 							<azure.localfile>${azure.localfile}</azure.localfile>
+							<mule.verbose.exceptions>false</mule.verbose.exceptions>
 						</properties>
 						<workers>${workers}</workers>
 						<workerType>${workertype}</workerType>
@@ -66,6 +66,7 @@
 						<businessGroup>Swiss Sense\Swiss Sense ICT</businessGroup>
 						<deploymentTimeout>2000000</deploymentTimeout>
 						<skipDeploymentVerification>${skipVerify}</skipDeploymentVerification>
+						<disableCloudHubLogs>true</disableCloudHubLogs>
 					</cloudHubDeployment>
 				</configuration>
 				<executions>
