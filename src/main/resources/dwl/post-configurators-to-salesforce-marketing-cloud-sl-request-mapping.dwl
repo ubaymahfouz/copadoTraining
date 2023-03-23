@@ -9,13 +9,26 @@ var filterSF = {(vars.lastModifiedGetCustomersResponse.systemCustomerIds filter 
 		name: vars.originalPayload.source.name,
 		campaign: vars.originalPayload.source.campaign
 	},
-	email: vars.originalPayload.email,
 	salesforceContactKey: if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "lead") filterSF.id
 	else if (vars.lastModifiedGetCustomersResponse != null and filterSF.customerType == "customer") filterSF.contactId
 	else vars.customerRefResponse.salesforceCustomerId,
 	globalCustomerId: if (vars.lastModifiedGetCustomersResponse != null) vars.lastModifiedGetCustomersResponse.globalCustomerId else vars.postCustomersResponse.globalCustomerId,
+    salutation: vars.originalPayload.salutation,
 	firstName: vars.originalPayload.firstName,
 	lastName: vars.originalPayload.lastName,
+    addresses: vars.originalPayload.addresses map (address, indexOfAddress) -> {
+        street: address.street,
+        houseNumber: address.houseNumber,
+        houseNumberSuffix: address.houseNumberSuffix,
+        postalCode: address.postalCode,
+        city: address.city,
+        countryCode: address.countryCode
+    },
+    phoneNumbers: vars.originalPayload.phoneNumbers map (phoneNumber, indexOfPhoneNumber) -> {
+        number: phoneNumber.number,
+        "type": phoneNumber."type"
+    },
+	email: vars.originalPayload.email,
 	language: vars.originalPayload.language,
 	interestData: vars.originalPayload.interestData map ( interestData , indexOfInterestData ) -> {
 		key: interestData.key,
