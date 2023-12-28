@@ -6,6 +6,9 @@
 	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
 	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit   http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/api-gateway   http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
@@ -48,7 +51,7 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true" />
 	<configuration doc:name="Configuration" doc:id="acea7b07-dd62-4f94-a0b9-bda0ba581c3e" defaultErrorHandler-ref="GlobalErrorHandling" />
 	<apikit:config name="customer-interaction-process-api-config"
-		api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.2.5:raml:zip:customer-interaction-process-api.raml"
+		api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.2.7:raml:zip:customer-interaction-process-api.raml"
 		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" keepApiBaseUri="true"/>
 	<http:request-config name="HTTPS_Request_Customers_PL_configuration" doc:name="HTTP Request configuration"
 		doc:id="9b2b1fc9-e500-4b9b-a65c-7b1f1a702dd9" basePath="${secure::https.request.customers-pl.basepath}"
