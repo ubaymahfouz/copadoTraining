@@ -61,7 +61,7 @@
 	(variables: vars) if (vars != null), 
 	(failingNode: error.failingComponent) if (error != null),
 	(originalError: error.detailedDescription) if (error != null),
-	(fullerror: error) if (error != null)
+	(fullerror: error.description) if (error != null)
 }]]]></json-logger:content>
 			</json-logger:logger>
 		</on-error-propagate>
