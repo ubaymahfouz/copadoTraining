@@ -13,5 +13,3 @@ resources:
   
 extends:
   template: mulesoft-api.yml@pipeline-templates
-  parameters:
-    runtime: 4.4.0
