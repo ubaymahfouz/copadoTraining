@@ -1,4 +1,13 @@
 {
-	"minMuleVersion":"4.3.0",
-	"secureProperties":["anypoint.platform.client_secret","anypoint.platform.client_id","customer-interaction-pl-ms-encryption-key","azure.clientid","azure.clientsecret","azure.vaultname","azure.encryptkey","azure.localfile"]
+	"minMuleVersion": "4.6.0",
+	"secureProperties": [
+		"anypoint.platform.client_secret",
+		"anypoint.platform.client_id",
+		"customer-interaction-pl-ms-encryption-key",
+		"azure.clientid",
+		"azure.clientsecret",
+		"azure.vaultname",
+		"azure.encryptkey",
+		"azure.localfile"
+	]
 }
