@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core 
+	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/json-logger 
+	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+	http://www.mulesoft.org/schema/mule/http 
+	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+	http://www.mulesoft.org/schema/mule/ee/core 
+	http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="post-insider" doc:id="0b682ab6-3c82-4b00-8cd9-68d7ab8bf457">
+		<json-logger:logger doc:name="Functional Log" doc:id="ba214598-90f0-4d72-8ed0-3d17f8d6ff16" config-ref="JSON_Functional_Logger_Config"
+			message='#["Message to POST insider notification received, about to transform sap notification to insider request"]' tracePoint="BEFORE_TRANSFORM"
+			category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Transform sap notification to in insider request" doc:id="5b831838-d96d-4f4c-9b6c-f3647816a261" >
+      <ee:message >
+        <ee:set-payload resource="dwl/post-sap-notifications-to-insider.dwl" />
+      </ee:message>
+      <ee:variables >
+        <ee:set-variable variableName="insiderAuthkey" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-variable>
+      </ee:variables>
+    </ee:transform>
+    <json-logger:logger doc:name="Functional Log" doc:id="9f7c45d6-868b-4cd8-8911-a734032440ef" config-ref="JSON_Functional_Logger_Config" message='#["successfully transformed sap notification to insider request"]' tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes">
+      <json-logger:content><![CDATA[null]]></json-logger:content>
+    </json-logger:logger>
+    <set-variable value="${azure-vault::insider-ws-apikey}" doc:name="Set insider auth key-key vault" doc:id="c3b742ba-f11b-4fa9-a8d1-f2e9e61e6b87" variableName="insiderAuthKey" />
+    <json-logger:logger doc:name="Functional Log" doc:id="7d61fce1-fcae-410d-9368-a7b671fdc2d3" config-ref="JSON_Functional_Logger_Config" message='#["about to send insider request payload to insider api "]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+      <json-logger:content><![CDATA[null]]></json-logger:content>
+    </json-logger:logger>
+    <json-logger:logger doc:name="DEBUG Logger" doc:id="fa2877ae-7a5a-402a-b870-7d56fed98b79" config-ref="JSON_Logger_Config" message='#["about to send insider request payload to insider api"]' tracePoint="BEFORE_REQUEST" priority="DEBUG" category="nl.swisssense.payload">
+      <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    origin: vars.origin,
+    originalPayload: vars.originalPayload,
+    (lastModifiedCustomer: vars.lastModifiedGetCustomersResponse) if (vars.lastModifiedGetCustomersResponse != null)
+}]]]></json-logger:content>
+    </json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
+      <http:request method="POST" doc:name="post sap request @ insider api" doc:id="2c1938db-efec-4220-bfc3-9d80d0f175ed" config-ref="HTTP_Request_configuration_insider_Pl_configuration" path="${secure::https.request.insider-pl.path}" sendCorrelationId="ALWAYS" correlationId="#[correlationId]">
+        <http:headers><![CDATA[#[output application/java
+---
+{
+	"X-INS-AUTH-KEY" : vars.insiderAuthKey
+}]]]>
+        
+        </http:headers>
+      </http:request>	
+		</json-logger:logger-scope>
+    <json-logger:logger doc:name="Functional Log" doc:id="1a889e41-c454-4258-ae66-9e751f83df3b" config-ref="JSON_Functional_Logger_Config" message='#["successfully sent notification to insider api "]' tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" >
+      <json-logger:content ><![CDATA[null]]></json-logger:content>
+    </json-logger:logger>
+	</sub-flow>
+</mule>
