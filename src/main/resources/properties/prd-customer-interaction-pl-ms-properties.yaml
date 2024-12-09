@@ -31,7 +31,8 @@ https:
       port: "443"           
       protocol: "HTTPS"         
       timeout: 
-                response: "30000"        
+                response: "30000" 
+                idle: "30000"         
 
 ## HTTPS Request Config for connection to Salesforce SL ##
     salesforce-sl:
