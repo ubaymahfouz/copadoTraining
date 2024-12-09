@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core 
 	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 	http://www.mulesoft.org/schema/mule/json-logger 
 	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 
 	<error-handler name="GlobalErrorHandling" doc:id="5c5ea77b-79b5-4856-b4f4-36f7642c9b3e">
+        <on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate" doc:id="d64597c0-7154-4116-8434-024390ab674b" 
+                type="HTTP:BAD_GATEWAY,HTTP:BAD_REQUEST,HTTP:FORBIDDEN,HTTP:INTERNAL_SERVER_ERROR,HTTP:METHOD_NOT_ALLOWED,HTTP:NOT_ACCEPTABLE,HTTP:NOT_FOUND,HTTP:UNAUTHORIZED,HTTP:UNSUPPORTED_MEDIA_TYPE" >
+            <ee:transform doc:name="Create Error Response" doc:id="4abc8985-f4e0-4e76-b95e-4007e0c1cd6d" >
+                <ee:message >
+                    <ee:set-payload resource="dwl/error-response-http.dwl" />
+                </ee:message>
+                <ee:variables >
+                    <ee:set-variable resource="dwl/generic-error-httpstatus.dwl" variableName="httpStatus" />
+                </ee:variables>
+            </ee:transform>
+            <json-logger:logger doc:name="Error Payload Log" doc:id="41cce64c-c59e-4e77-9b98-810e8b0ab7fc" config-ref="JSON_Logger_Config" 
+                    message='#[(error.description  default "")]' tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error" >
+                <json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    attributes: attributes,
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null)
+}]]]></json-logger:content>
+            </json-logger:logger>
+        </on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
 			doc:id="ff44e829-2f1f-483c-894a-9dc8eb9a3da4" type="HTTP:CONNECTIVITY">
 			<json-logger:logger doc:name="Error Log" doc:id="f3c624c6-3906-4e1b-a4aa-b3a1731d109a" config-ref="JSON_Logger_Config"
@@ -18,21 +39,6 @@
 	(variables: vars) if (vars != null), 
 	(failingNode: error.failingComponent) if (error != null),
 	(originalError: error.detailedDescription) if (error != null)
-}]]]></json-logger:content>
-			</json-logger:logger>
-		</on-error-propagate>
-		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
-			doc:id="3a6b89a4-9797-4f8c-9b68-3852f0e5a115" type="HTTP:INTERNAL_SERVER_ERROR">
-			<json-logger:logger doc:name="Error Log" doc:id="b2e4ca34-eea8-4e06-a162-848a5e220a23" config-ref="JSON_Logger_Config"
-				message='Error occurred in an API which was called by this application.' tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error">
-				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-	attributes: attributes,
-	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-	(variables: vars) if (vars != null), 
-	(failingNode: error.failingComponent) if (error != null),
-	(originalError: error.detailedDescription) if (error != null),
-	(errorFromCalledAPI: error.errorMessage.payload.error) if (error.errorMessage.payload.error != null)
 }]]]></json-logger:content>
 			</json-logger:logger>
 		</on-error-propagate>
@@ -50,20 +56,24 @@
 }]]]></json-logger:content>
 			</json-logger:logger>
 		</on-error-propagate>
-		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
-			doc:id="706928e2-8045-41ee-9ede-5ff91cd10768">
-			<json-logger:logger doc:name="Error Log" doc:id="feba7791-69da-4c68-a538-a9c160768fa2" config-ref="JSON_Logger_Config"
-				tracePoint="EXCEPTION" category="nl.swisssense.error" priority="ERROR" message='#[error.description default "No error.description present."]'>
-				<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+		<on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate" doc:id="5ee458fa-b25e-48a4-b184-5812c286554b" 
+                type="ANY" >
+            <ee:transform doc:name="Create Error Response" doc:id="44abd074-6148-4e25-a33f-d532f9c5cdc9" >
+                <ee:message >
+                    <ee:set-payload resource="dwl/any-error-response.dwl" />
+                </ee:message>
+                <ee:variables >
+                    <ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <json-logger:logger doc:name="Error Payload Log" doc:id="02709638-3a4c-46f8-8bc3-400782cbd625" config-ref="JSON_Logger_Config" 
+                    message='#[(error.description default "")]' tracePoint="EXCEPTION" priority="ERROR" category="nl.swisssense.error" >
+                <json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-	attributes: attributes,
-	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-	(variables: vars) if (vars != null), 
-	(failingNode: error.failingComponent) if (error != null),
-	(originalError: error.detailedDescription) if (error != null),
-	(fullerror: error.description) if (error != null)
+    attributes: attributes,
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null)
 }]]]></json-logger:content>
-			</json-logger:logger>
-		</on-error-propagate>
+            </json-logger:logger>
+        </on-error-propagate>
 	</error-handler>
 </mule>

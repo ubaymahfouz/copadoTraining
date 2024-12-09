@@ -1,6 +1,13 @@
-%dw 2.0
 output application/json
 ---
 {
-	error: "An unexpected error has occurred. " ++ (error.description)
+    errors: [
+        {
+            correlationId: correlationId default "",
+            timestamp: now(),
+            statusCode: "500",
+            error: "Internal Server Error",
+            detail: error.detailedDescription default ""
+        }
+    ]
 }
