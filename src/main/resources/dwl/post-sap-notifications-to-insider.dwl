@@ -8,21 +8,21 @@ var region = (payload.customerKey splitBy "-")[1]
 {    
     "subject": (p("subject." ++ key ++ "." ++ region) 
    			 	default "")
-  		 		replace "%%OrderNumber%%" with 
-	         (mail.attributes filter (attr) -> attr.name == "OrderNumber")[0].value,
+  				replace "%%OrderNumber%%" with 
+	         (mail.attributes filter (attr) -> attr.name == "OrderNumber")[0].value default "",
     "tos": [
     {
-    "name": ((mail.attributes filter (attr) -> attr.name == "FirstName")[0].value) ++ " " ++ ((mail.attributes filter (attr) -> attr.name == "LastName")[0].value) ,  
-    "email": mail.emailAddress
+    "name": ((mail.attributes filter (attr) -> attr.name == "FirstName")[0].value) default "" ++ " " ++ ((mail.attributes filter (attr) -> attr.name == "LastName")[0].value)default "" ,  
+    "email": mail.emailAddress default ""
     }    
     ],
     "from": {
-        "name": (mail.attributes filter (attr) -> attr.name == "DepartmentID")[0].value,
-        "email": (mail.attributes filter (attr) -> attr.name == "DepEmailAddress")[0].value
-    },
+        "name": (mail.attributes filter (attr) -> attr.name == "DepartmentID")[0].value default "",
+        "email": p("from_email." ++ region)
+    default ""},
     "reply_to": {
-        "name": (mail.attributes filter (attr) -> attr.name == "DepartmentID")[0].value,
-        "email": (mail.attributes filter (attr) -> attr.name == "DepEmailAddress")[0].value
+        "name": (mail.attributes filter (attr) -> attr.name == "DepartmentID")[0].value default "",
+        "email": (mail.attributes filter (attr) -> attr.name == "DepEmailAddress")[0].value default ""
     },
     "template_id": (p("customerkey." ++ key ++ "-" ++ region) 
    			 	default "") as String,

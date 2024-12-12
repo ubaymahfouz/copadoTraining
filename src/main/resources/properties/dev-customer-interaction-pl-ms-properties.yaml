@@ -91,7 +91,7 @@ https:
       basepath: "/api/v1"
       protocol: "HTTPS"
 #      host: "mule-worker-tst-document-generation-sl-ms.de-c1.eu1.cloudhub.io"
-      port: "8092"
+      port: "8095"
       host: "localhost"
       timeout:
         response: "60000"
@@ -227,8 +227,8 @@ customerkey:
     B8-DE: ""
     B8-BE: ""
     B8-AT: ""
-    O9-NL: ""
-    O9-DE: ""
+    O9-NL: "16671"
+    O9-DE: "16671"
     O9-BE: ""
     O9-AT: ""
     B9-NL: ""
@@ -325,4 +325,10 @@ subject:
      NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
      DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
      BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
-     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "               
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "         
+
+from_email:
+     NL: "contact@email.swisssense.nl"
+     DE: "contact@email.swisssense.de"
+     BE: "contact@email.swisssense.be"
+     AT: "contact@email.swisssense.at"

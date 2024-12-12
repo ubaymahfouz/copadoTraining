@@ -319,4 +319,11 @@ subject:
      NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
      DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
      BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
-     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "                 
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "    
+     
+## domain- email mapping -from ##   
+from_email:
+     NL: "contact@email.swisssense.nl"
+     DE: "contact@email.swisssense.de"
+     BE: "contact@email.swisssense.be"
+     AT: "contact@email.swisssense.at"                               
