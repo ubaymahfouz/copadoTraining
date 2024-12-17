@@ -47,7 +47,7 @@ output application/java
 }]]]></json-logger:content>
     </json-logger:logger>
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="b08d1bff-da86-4f26-a5b0-7f13876f1eeb" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-      <http:request method="POST" doc:name="post sap request @ insider api" doc:id="2c1938db-efec-4220-bfc3-9d80d0f175ed" config-ref="HTTP_Request_configuration_insider_Pl_configuration" path="${secure::https.request.insider-pl.path}" sendCorrelationId="ALWAYS" correlationId="#[correlationId]">
+      <http:request method="POST" doc:name="post sap request @ insider api" doc:id="2c1938db-efec-4220-bfc3-9d80d0f175ed" config-ref="HTTP_Request_configuration_insider_email_configuration" path="${secure::https.request.insider.email.path}" sendCorrelationId="ALWAYS" correlationId="#[correlationId]">
         <http:headers><![CDATA[#[output application/java
 ---
 {

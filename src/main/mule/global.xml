@@ -123,7 +123,10 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 			sharedAccessKeyName="${azure-vault::azure-servicebus-sharedaccesspolicy-name}"
 			sharedAccessKey="${azure-vault::azure-servicebus-sharedaccesspolicy-key}" />
 	</azure-service-bus-messaging:config>
-  <http:request-config name="HTTP_Request_configuration_insider_Pl_configuration" doc:name="HTTP Request configuration" doc:id="c9510f35-236a-4d39-9d6d-6427fcb2c366" responseTimeout="${secure::https.request.insider-pl.timeout.response}">
-    <http:request-connection protocol="${secure::https.request.insider-pl.protocol}" host="${secure::https.request.insider-pl.host}" port="${secure::https.request.insider-pl.port}" connectionIdleTimeout="${secure::https.request.insider-pl.timeout.idle}"/>
+  <http:request-config name="HTTP_Request_configuration_insider_email_configuration" doc:name="HTTP Request configuration" doc:id="c9510f35-236a-4d39-9d6d-6427fcb2c366" responseTimeout="${secure::https.request.insider.timeout.response}">
+    <http:request-connection protocol="${secure::https.request.insider.protocol}" host="${secure::https.request.insider.email.host}" port="${secure::https.request.insider.port}" connectionIdleTimeout="${secure::https.request.insider.timeout.idle}"/>
+  </http:request-config>
+  <http:request-config name="HTTP_Request_configuration_insider_event_configuration" doc:name="HTTP Request configuration" doc:id="f31daa15-b028-4afc-8629-59f2ee4c5fdc" responseTimeout="${secure::https.request.insider.timeout.response}">
+    <http:request-connection protocol="${secure::https.request.insider.protocol}" host="${secure::https.request.insider.event.host}" port="${secure::https.request.insider.port}" connectionIdleTimeout="${secure::https.request.insider.timeout.idle}"/>
   </http:request-config>
 </mule>
