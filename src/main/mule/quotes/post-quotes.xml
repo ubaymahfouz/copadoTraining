@@ -284,12 +284,12 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="DEBUG" doc:id="f3f8cc10-58dd-4b88-af31-0d155ff646be" config-ref="JSON_Logger_Config" message='#["payload and variables before insider flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    payload: payload default "",
+    //payload: if (payload != null and !isEMpty(payload)) payload else {},
     attributes: attributes,
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
     </json-logger:logger>
-    <!-- [STUDIO:"post quotes to insider -email"]<flow-ref doc:name="post quotes to insider -email" doc:id="9cd82b19-b150-477d-b82a-c8afe43f3759" name="post-quotes-insider-email" /> [STUDIO] -->
+    <flow-ref doc:name="post quotes to insider -email" doc:id="9cd82b19-b150-477d-b82a-c8afe43f3759" name="post-quotes-insider-email" />
 	</sub-flow>
   <sub-flow name="post-quotes-insider-email" doc:id="7fd56b03-0419-4444-a0e9-b83a8a23a885" >
     <json-logger:logger doc:name="Functional" doc:id="814c3e72-fc20-423a-90e7-0ac460dccd59" config-ref="JSON_Functional_Logger_Config" message="About to transform Quote to insider request format " tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
@@ -321,14 +321,21 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
       <reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
       <azure-service-bus-messaging:body ><![CDATA[#[vars.insiderEmailPayload]]]></azure-service-bus-messaging:body>
     </azure-service-bus-messaging:send>
-    <flow-ref doc:name="post quotes to insider -event" doc:id="3cb68476-4bba-4797-b46f-3809d70aa61e" name="post-quotes-insider-event" />
+    <json-logger:logger doc:name="DEBUG" doc:id="6b7b4ce3-8fe4-4bfb-8baa-f0e6046e712a" config-ref="JSON_Logger_Config" message='#["payload and variables before insider flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+      <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+    </json-logger:logger>
+    <!-- [STUDIO:"post quotes to insider -event"]<flow-ref doc:name="post quotes to insider -event" doc:id="3cb68476-4bba-4797-b46f-3809d70aa61e" name="post-quotes-insider-event" /> [STUDIO] -->
   </sub-flow>
   <flow name="listener-quote-insider-email" doc:id="f539c1dd-ded2-4fdf-af8c-d0da5d0410d6" >
     <azure-service-bus-messaging:message-listener doc:name="Message listener" doc:id="cc0f20a6-f94a-420b-82ec-0dda8c0d2f6c" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.quote-related-mailings.q}"/>
     <json-logger:logger doc:name="Functional" doc:id="b6a83547-01c6-4813-b1e3-9638ee8cbcab" config-ref="JSON_Functional_Logger_Config" message="About to POST  insider email @ insider API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
       <json-logger:content ><![CDATA[#[null]]]></json-logger:content>
     </json-logger:logger>
-    <set-variable value="#[payload]" doc:name="Set Quote Step2 Payload" doc:id="b47d12ef-90a3-4e85-9c40-19cc61b41a3a" variableName="quote.step2.payload" />
     <set-variable value="${azure-vault::insider-ws-apikey}" doc:name="Set insider auth key-key vault" doc:id="6f32e688-a14a-4be2-b937-077fc28664eb" variableName="insiderAuthKey" />
     <json-logger:logger-scope doc:name="Logger scope" doc:id="25b013c8-1d7b-410d-9ce5-6ea8794aa6b0" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
       <http:request method="POST" doc:name="Insider API - POST email " doc:id="e82a2886-fead-48f6-be37-8ea6a3cc641a" config-ref="HTTP_Request_configuration_insider_email_configuration" path="${secure::https.request.insider.email.path}" correlationId="#[vars.correlationId]" >
@@ -344,53 +351,53 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     </json-logger:logger>
     <error-handler ref="GlobalErrorHandling" />
   </flow>
-  <sub-flow name="post-quotes-insider-event" doc:id="a628f528-2557-487b-b7e6-bbfc1f35ab26" >
-    <json-logger:logger doc:name="Functional" doc:id="55ee72dc-a854-4c3a-b492-49ca065230a0" config-ref="JSON_Functional_Logger_Config" message="About to transform Quote to insider event request format " tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
-      <json-logger:content ><![CDATA[null]]></json-logger:content>
+  <!-- [STUDIO:"post-quotes-insider-event"]<sub-flow name="post-quotes-insider-event" doc:id="a628f528-2557-487b-b7e6-bbfc1f35ab26" >
+    <json-logger:logger doc:name="Functional" doc:id="55ee72dc-a854-4c3a-b492-49ca065230a0" config-ref="JSON_Functional_Logger_Config" message="About to transform Quote to insider event request format " tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId&#93;" >
+      <json-logger:content ><![CDATA[null&#93;&#93;></json-logger:content>
     </json-logger:logger>
     <ee:transform doc:name="Transform quote to insider event" doc:id="8074009a-db52-4585-abe0-fa256b988683" >
       <ee:message >
         <ee:set-payload resource="dwl/post-quote-insider-event-mapping.dwl" />
       </ee:message>
     </ee:transform>
-    <json-logger:logger doc:name="Functional" doc:id="47f63bb6-290a-4f0d-a3f1-f0a918a569e2" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider event request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
-      <json-logger:content ><![CDATA[null]]></json-logger:content>
+    <json-logger:logger doc:name="Functional" doc:id="47f63bb6-290a-4f0d-a3f1-f0a918a569e2" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider event request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId&#93;" >
+      <json-logger:content ><![CDATA[null&#93;&#93;></json-logger:content>
     </json-logger:logger>
-    <json-logger:logger doc:name="DEBUG" doc:id="88acc995-f83d-4324-af7b-ec39115f0403" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider event request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
-      <json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+    <json-logger:logger doc:name="DEBUG" doc:id="88acc995-f83d-4324-af7b-ec39115f0403" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider event request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId&#93;" >
+      <json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json &#45;&#45;-
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
     (vars: vars) if (vars != null)
-}]]]></json-logger:content>
+}&#93;&#93;&#93;></json-logger:content>
     </json-logger:logger>
     <json-logger:logger doc:name="Functional" doc:id="6bd62141-4759-4392-a7ec-a10716924254" config-ref="JSON_Functional_Logger_Config" message="About to send quote's insider event request  to ASB queue - Quote insider event upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
-      <json-logger:content ><![CDATA[null]]></json-logger:content>
+      <json-logger:content ><![CDATA[null&#93;&#93;></json-logger:content>
     </json-logger:logger>
     <azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-event-upsert.q}" doc:name="Send Quote insider event upsert" doc:id="5b9c72ce-6f19-4e43-afb5-cea897e496e6" config-ref="Azure_Service_Bus_Messaging_Connector_Config" sendCorrelationStrategy="ALWAYS" >
       <reconnect frequency="${azure.servicebus.reconnection.frequency}" count="${azure.servicebus.reconnection.attempts}" />
     </azure-service-bus-messaging:send>
-  </sub-flow>
-  <flow name="listener-quote-insider-event" doc:id="2c48ca79-882f-45f2-b1c3-137789b4d484" >
+  </sub-flow> [STUDIO] -->
+  <!-- [STUDIO:"listener-quote-insider-event"]<flow name="listener-quote-insider-event" doc:id="2c48ca79-882f-45f2-b1c3-137789b4d484" >
     <azure-service-bus-messaging:message-listener ackMode="AUTO" doc:name="Message listener" doc:id="7bde4609-daf8-4c89-8e75-e89ad51c9c52" config-ref="Azure_Service_Bus_Messaging_Connector_Config" destinationName="${azure.servicebus.destination.quote.insider-event-upsert.q}"/>
-    <json-logger:logger doc:name="Functional" doc:id="7d7ff16f-a2e0-443c-b0bd-821db209ed8d" config-ref="JSON_Functional_Logger_Config" message="About to POST insider event @ insider API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
-      <json-logger:content ><![CDATA[null]]></json-logger:content>
+    <json-logger:logger doc:name="Functional" doc:id="7d7ff16f-a2e0-443c-b0bd-821db209ed8d" config-ref="JSON_Functional_Logger_Config" message="About to POST insider event @ insider API" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId&#93;" >
+      <json-logger:content ><![CDATA[null&#93;&#93;></json-logger:content>
     </json-logger:logger>
     <set-variable value="${azure-vault::insider-x-request-token}" doc:name="Set insider request-token-key vault" doc:id="a3e30685-bbe3-4880-a094-290856183b3e" variableName="eventRequestToken" />
     <set-variable value="${azure-vault::insider-x-partner-name}" doc:name="Set insider insider-x-partner-name" doc:id="465b8958-516b-43ab-8222-9a74767dc86a" variableName="eventPartnerName" />
     <json-logger:logger-scope doc:name="Logger scope" doc:id="915f5ebb-752c-4e94-835b-adb196ef4fba" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
-      <http:request method="POST" doc:name="Insider API - POST event" doc:id="d34f1aa1-8917-48fa-8371-aa1f914807e9" config-ref="HTTP_Request_configuration_insider_event_configuration" path="${secure::https.request.insider.event.path}" correlationId="#[vars.correlationId]" >
+      <http:request method="POST" doc:name="Insider API - POST event" doc:id="d34f1aa1-8917-48fa-8371-aa1f914807e9" config-ref="HTTP_Request_configuration_insider_event_configuration" path="${secure::https.request.insider.event.path}" correlationId="#[vars.correlationId&#93;" >
         <http:headers ><![CDATA[#[output application/java
----
+&#45;&#45;-
 {
 	"X-REQUEST-TOKEN" : vars.eventRequestToken,
 	"X-PARTNER-NAME" : vars.eventPartnerName
-}]]]></http:headers>
+}&#93;&#93;&#93;></http:headers>
       </http:request>
     </json-logger:logger-scope>
-    <json-logger:logger doc:name="Functional" doc:id="0287567b-b935-4306-981e-12888645983f" config-ref="JSON_Functional_Logger_Config" message="After POST insider event @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
-      <json-logger:content ><![CDATA[null]]></json-logger:content>
+    <json-logger:logger doc:name="Functional" doc:id="0287567b-b935-4306-981e-12888645983f" config-ref="JSON_Functional_Logger_Config" message="After POST insider event @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId&#93;" >
+      <json-logger:content ><![CDATA[null&#93;&#93;></json-logger:content>
     </json-logger:logger>
     <error-handler ref="GlobalErrorHandling" />
-  </flow>
+  </flow> [STUDIO] -->
 </mule>
