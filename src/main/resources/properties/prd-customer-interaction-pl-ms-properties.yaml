@@ -24,10 +24,14 @@ https:
       customerssync:
         path: "/customers_sync"
         
-## HTTPS Request Config for connection to Insider PL ## 
-    insider-pl:
-      host: "mail.useinsider.com"
-      path: "/mail/v1/send" 
+## HTTPS Request Config for connection to Insider  ## 
+    insider:
+      email:
+        host: "mail.useinsider.com"
+        path: "/mail/v1/send" 
+      event:       
+        host: "unification.useinsider.com"
+        path: "api/user/v1/upsert"   
       port: "443"           
       protocol: "HTTPS"         
       timeout: 
@@ -143,6 +147,14 @@ azure:
           q: "customer-interaction-pl.quote.post.step2.inbound.queue"
           dlq: "customer-interaction-pl.quote.post.step2.inbound.queue/$DeadLetterQueue"
           maxConcurrency: "4"
+        quote-related-mailings:  
+           q: "customer-interaction-pl.quote.post.quote-related-mailings.inbound.queue"
+           dlq: "customer-interaction-pl.quote.post.quote-related-mailings.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+        insider-event-upsert: 
+           q: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue"
+           dlq: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"  
 
 ## Keystores Config ##
 keystore:
@@ -318,6 +330,13 @@ subject:
      DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
      BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
      AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) " 
+   ## language code based mapping for transactional email subject##
+   nl_nl:
+     subject= "Je offerte staat klaar"
+     template_id= "13407"  
+   de_de:
+     subject= "Ihr persönliches Angebot"
+     template_id= "13639"    
 
 ## domain- email mapping -from ##   
 from_email:
