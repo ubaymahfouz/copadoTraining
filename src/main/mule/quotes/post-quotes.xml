@@ -284,7 +284,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="DEBUG" doc:id="f3f8cc10-58dd-4b88-af31-0d155ff646be" config-ref="JSON_Logger_Config" message='#["payload and variables before insider flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    payload: payload default "",
     attributes: attributes,
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
