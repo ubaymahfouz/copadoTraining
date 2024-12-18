@@ -323,7 +323,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="DEBUG" doc:id="6b7b4ce3-8fe4-4bfb-8baa-f0e6046e712a" config-ref="JSON_Logger_Config" message='#["payload and variables before calling insider event flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" priority="DEBUG">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
@@ -373,7 +372,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="DEBUG" doc:id="83e17b44-94f3-4299-a1ce-03f09814d90e" config-ref="JSON_Logger_Config" message='#["payload and variables before insider event transformation"]' tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
     attributes: attributes,
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
