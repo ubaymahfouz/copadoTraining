@@ -1,6 +1,6 @@
 %dw 2.0
 output application/json
-var event = vars.quote.step2.payload
+var event = vars.'quote.step2.payload'
 ---
 {    
     users: [
@@ -9,7 +9,12 @@ var event = vars.quote.step2.payload
              {
                 "uuid": vars.customerRefSfIdResponse.targetCustomerId,
                 "email": event.customer.email default "",
-                "phone_number": event.customer.phone  default ""
+                "phone_number": if (event.customer.countryCode == "NL") 
+				        "+31" ++ event.customer.phone replace /^(0+)/ with "" 
+				      else if (event.customer.countryCode == "DE") 
+				        "+49" ++ event.customer.phone replace /^(0+)/ with "" 
+				      else 
+				        "+" ++ (event.customer.phone replace /^(0+)/ with "" )
              },
             "events": 
              [
