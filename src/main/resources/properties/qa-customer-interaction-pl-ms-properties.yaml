@@ -233,6 +233,10 @@ customerkey:
     O3-BE  : "16243"
     O3-DE :  "16241"
     O3-NL  : "16244"
+    B7-AT :  "16252"
+    B7-BE :  "16253"
+    B7-DE :  "16251"    
+    B7-NL :  "16254"  
     
 subject:
    ZPAY:
@@ -325,6 +329,9 @@ subject:
      DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
      BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
      AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "    
+   ZCOH: 
+     DE: "Wichtige Informationen zur Zustellung Ihrer Bestellung - Bestellnummer %%OrderNumber%%"
+     AT: "Wichtige Informationen zur Zustellung Ihrer Bestellung - Bestellnummer %%OrderNumber%%"  
    ## language code based mapping for transactional email subject##
    nl_nl:
      subject= "Je offerte staat klaar"
