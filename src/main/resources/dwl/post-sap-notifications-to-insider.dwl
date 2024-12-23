@@ -26,5 +26,5 @@ var region = (payload.customerKey splitBy "-")[1]
     },
     "template_id": (p("customerkey." ++ key ++ "-" ++ region) 
    			 	default "") as String,
-    "dynamic_fields": (mail.attributes reduce ((item, accumulator) -> accumulator ++ { (item.name): item.value} ))
+    "dynamic_fields": (mail.attributes reduce ((item, accumulator= {}) -> accumulator ++ { (item.name): item.value} ))
 }  
