@@ -23,6 +23,20 @@ https:
           path: "/customers/{customerid}"
       customerssync:
         path: "/customers_sync"
+        
+## HTTPS Request Config for connection to Insider ## 
+    insider:
+      email:
+        host: "mail.useinsider.com"
+        path: "/mail/v1/send" 
+      event:       
+        host: "unification.useinsider.com"
+        path: "api/user/v1/upsert"   
+      port: "443"           
+      protocol: "HTTPS"         
+      timeout: 
+                response: "30000"
+                idle: "30000"  
 
 ## HTTPS Request Config for connection to Salesforce SL ##
     salesforce-sl:
@@ -133,6 +147,14 @@ azure:
           q: "customer-interaction-pl.quote.post.step2.inbound.queue"
           dlq: "customer-interaction-pl.quote.post.step2.inbound.queue/$DeadLetterQueue"
           maxConcurrency: "4"
+        quote-related-mailings:  
+           q: "customer-interaction-pl.quote.post.quote-related-mailings.inbound.queue"
+           dlq: "customer-interaction-pl.quote.post.quote-related-mailings.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+        insider-event-upsert: 
+           q: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue"
+           dlq: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"   
 
 ## Keystores Config ##
 keystore:
@@ -142,3 +164,185 @@ keystore:
   password: "![+nsCidMRvo9N6qn3ROR1UQ==]"
 truststore:
   insecure: "true"
+
+## insider data mapping ##   
+customerkey:
+    ZCOH-AT: "16193"
+    ZCOH-DE: "16194"
+    O6ML-AT: "16192"
+    O6ML-BE: "16190"
+    O6ML-DE: "16191"
+    O6ML-NL: "16128"
+    O6ZL-AT: "16197"
+    O6ZL-BE: "16196"
+    O6ZL-DE: "16198"
+    O6ZL-NL: "16195"
+    ZPAY-AT: "16203"
+    ZPAY-BE: "16204"
+    ZPAY-DE: "16202"
+    ZPAY-NL: "16205"
+    O7-AT :  "16208"
+    O7-BE:   "16207"
+    O7-DE :  "16209"
+    O7-NL :  "16206"
+    B8-AT :  "16212"
+    B8-BE :  "16213"
+    B8-DE :  "16211"
+    B8-NL  : "16210"
+    B9-AT  : "16212"
+    B9-BE :  "16213"
+    B9-DE  : "16211"
+    B9-NL  : "16210"
+    B5-AT  : "16215"
+    B5-BE  : "16214"
+    B5-DE  : "16216"
+    B5-NL  : "16217"
+    B2-AT  : "16188"
+    B2-BE  : "16189"
+    B2-DE  : "16187"
+    B2-NL  : "16186"
+    B4-AT  : "16220"
+    B4-BE  : "16222"
+    B4-DE  : "16219"
+    B4-NL  : "16218"
+    B3-AT  : "16225"
+    B3-BE  : "16224"
+    B3-DE  : "16227"
+    B3-NL  : "16226"
+    O8-AT  : "16231"
+    O8-BE  : "16232"
+    O8-DE  : "16230"
+    O8-NL  : "16229"
+    O9-AT  : "16231"
+    O9-BE  : "16232"
+    O9-DE  : "16230"
+    O9-NL  : "16229"
+    O5-AT  : "16234"
+    O5-BE  : "16236"
+    O5-DE  : "16235"
+    O5-NL  : "16233"
+    O2-AT :  "16185"
+    O2-BE  : "13661"
+    O2-DE  : "16184"
+    O2-NL  : "16176"
+    O4-AT  : "16239"
+    O4-BE :  "16240"
+    O4-DE :  "16238"
+    O4-NL  : "16237"
+    O3-AT :  "16242"
+    O3-BE  : "16243"
+    O3-DE :  "16241"
+    O3-NL  : "16244"
+    B7-AT :  "16252"
+    B7-BE :  "16253"
+    B7-DE :  "16251"    
+    B7-NL :  "16254"  
+    
+subject:
+   ZPAY:
+     NL: "Jouw online betaallink - Ordernummer %%OrderNumber%%"
+     DE: "Ihr Online-Zahlungslink - Bestellnummer %%OrderNumber%%"
+     BE: "Jouw online betaallink - Ordernummer %%OrderNumber%%"
+     AT: "Ihr Online-Zahlungslink - Bestellnummer %%OrderNumber%%"
+   O2:
+     NL: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     DE: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉"
+     BE: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     AT: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉"
+   B2:
+     NL: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     DE: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉"
+     BE: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     AT: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉"
+   B2C:   
+     NL: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     DE: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉" 
+     BE: "We zijn aan de slag met jouw bestelling %%OrderNumber%%! 🎉"
+     AT: "Wir haben mit Ihrer Bestellung %%OrderNumber%% begonnen! 🎉"
+   O3:
+     NL: "We zijn bezig met het maken van jouw bestelling %%OrderNumber%%!"
+     DE: "Ihre Bestellung %%OrderNumber%% ist in Produktion!"
+     BE: "We zijn bezig met het maken van jouw bestelling %%OrderNumber%%!"
+     AT: "Ihre Bestellung %%OrderNumber%% ist in Produktion!"
+   B3C:
+     NL: "We zijn bezig met het maken van jouw bestelling %%OrderNumber%%!"     
+     DE: "Ihre Bestellung %%OrderNumber%% ist in Produktion!"
+     BE: "We zijn bezig met het maken van jouw bestelling %%OrderNumber%%!"
+     AT: "Ihre Bestellung %%OrderNumber%% ist in Produktion!"
+   O4:
+     NL: "Jouw bestelling %%OrderNumber%% is bijna klaar!"
+     DE: "Ihre Bestellung %%OrderNumber%%  ist fast fertig!"
+     BE: "Jouw bestelling %%OrderNumber%% is bijna klaar!"
+     AT: "Ihre Bestellung %%OrderNumber%%  ist fast fertig!"
+   B4:
+     NL: "Jouw bestelling %%OrderNumber%% is bijna klaar!"
+     DE: "Ihre Bestellung %%OrderNumber%%  ist fast fertig!"
+     BE: "Jouw bestelling %%OrderNumber%% is bijna klaar!"
+     AT: "Ihre Bestellung %%OrderNumber%%  ist fast fertig!"
+   O5:
+     NL: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."
+     BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."
+   B5:
+     NL: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%." 
+     BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%." 
+   O6ZL:
+     NL: "Belangrijk: De bezorgdag van jouw bestelling %%OrderNumber%% is bekend!"
+     DE: "Wichtig: Der Liefertag Ihrer Bestellung %%OrderNumber%% steht fest!"
+     BE: "Belangrijk: De bezorgdag van jouw bestelling %%OrderNumber%% is bekend!"
+     AT: "Wichtig: Der Liefertag Ihrer Bestellung %%OrderNumber%% steht fest!"
+   O6ML:
+     NL: "Belangrijk: De bezorgdag van jouw bestelling %%OrderNumber%% is bekend!"
+     DE: "Wichtig: Der Liefertag Ihrer Bestellung %%OrderNumber%% steht fest!" 
+     BE: "Belangrijk: De bezorgdag van jouw bestelling %%OrderNumber%% is bekend!"
+     AT: "Wichtig: Der Liefertag Ihrer Bestellung %%OrderNumber%% steht fest!"
+   O7:
+     NL: "Dit is het tijdsblok van jouw bezorgafspraak! (%%OrderNumber%%)"
+     DE: "Das Zeitfenster für Ihren Liefertermin steht fest! (%%OrderNumber%%)"
+     BE: "Dit is het tijdsblok van jouw bezorgafspraak! (%%OrderNumber%%)"
+     AT: "Das Zeitfenster für Ihren Liefertermin steht fest! (%%OrderNumber%%)"
+   B7:
+     NL: "Dit is het tijdsblok van jouw bezorgafspraak! (%%OrderNumber%%)"
+     DE: "Das Zeitfenster für Ihren Liefertermin steht fest! (%%OrderNumber%%)" 
+     BE: "Dit is het tijdsblok van jouw bezorgafspraak! (%%OrderNumber%%)"
+     AT: "Das Zeitfenster für Ihren Liefertermin steht fest! (%%OrderNumber%%)"
+   O8:
+     NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+     BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+   B8:
+     NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+     BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+   O9:
+     NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+     BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+   B9:
+     NL: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     DE: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "
+     BE: "Jouw mening telt! Vergeet hem niet te delen. 💚 (%%OrderNumber%%)"
+     AT: "Ihre Meinung ist wichtig! Vergessen Sie nicht, sie zu teilen. 💚(%%OrderNumber%%) "    
+   ZCOH: 
+     DE: "Wichtige Informationen zur Zustellung Ihrer Bestellung - Bestellnummer %%OrderNumber%%"
+     AT: "Wichtige Informationen zur Zustellung Ihrer Bestellung - Bestellnummer %%OrderNumber%%"  
+   ## language code based mapping for transactional email subject##
+   nl_nl:
+     subject= "Je offerte staat klaar"
+     template_id= "13407"  
+   de_de:
+     subject= "Ihr persönliches Angebot"
+     template_id= "13639"  
+     
+## domain- email mapping -from ##   
+from_email:
+     NL: "contact@emailuat.swisssense.com"
+     DE: "contact@emailuat.swisssense.com"
+     BE: "contact@emailuat.swisssense.com"
+     AT: "contact@emailuat.swisssense.com"                                   

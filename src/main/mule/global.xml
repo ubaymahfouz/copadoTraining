@@ -37,7 +37,7 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 		<tls:trust-store insecure="${secure::truststore.insecure}" />
 	</tls:context>
 	<configuration-properties doc:name="Configuration properties" doc:id="e79fdf2d-6ceb-4ae6-9849-a251d936986d"
-		file="properties/global.yaml" />
+		file="properties/errors.yaml" />
 	<configuration-properties doc:name="Env configuration properties" doc:id="a0610267-b731-470b-96b6-122b31c62ef1" 
 		file="properties/${mule.ch.env}-customer-interaction-pl-ms-properties.yaml" />
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="4f785cec-8be5-4bfb-bd56-9ac1c30918c8"
@@ -51,7 +51,7 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 		doc:id="dcd28aba-beb5-4a66-bc46-52d33eb34597" flowRef="customer-interaction-process-api-main" ignoreBasePath="true" />
 	<configuration doc:name="Configuration" doc:id="acea7b07-dd62-4f94-a0b9-bda0ba581c3e" defaultErrorHandler-ref="GlobalErrorHandling" />
 	<apikit:config name="customer-interaction-process-api-config"
-		api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.2.7:raml:zip:customer-interaction-process-api.raml"
+		api="resource::628dd124-53a0-4efa-9453-7ee7109dfdf0:customer-interaction-pl-ms:0.2.9:raml:zip:customer-interaction-process-api.raml"
 		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" keepApiBaseUri="true"/>
 	<http:request-config name="HTTPS_Request_Customers_PL_configuration" doc:name="HTTP Request configuration"
 		doc:id="9b2b1fc9-e500-4b9b-a65c-7b1f1a702dd9" basePath="${secure::https.request.customers-pl.basepath}"
@@ -123,4 +123,10 @@ http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mul
 			sharedAccessKeyName="${azure-vault::azure-servicebus-sharedaccesspolicy-name}"
 			sharedAccessKey="${azure-vault::azure-servicebus-sharedaccesspolicy-key}" />
 	</azure-service-bus-messaging:config>
+  <http:request-config name="HTTP_Request_configuration_insider_email_configuration" doc:name="HTTP Request configuration" doc:id="c9510f35-236a-4d39-9d6d-6427fcb2c366" responseTimeout="${secure::https.request.insider.timeout.response}">
+    <http:request-connection protocol="${secure::https.request.insider.protocol}" host="${secure::https.request.insider.email.host}" port="${secure::https.request.insider.port}" connectionIdleTimeout="${secure::https.request.insider.timeout.idle}"/>
+  </http:request-config>
+  <http:request-config name="HTTP_Request_configuration_insider_event_configuration" doc:name="HTTP Request configuration" doc:id="f31daa15-b028-4afc-8629-59f2ee4c5fdc" responseTimeout="${secure::https.request.insider.timeout.response}">
+    <http:request-connection protocol="${secure::https.request.insider.protocol}" host="${secure::https.request.insider.event.host}" port="${secure::https.request.insider.port}" connectionIdleTimeout="${secure::https.request.insider.timeout.idle}"/>
+  </http:request-config>
 </mule>

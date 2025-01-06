@@ -37,24 +37,6 @@
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
-            <on-error-propagate type="ANY" enableNotifications="true" logException="true">
-                <json-logger:logger doc:name="Error Log" doc:id="6ac55acc-79a6-49dd-9be0-d1b0c407f8d6" tracePoint="EXCEPTION" message="#[&quot;APIKit Router Error Handling 'ANY' path taken. &quot; ++ (error.description default &quot;&quot;)]" priority="ERROR" config-ref="JSON_Logger_Config" category="nl.swisssense.error">
-                    <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-	attributes: attributes,
-	(payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-	error: message.message.exceptionPayload.info
-}]]]></json-logger:content>
-                </json-logger:logger>
-                <ee:transform doc:name="Create Error Response" doc:id="34681480-c493-45a8-98bb-73535cca14b0">
-                    <ee:message>
-                        <ee:set-payload resource="dwl/any-error-response.dwl" />
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
-            </on-error-propagate>
         </error-handler>
     </flow>
     <flow name="post:\interests:application\json:customer-interaction-process-api-config">
@@ -76,5 +58,16 @@
  	statusCode: attributes.statusCode
 }]]]></json-logger:content>
 		</json-logger:logger>
+    </flow>
+    <flow name="post:\notifications\mail:application\json:customer-interaction-process-api-config">
+    <flow-ref doc:name="post-sap-notification-orchestration" doc:id="046f9770-4355-4238-a5b0-4ba2b7aa5a88" name="post-insider" />
+    <json-logger:logger doc:name="Exit Log" doc:id="52cd26d3-5e73-4a9b-9ac0-d4a3fd678823" config-ref="JSON_Logger_Config" message="End post /insider notification" tracePoint="END" category="nl.swisssense.attributes" >
+      <json-logger:content ><![CDATA[#[output application/json skipNullOn="everywhere"---
+{
+ 	reasonPhrase: attributes.reasonPhrase,
+ 	statusCode: attributes.statusCode
+}]]]></json-logger:content>
+    </json-logger:logger>
+    <error-handler ref="GlobalErrorHandling" />
     </flow>
 </mule>

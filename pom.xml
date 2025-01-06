@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>customer-interaction-pl-ms</artifactId>
-	<version>1.0.19</version>
+	<version>1.0.20-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 	<name>customer-interaction-pl-ms</name>
 	<description>This a Process Layer application for Swiss Sense.</description>
@@ -127,7 +127,7 @@
 		<dependency>
 			<groupId>628dd124-53a0-4efa-9453-7ee7109dfdf0</groupId>
 			<artifactId>customer-interaction-pl-ms</artifactId>
-			<version>0.2.7</version>
+			<version>0.2.9</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
