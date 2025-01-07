@@ -335,11 +335,17 @@ subject:
      AT: "Wichtige Informationen zur Zustellung Ihrer Bestellung - Bestellnummer %%OrderNumber%%"  
    ## language code based mapping for transactional email subject##
    nl_nl:
-     subject= "Je offerte staat klaar"
-     template_id= "13407"  
+     subject: "Je offerte staat klaar"
+     template_id: "13611" 
+   be_be:
+     subject: "Je offerte staat klaar"
+     template_id: "13638"    
    de_de:
-     subject= "Ihr persönliches Angebot"
-     template_id= "13639"    
+     subject: "Ihr persönliches Angebot"
+     template_id: "13637"
+   at_at:  
+     subject: "Je offerte staat klaar"
+     template_id: "13665" 
 
 ## domain- email mapping -from ##   
 from_email:
