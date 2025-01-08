@@ -344,7 +344,7 @@ subject:
      subject: "Ihr persönliches Angebot"
      template_id: "13637"
    at_at:  
-     subject: "Je offerte staat klaar"
+     subject: "Ihr persönliches Angebot"
      template_id: "13665" 
 
 ## domain- email mapping -from ##   
