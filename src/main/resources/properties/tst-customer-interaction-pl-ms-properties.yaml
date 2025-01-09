@@ -237,6 +237,14 @@ customerkey:
     B7-BE :  "16253"
     B7-DE :  "16251"    
     B7-NL :  "16254"  
+    O6-AT  : "16234"
+    O6-BE  : "16236"
+    O6-DE  : "16235"
+    O6-NL  : "16233"
+    B6-AT  : "16215"
+    B6-BE  : "16214"
+    B6-DE  : "16216"
+    B6-NL  : "16217"    
         
 ## insider subject data mapping ##     
     
@@ -286,11 +294,21 @@ subject:
      DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."
      BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
      AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."
+   O6:
+     NL: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."
+     BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."  
    B5:
      NL: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
      DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%." 
      BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
      AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%." 
+   B6:
+     NL: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     DE: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%." 
+     BE: "De laatste kwaliteitscontrole van jouw bestelling %%OrderNumber%%."
+     AT: "Die abschließende Qualitätsprüfung Ihrer Bestellung %%OrderNumber%%."   
    O6ZL:
      NL: "Belangrijk: De bezorgdag van jouw bestelling %%OrderNumber%% is bekend!"
      DE: "Wichtig: Der Liefertag Ihrer Bestellung %%OrderNumber%% steht fest!"
