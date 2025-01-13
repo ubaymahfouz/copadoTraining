@@ -27,13 +27,14 @@ var mail = vars.'quote.step2.payload'
             "name": mail.orderHeader.salesOffice.name,
             "email": mail.orderHeader.salesOffice.storeEmail
         },
-     "template_id": if((mail.customer.language == "nl_nl") or (mail.customer.language == "be_be")) 
-                p("subject.nl_nl.template_id" )  default ""
-              else
-                if((mail.customer.language == "de_de") or (mail.customer.language == "at_at")) 
-                p("subject.de_de.template_id" )  default "" 
-              else  
-                p("subject.nl_nl.template_id" )   default "" , 
+     "template_id": if(mail.customer.language == "nl_nl")     p("subject.nl_nl.template_id" )  default ""
+                        else 
+                             if(mail.customer.language == "be_be") p("subject.be_be.template_id" )  default ""
+                        else     
+                             if(mail.customer.language == "de_de") p("subject.de_de.template_id" )  default "" 
+                        else  
+                             if(mail.customer.language == "at_at") p("subject.at_at.template_id" )  default "" 
+                        else ""     ,
      "dynamic_fields": 
         {
         "lang_country": mail.customer.language,

@@ -342,10 +342,16 @@ subject:
    ## language code based mapping for transactional email subject##
    nl_nl:
      subject: "Je offerte staat klaar"
-     template_id: "13407"  
+     template_id: "13639" 
+   be_be: 
+     subject: "Je offerte staat klaar"
+     template_id: "13644"   
    de_de:
      subject: "Ihr persönliches Angebot"
-     template_id: "13639"
+     template_id: "13643"  
+   at_at:  
+     subject: "Ihr persönliches Angebot"
+     template_id: "13674" 
 
 from_email:
      NL: "contact@emailuat.swisssense.com"
