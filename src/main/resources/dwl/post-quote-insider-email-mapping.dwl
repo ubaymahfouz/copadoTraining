@@ -4,12 +4,12 @@ var mail = vars.'quote.step2.payload'
 ---
 {    
     "subject": if((mail.customer.language == "nl_nl") or (mail.customer.language == "be_be")) 
-                p("subject.nl_nl.subject" ) ++ " (" ++ mail.orderHeader.id ++ ")" default ""
+                p("subject.nl_nl.subject" ) ++ " (" ++ (mail.orderHeader.id) replace /^quote-/ with ""  ++ ")" default ""
               else
                 if((mail.customer.language == "de_de") or (mail.customer.language == "at_at")) 
-                p("subject.de_de.subject" ) ++ " (" ++ mail.orderHeader.id ++ ")" default ""
+                p("subject.de_de.subject" ) ++ " (" ++ (mail.orderHeader.id) replace /^quote-/ with ""  ++ ")" default ""
               else  
-                p("subject.nl_nl.subject" ) ++ " (" ++ mail.orderHeader.id ++ ")"  default "",
+                p("subject.nl_nl.subject" ) ++ " (" ++ (mail.orderHeader.id) replace /^quote-/ with ""  ++ ")"  default "",
     "tos":
     [
         {
