@@ -163,7 +163,15 @@ azure:
            q: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue"
            dlq: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue/$DeadLetterQueue"
            maxConcurrency: "4"
-
+        insider-user-upsert: 
+           q: "customer-interaction-pl.interests.post.insider.user.upsert.inbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.user.upsert.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+        insider-email-inbound: 
+           q: "customer-interaction-pl.interests.post.insider.email.inbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.email.inbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+                
 ## Keystores Config ##
 keystore:
   type: "JKS"
@@ -358,3 +366,7 @@ from_email:
      DE: "contact@emailuat.swisssense.com"
      BE: "contact@emailuat.swisssense.com"
      AT: "contact@emailuat.swisssense.com"
+
+insider_switch:
+     sfmc_active: "true"
+     insider_active: "true"
