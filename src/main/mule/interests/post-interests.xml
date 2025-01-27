@@ -201,8 +201,7 @@ output application/json
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-    attributes: attributes,
-    (vars: vars) if (vars != null)
+    attributes: attributes
 }]]]></json-logger:content>
 		</json-logger:logger>
 	</flow>
