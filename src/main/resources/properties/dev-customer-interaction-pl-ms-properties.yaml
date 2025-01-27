@@ -343,13 +343,13 @@ subject:
    nl_nl:
      subject: "Je offerte staat klaar"
      template_id: "13639" 
-   be_be: 
+   nl_be:
      subject: "Je offerte staat klaar"
      template_id: "13644"   
    de_de:
      subject: "Ihr persönliches Angebot"
      template_id: "13643"  
-   at_at:  
+   de_at:
      subject: "Ihr persönliches Angebot"
      template_id: "13674" 
 
