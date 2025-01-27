@@ -399,6 +399,33 @@ reply_email:
      DE: "kontakt@swisssense.de"
      AT: "kontakt@swisssense.at"
 
+template_id:
+   mattress-advisor:
+      NL: "16798"
+      BE: "16798"
+      DE: "16794"
+      AT: "16794"
+   pillow-advisor:
+      NL: "16790"
+      BE: "16790"
+      DE: "16793"
+      AT: "16793"
+   topper-advisor:
+      NL: "16782"
+      BE: "16782"
+      DE: "16791"
+      AT: "16791"
+   duvet-advisor:
+      NL: "16786"
+      BE: "16786"
+      DE: "16797"
+      AT: "16797"
+   boxspring-configurator:
+      NL: "16772"
+      BE: "16772"
+      DE: "16771"
+      AT: "16771"
+
 insider_switch:
      sfmc_active: "true"
      insider_active: "true"                                             

@@ -1,12 +1,12 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
-var interestData = payload.interestData
+var interestData = vars.originalPayload.interestData
 ---
 {
-	"subject": p("subject." ++ payload.source.campaign ++ "." ++ payload.language) default "Here is your offer",
+	"subject": p("subject." ++ vars.originalPayload.source.campaign ++ "." ++ vars.originalPayload.language) default "Here is your offer",
 	"tos": [{
 		"name": "Random Customer",
-		"email": payload.email
+		"email": vars.originalPayload.email
 	}],
 	"from": {
 		"name": "Swiss Sense",
@@ -14,12 +14,12 @@ var interestData = payload.interestData
 	},
 	"reply_to": {
 		"name": "Swiss Sense",
-		"email": p("reply_email." ++ payload.addresses[0].countryCode) default "contact@swisssense.nl"
+		"email": p("reply_email." ++ vars.originalPayload.addresses[0].countryCode) default "contact@swisssense.nl"
 	},
 	"template_id": "13407",
 	"dynamic_fields": {
-		"type": payload.source."type",
-		"campaign": payload.source.campaign,
+		"type": vars.originalPayload.source."type",
+		"campaign": vars.originalPayload.source.campaign,
 		"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,
 		"sku_configured_product": (interestData filter ((item) -> item.key == "SKUConfiguredProduct"))[0].value default null,
 		"price": (interestData filter ((item) -> item.key == "Price"))[0].value default null,

@@ -1,12 +1,12 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
-var interestData = payload.interestData
-var productData = payload.productData map ((item, index) -> item)
+var interestData = vars.originalPayload.interestData
+var productData = vars.originalPayload.productData map ((item, index) -> item)
 ---
 {
-	"subject": p("subject." ++ payload.source.campaign ++ "." ++ payload.language) default "Here is your offer",
+	"subject": p("subject." ++ vars.originalPayload.source.campaign ++ "." ++ vars.originalPayload.language) default "Here is your offer",
 	"tos": [{
-		"email": payload.email
+		"email": vars.originalPayload.email
 	}],
 	"from": {
 		"name": "Swiss Sense",
@@ -14,12 +14,12 @@ var productData = payload.productData map ((item, index) -> item)
 	},
 	"reply_to": {
 		"name": "Swiss Sense",
-		"email": p("reply_email." ++ payload.addresses[0].countryCode) default "contact@swisssense.nl"
+		"email": p("reply_email." ++ vars.originalPayload.addresses[0].countryCode) default "contact@swisssense.nl"
 	},
-	"template_id": "13407",
+	"template_id": p("template_id." ++ vars.originalPayload.source.campaign ++ "." ++ vars.originalPayload.addresses[0].countryCode),
 	"dynamic_fields": {
-		"type": payload.source."type",
-		"campaign": payload.source.campaign,
+		"type": vars.originalPayload.source."type",
+		"campaign": vars.originalPayload.source.campaign,
 		"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,
 		"why_new": (interestData filter ((item) -> item.key == "WhyNew"))[0].value default null,
 		"posture": (interestData filter ((item) -> item.key == "Posture"))[0].value default null,

@@ -1,28 +1,29 @@
 %dw 2.0
 output application/json skipNullOn = "everywhere"
-var interestData = payload.interestData
-var productData = payload.productData map ((item, index) -> item)
+var interestData = vars.originalPayload.interestData
+var productData = vars.originalPayload.productData map ((item, index) -> item)
 ---
+if (vars.originalPayload.source.campaign != "boxspring-configurator")
 {
 	"users": [{
 		"identifiers": {
-			"uuid": payload.globalCustomerId,
-			"email": payload.email
+			"uuid": vars.originalPayload.globalCustomerId,
+			"email": vars.originalPayload.email
 		},
 		"attributes": {
-			"email_opt_in": if(payload.subscriptions?) "true" else "false",
-			"language": payload.language,
-			"country": payload.addresses[0].countryCode
+			"email_opt_in": if(vars.originalPayload.subscriptions?) "true" else "false",
+			"language": vars.originalPayload.language,
+			"country": vars.originalPayload.addresses[0].countryCode
 		},
 		"events": [{
-			"event_name": "user_interest_recorded_for_" ++ payload.source.campaign,
+			"event_name": "user_interest_recorded_for_" ++ vars.originalPayload.source.campaign,
 			"timestamp": now() as DateTime as String {
 				format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
 			},
 			"event_params": {
 				"custom": {
-					"source": payload.source.name,
-					"campaign": payload.source.campaign,
+					"source": vars.originalPayload.source.name,
+					"campaign": vars.originalPayload.source.campaign,
 					"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,
 					"why_new": (interestData filter ((item) -> item.key == "WhyNew"))[0].value default null,
 					"posture": (interestData filter ((item) -> item.key == "Posture"))[0].value default null,
@@ -41,4 +42,4 @@ var productData = payload.productData map ((item, index) -> item)
 			}
 		}]
 	}]
-}
+} else null

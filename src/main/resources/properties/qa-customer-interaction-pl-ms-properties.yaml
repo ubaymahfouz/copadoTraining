@@ -414,6 +414,33 @@ reply_email:
      DE: "kontakt@swisssense.de"
      AT: "kontakt@swisssense.at"
 
+template_id:
+   mattress-advisor:
+      NL: "17526"
+      BE: "17526"
+      DE: "17527"
+      AT: "17527"
+   pillow-advisor:
+      NL: "17524"
+      BE: "17524"
+      DE: "17525"
+      AT: "17525"
+   topper-advisor:
+      NL: "17528"
+      BE: "17528"
+      DE: "17529"
+      AT: "17529"
+   duvet-advisor:
+      NL: "17522"
+      BE: "17522"
+      DE: "17523"
+      AT: "17523"
+   boxspring-configurator:
+      NL: "17515"
+      BE: "17515"
+      DE: "17516"
+      AT: "17516"
+
 insider_switch:
      sfmc_active: "true"
      insider_active: "true"   
