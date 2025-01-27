@@ -18,7 +18,6 @@ var interestData = payload.interestData
 	},
 	"template_id": "13407",
 	"dynamic_fields": {
-		"origin": payload.origin,
 		"type": payload.source."type",
 		"campaign": payload.source.campaign,
 		"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,

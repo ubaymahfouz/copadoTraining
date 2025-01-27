@@ -10,7 +10,7 @@ var productData = payload.productData map ((item, index) -> item)
 			"email": payload.email
 		},
 		"attributes": {
-			"email_opt_in": "true",
+			"email_opt_in": if(payload.subscriptions?) "true" else "false",
 			"language": payload.language,
 			"country": payload.addresses[0].countryCode
 		},
@@ -21,8 +21,7 @@ var productData = payload.productData map ((item, index) -> item)
 			},
 			"event_params": {
 				"custom": {
-					"origin": payload.origin,
-					"type": payload.source.name,
+					"source": payload.source.name,
 					"campaign": payload.source.campaign,
 					"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,
 					"why_new": (interestData filter ((item) -> item.key == "WhyNew"))[0].value default null,

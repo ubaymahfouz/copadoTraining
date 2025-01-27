@@ -9,7 +9,7 @@ var interestData = payload.interestData
 			"email": payload.email
 		},
 		"attributes": {
-			"email_opt_in": "true",
+			"email_opt_in": if(payload.subscriptions?) "true" else "false",
 			"language": payload.language,
 			"country": payload.addresses[0].countryCode
 		},
@@ -20,8 +20,7 @@ var interestData = payload.interestData
 			},
 			"event_params": {
 				"custom": {
-					"origin": payload.origin,
-					"type": payload.source.name,
+					"source": payload.source.name,
 					"campaign": payload.source.campaign,
 					"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,
 					"sku_configured_product": (interestData filter ((item) -> item.key == "SKUConfiguredProduct"))[0].value default null,

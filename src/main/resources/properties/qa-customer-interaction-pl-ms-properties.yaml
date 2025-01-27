@@ -154,7 +154,15 @@ azure:
         insider-event-upsert: 
            q: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue"
            dlq: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue/$DeadLetterQueue"
-           maxConcurrency: "4"   
+           maxConcurrency: "4" 
+        insider-user-upsert: 
+           q: "customer-interaction-pl.interests.post.insider.user.upsert.outbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.user.upsert.outbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+        insider-email-send-outbound: 
+           q: "customer-interaction-pl.interests.post.insider.email.send.outbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.email.send.outbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"  
 
 ## Keystores Config ##
 keystore:

@@ -6,7 +6,6 @@ var productData = payload.productData map ((item, index) -> item)
 {
 	"subject": p("subject." ++ payload.source.campaign ++ "." ++ payload.language) default "Here is your offer",
 	"tos": [{
-		"name": "Random Customer",
 		"email": payload.email
 	}],
 	"from": {
@@ -19,7 +18,6 @@ var productData = payload.productData map ((item, index) -> item)
 	},
 	"template_id": "13407",
 	"dynamic_fields": {
-		"origin": payload.origin,
 		"type": payload.source."type",
 		"campaign": payload.source.campaign,
 		"config_url": (interestData filter ((item) -> item.key == "ConfigURL"))[0].value  default null,

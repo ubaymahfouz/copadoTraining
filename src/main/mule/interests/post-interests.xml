@@ -217,6 +217,7 @@ output application/json
 				<ee:set-variable resource="dwl/transactional-emails-advisors.dwl" variableName="advisors" />
 			</ee:variables>
 		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="19e27f19-3db2-44f6-b255-5264cf34b7f5" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" />
 		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}" doc:name="Send to insider-user-upsert q" doc:id="b5f4abd4-012e-447f-ab9c-58daeafb4ecf" config-ref="Azure_Service_Bus_Messaging_Connector_Config" >
 			<azure-service-bus-messaging:body ><![CDATA[#[vars.payload.body]]]></azure-service-bus-messaging:body>
 		</azure-service-bus-messaging:send>
