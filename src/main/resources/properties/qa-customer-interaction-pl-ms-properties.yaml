@@ -376,6 +376,22 @@ subject:
    at_at:  
      subject: "Ihr persönliches Angebot"
      template_id: "13674"    
+   ## Dynamic Subject Determination for Insider
+   mattress-advisor:
+      nl: "Alsjeblieft, de beste matrassen voor jou!"
+      de: "Die perfekte Matratze für Sie!"
+   pillow-advisor:
+      nl: "Alsjeblieft, de beste hoofdkussens voor jou!"
+      de: "Das perfekte Kopfkissen für Sie!"
+   topper-advisor:
+      nl: "Alsjeblieft, de beste toppers voor jou!"
+      de: "Das perfekte Topper für Sie!"
+   duvet-advisor:
+      nl: "Alsjeblieft, de beste dekbedden voor jou!"
+      de: "Die ideale Bettdecke für Sie!"
+   boxspring-configurator:
+      nl: "Alsjeblieft, jouw ontwerp!"
+      de: "Hier ist Ihre persönliche Konfiguration!"
      
 ## domain- email mapping -from ##   
 from_email:
@@ -383,3 +399,13 @@ from_email:
      DE: "contact@emailuat.swisssense.com"
      BE: "contact@emailuat.swisssense.com"
      AT: "contact@emailuat.swisssense.com"                                   
+
+reply_email:
+     NL: "contact@swisssense.nl"
+     BE: "contact@swisssense.be"
+     DE: "kontakt@swisssense.de"
+     AT: "kontakt@swisssense.at"
+
+insider_switch:
+     sfmc_active: "true"
+     insider_active: "true"   
