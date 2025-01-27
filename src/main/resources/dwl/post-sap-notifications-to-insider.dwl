@@ -17,7 +17,7 @@ var region = (payload.customerKey splitBy "-")[1]
     }    
     ],
     "from": {
-        "name": (mail.attributes filter (attr) -> attr.name == "DepartmentID")[0].value default "",
+        "name": "Swiss Sense",
         "email": p("from_email." ++ region)
     default ""},
     "reply_to": {

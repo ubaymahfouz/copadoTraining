@@ -281,7 +281,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
-    <json-logger:logger doc:name="DEBUG" doc:id="f3f8cc10-58dd-4b88-af31-0d155ff646be" config-ref="JSON_Logger_Config" message='#["payload and variables before insider flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+    <json-logger:logger doc:name="DEBUG" doc:id="f3f8cc10-58dd-4b88-af31-0d155ff646be" config-ref="JSON_Logger_Config" message='#["payload and variables before insider flow"]' tracePoint="AFTER_REQUEST" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" priority="DEBUG">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     //payload: if (payload != null and !isEMpty(payload)) payload else {},
@@ -305,7 +305,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="Functional" doc:id="0ac5ec9b-c0a9-432a-872e-40e7326ced3f" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
       <json-logger:content ><![CDATA[null]]></json-logger:content>
     </json-logger:logger>
-    <json-logger:logger doc:name="DEBUG" doc:id="9dd7b08b-88f1-409c-a731-109a07195eb8" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" priority="DEBUG">
+    <json-logger:logger doc:name="DEBUG" doc:id="9dd7b08b-88f1-409c-a731-109a07195eb8" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" priority="DEBUG">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -384,7 +384,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <json-logger:logger doc:name="Functional" doc:id="47f63bb6-290a-4f0d-a3f1-f0a918a569e2" config-ref="JSON_Functional_Logger_Config" message="successfully transformed Quote to insider event request format " tracePoint="AFTER_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
       <json-logger:content ><![CDATA[null]]></json-logger:content>
     </json-logger:logger>
-    <json-logger:logger doc:name="DEBUG1" doc:id="27aedb6f-22a3-4d92-8a81-d483c2bbbd87" config-ref="JSON_Logger_Config" message='#["successfully transformed POST insider event request "]' tracePoint="AFTER_TRANSFORM" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
+    <json-logger:logger doc:name="DEBUG" doc:id="27aedb6f-22a3-4d92-8a81-d483c2bbbd87" config-ref="JSON_Logger_Config" message='#["successfully transformed POST insider event request "]' tracePoint="AFTER_TRANSFORM" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]">
       <json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
