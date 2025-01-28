@@ -198,6 +198,8 @@ output application/json
 		<json-logger:logger doc:name="Functional" doc:id="d98cae66-c25c-499c-9a71-8959be2f7af7" config-ref="JSON_Logger_Config" message='#["About to post user upsert to insider"]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
+		<set-variable value="${azure-vault::insider-x-request-token}" doc:name="Set insider request-token-key vault" doc:id="c82a796f-679a-44cc-8bf2-dc8fff201382" variableName="eventRequestToken" />
+		<set-variable value="${azure-vault::insider-x-partner-name}" doc:name="Set insider insider-x-partner-name" doc:id="784629c7-c7ec-442c-9b3e-a27881539f40" variableName="eventPartnerName" />
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="fd5c751f-e174-481a-a7fb-425e5f5f0778" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
 			<http:request method="POST" doc:name="Insider API - user upsert" doc:id="0f71cb5c-ea3a-4035-995f-a3fe05460a55" config-ref="HTTP_Request_configuration_insider_event_configuration" path="${secure::https.request.insider.event.path}" correlationId="#[vars.correlationId]" >
 				<http:body ><![CDATA[#[vars.userUpsertQOriginalPayload]]]></http:body>
@@ -209,11 +211,15 @@ output application/json
 }]]]></http:headers>
 			</http:request>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="DEBUG Logger" doc:id="bee850b1-1f8e-4e8c-b60d-dfea495cf265" config-ref="JSON_Logger_Config" message="Successfully received profile upsert response from insider API" tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
+		<json-logger:logger doc:name="Functional1" doc:id="2caec13e-4603-4b7f-b093-990b26f35afa" config-ref="JSON_Functional_Logger_Config" message="After POST insider event @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger doc:name="DEBUG" doc:id="0583b7e5-178f-4762-8e60-aca263ed0015" config-ref="JSON_Logger_Config" message='#["successfully sent POST insider user upsert event @ insider API"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
-    attributes: attributes
+    attributes: attributes,
+    (vars: vars) if (vars != null)
 }]]]></json-logger:content>
 		</json-logger:logger>
 	</flow>
@@ -260,18 +266,21 @@ output application/json
 		<json-logger:logger doc:name="Functional" doc:id="4035cf3b-ad6c-4925-a927-5106b8dba3f3" config-ref="JSON_Logger_Config" message='#["About to post user upsert to insider"]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
+		<set-variable value="${azure-vault::insider-ws-apikey}" doc:name="Set insider auth key-key vault" doc:id="4c80dc35-f9f3-4ae9-9f85-fe068e88414d" variableName="insiderAuthKey" />
 		<json-logger:logger-scope doc:name="Logger scope" doc:id="465ae67a-2f60-42fb-9735-2dd3cbf7faa4" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
 			<http:request method="POST" doc:name="Insider API - send email" doc:id="8644f560-4514-498d-8c6f-2047bf48537c" config-ref="HTTP_Request_configuration_insider_email_configuration" path="${secure::https.request.insider.email.path}" correlationId="#[vars.correlationId]" >
 				<http:body ><![CDATA[#[vars.emailsQOriginalPayload]]]></http:body>
 				<http:headers ><![CDATA[#[output application/java
 ---
 {
-    "X-REQUEST-TOKEN" : vars.insiderEventToken.requestToken,
-    "X-PARTNER-NAME" : vars.insiderEventPartner.name
+	"X-INS-AUTH-KEY" : vars.insiderAuthKey
 }]]]></http:headers>
 			</http:request>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="DEBUG Logger" doc:id="ee728a33-ece7-4a8e-a430-41ee32921494" config-ref="JSON_Logger_Config" message="Successfully received profile upsert response from insider API" tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
+		<json-logger:logger doc:name="Functional1" doc:id="e5b359c1-1afd-479d-80b0-81a7dc0064a2" config-ref="JSON_Functional_Logger_Config" message="After POST  insider email @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger doc:name="DEBUG" doc:id="72720f47-8922-4abd-9f39-df72119b6b23" config-ref="JSON_Logger_Config" message='#["successfully sent insider email request @ insider API"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
