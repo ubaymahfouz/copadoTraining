@@ -116,36 +116,34 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 }]]]></http:uri-params>
 					</http:request>
 				</json-logger:logger-scope>
-				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" >
-					<route >
-						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
-					<when expression='#[p("insider_switch.sfmc_active") == "true"]'>
-						<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
+				<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />
 					</ee:message>
 				</ee:transform>
-						<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
+				<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 					</http:request>
-					</when>
+				<!-- [STUDIO:"Scatter-Gather"]<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" >
+					<route >
+						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
 				</choice>
 					</route>
 					<route >
 						<choice doc:name="Choice" doc:id="d7b7210b-4777-4dc5-bc13-b06fab07630d" >
-							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"&#93;'>
 								<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
 							</when>
 						</choice>
 					</route>
 					<route >
 						<choice doc:name="Choice" doc:id="6b6df192-cc95-4a1b-9793-0dd852379009" >
-							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
-								<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"&#93;'>
+								<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload&#93;" />
 							</when>
 						</choice>
 					</route>
-				</scatter-gather>
+				</scatter-gather> [STUDIO] -->
 			</when>
 			<otherwise>
 				<json-logger:logger doc:name="Functional Log" doc:id="a11ea97b-8f42-47f5-a7e4-37d7b6807c3e" config-ref="JSON_Functional_Logger_Config"
