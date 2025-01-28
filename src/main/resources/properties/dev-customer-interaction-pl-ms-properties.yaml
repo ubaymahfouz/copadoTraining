@@ -163,7 +163,15 @@ azure:
            q: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue"
            dlq: "customer-interaction-pl.quote.post.insider-event-upsert.inbound.queue/$DeadLetterQueue"
            maxConcurrency: "4"
-
+        insider-user-upsert: 
+           q: "customer-interaction-pl.interests.post.insider.user.upsert.outbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.user.upsert.outbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+        insider-email-send-outbound: 
+           q: "customer-interaction-pl.interests.post.insider.email.send.outbound.queue"
+           dlq: "customer-interaction-pl.interests.post.insider.email.send.outbound.queue/$DeadLetterQueue"
+           maxConcurrency: "4"
+                
 ## Keystores Config ##
 keystore:
   type: "JKS"
@@ -343,18 +351,72 @@ subject:
    nl_nl:
      subject: "Je offerte staat klaar"
      template_id: "13639" 
-   be_be: 
+   nl_be:
      subject: "Je offerte staat klaar"
      template_id: "13644"   
    de_de:
      subject: "Ihr persönliches Angebot"
      template_id: "13643"  
-   at_at:  
+   de_at:
      subject: "Ihr persönliches Angebot"
      template_id: "13674" 
-
+   ## Dynamic Subject Determination for Insider
+   mattress-advisor:
+      nl: "Alsjeblieft, de beste matrassen voor jou!"
+      de: "Die perfekte Matratze für Sie!"
+   pillow-advisor:
+      nl: "Alsjeblieft, de beste hoofdkussens voor jou!"
+      de: "Das perfekte Kopfkissen für Sie!"
+   topper-advisor:
+      nl: "Alsjeblieft, de beste toppers voor jou!"
+      de: "Das perfekte Topper für Sie!"
+   duvet-advisor:
+      nl: "Alsjeblieft, de beste dekbedden voor jou!"
+      de: "Die ideale Bettdecke für Sie!"
+   boxspring-configurator:
+      nl: "Alsjeblieft, jouw ontwerp!"
+      de: "Hier ist Ihre persönliche Konfiguration!"
+      
 from_email:
      NL: "contact@emailuat.swisssense.com"
      DE: "contact@emailuat.swisssense.com"
      BE: "contact@emailuat.swisssense.com"
      AT: "contact@emailuat.swisssense.com"
+
+reply_email:
+     NL: "contact@swisssense.nl"
+     BE: "contact@swisssense.be"
+     DE: "kontakt@swisssense.de"
+     AT: "kontakt@swisssense.at"
+
+template_id:
+   mattress-advisor:
+      NL: "17526"
+      BE: "17526"
+      DE: "17527"
+      AT: "17527"
+   pillow-advisor:
+      NL: "17524"
+      BE: "17524"
+      DE: "17525"
+      AT: "17525"
+   topper-advisor:
+      NL: "17528"
+      BE: "17528"
+      DE: "17529"
+      AT: "17529"
+   duvet-advisor:
+      NL: "17522"
+      BE: "17522"
+      DE: "17523"
+      AT: "17523"
+   boxspring-configurator:
+      NL: "17515"
+      BE: "17515"
+      DE: "17516"
+      AT: "17516"
+
+insider_switch:
+     sfmc_active: "true"
+     insider_interests_active: "true"
+     insider_quotes_active: "true"
