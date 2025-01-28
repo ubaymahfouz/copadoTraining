@@ -445,4 +445,5 @@ template_id:
 
 insider_switch:
      sfmc_active: "true"
-     insider_active: "true"                           
+     insider_interests_active: "true"
+     insider_quotes_active: "true"                         

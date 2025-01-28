@@ -119,7 +119,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" >
 					<route >
 						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
-					<when expression='#[p("insider_switch.sfmc_active") == true]'>
+					<when expression='#[p("insider_switch.sfmc_active") == "true"]'>
 						<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />

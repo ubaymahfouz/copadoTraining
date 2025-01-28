@@ -289,7 +289,16 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     (vars: vars) if (vars != null)
 }]]]></json-logger:content>
     </json-logger:logger>
-    <flow-ref doc:name="post quotes to insider -email" doc:id="9cd82b19-b150-477d-b82a-c8afe43f3759" name="post-quotes-insider-email" />
+    <choice doc:name="Choice" doc:id="5f5d583f-ad93-431a-88fa-6698c072b2f6" >
+			<when expression='#[p("insider_switch.insider_quotes_active") == "true"]'>
+				<flow-ref doc:name="post quotes to insider -email" doc:id="9cd82b19-b150-477d-b82a-c8afe43f3759" name="post-quotes-insider-email" />
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Functional" doc:id="a2fbc9d5-9093-435c-a1da-1c13d750acd6" config-ref="JSON_Functional_Logger_Config" message="Insider switch is not avtive. Skipping Insider calls" tracePoint="END" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+					<json-logger:content ><![CDATA[null]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
 	</sub-flow>
   <sub-flow name="post-quotes-insider-email" doc:id="7fd56b03-0419-4444-a0e9-b83a8a23a885" >
     <json-logger:logger doc:name="Functional" doc:id="814c3e72-fc20-423a-90e7-0ac460dccd59" config-ref="JSON_Functional_Logger_Config" message="About to transform Quote to insider request format " tracePoint="BEFORE_TRANSFORM" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
