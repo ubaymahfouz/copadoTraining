@@ -134,6 +134,9 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 					<route >
 						<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
 					</route>
+					<route >
+						<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+					</route>
 				</scatter-gather>
 			</when>
 			<otherwise>
@@ -150,19 +153,16 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		</json-logger:logger>
 		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
 			<ee:message >
+				<ee:set-payload resource="dw/post-configurators-to-insider-advisors-and-configurator-mapping.dwl" />
 			</ee:message>
 			<ee:variables >
 				<ee:set-variable resource="dwl/post-configurators-to-insider-boxspring-configurator-mapping.dwl" variableName="boxspring_configurator" />
-				<ee:set-variable resource="dwl/post-configurators-to-insider-advisors-mapping.dwl" variableName="advisors" />
 			</ee:variables>
 		</ee:transform>
-		<set-variable doc:name="Set advisors/configurators payload" doc:id="491d762e-1f64-4dc0-8490-8aa06bf786c3" variableName="payload" value='#[output application/json&#10;---&#10;{&#10;	"body": if(vars.advisors != null) vars.advisors&#10;			else if (vars.boxspring_configurator != null) vars.boxspring_configurator&#10;			else null&#10;}]'/>
 		<json-logger:logger doc:name="Functional" doc:id="b1810cb1-7b41-4c92-bacc-fb5ab13d98fa" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 		</json-logger:logger>
 		<azure-service-bus-messaging:send doc:name="Send to insider-user-upsert q" doc:id="4cf30cb6-9b98-4cac-b4a5-abf5838e984c" config-ref="Azure_Service_Bus_Messaging_Connector_Config" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}">
-			<azure-service-bus-messaging:body ><![CDATA[#[vars.payload.body]]]></azure-service-bus-messaging:body>
 		</azure-service-bus-messaging:send>
-		<flow-ref doc:name="insider send emails payload to q" doc:id="347e1147-c142-4f35-a825-bd0dd64e4c51" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
 	</sub-flow>
 	<flow name="post-user-upsert-from-q" doc:id="e3549c35-d53d-4ce4-8bc9-ef46b68ea38e" >
 		<azure-service-bus-messaging:message-listener doc:name="Message listener insider-user-upsert" doc:id="ad73ae1f-7570-4ec9-b51f-83d0c05acf42" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}"/>
@@ -210,16 +210,15 @@ output application/json
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Transactional emails mapping" doc:id="ea326a68-e983-4878-8c62-f14789e5daaa" >
-			<ee:message />
+			<ee:message >
+				<ee:set-payload resource="dwl/transactional-emails-advisors-and-configurator.dwl" />
+			</ee:message>
 			<ee:variables >
 				<ee:set-variable resource="dwl/transactional-emails-boxspring-configurator-mapping.dwl" variableName="boxspring-configurator" />
-				<ee:set-variable resource="dwl/transactional-emails-advisors.dwl" variableName="advisors" />
 			</ee:variables>
 		</ee:transform>
-		<set-variable value='#[output application/json&#10;---&#10;{&#10;	"body": if(vars.advisors != null) vars.advisors&#10;			else if (vars.boxspring_configurator != null) vars.boxspring_configurator&#10;			else null&#10;}]' doc:name="Set advisors/configurators payload" doc:id="f81b1a89-56c3-4030-86bb-94cc128914c8" variableName="payload" />
 		<json-logger:logger doc:name="Functional" doc:id="19e27f19-3db2-44f6-b255-5264cf34b7f5" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" />
 		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}" doc:name="Send to insider-email-send-outbound q" doc:id="b5f4abd4-012e-447f-ab9c-58daeafb4ecf" config-ref="Azure_Service_Bus_Messaging_Connector_Config" >
-			<azure-service-bus-messaging:body ><![CDATA[#[vars.payload.body]]]></azure-service-bus-messaging:body>
 		</azure-service-bus-messaging:send>
 	</sub-flow>
 	<flow name="post-emails-from-q" doc:id="766aff8a-191f-4a3c-a037-e88c6601b4ce">
