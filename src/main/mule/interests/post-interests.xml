@@ -153,10 +153,9 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		</json-logger:logger>
 		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
 			<ee:message >
-				<ee:set-payload resource="dw/post-configurators-to-insider-advisors-and-configurator-mapping.dwl" />
+				<ee:set-payload resource="dwl/post-user-upsert-advisors-and-configurator-mapping-to-insider.dwl" />
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable resource="dwl/post-configurators-to-insider-boxspring-configurator-mapping.dwl" variableName="boxspring_configurator" />
 			</ee:variables>
 		</ee:transform>
 		<json-logger:logger doc:name="Functional" doc:id="b1810cb1-7b41-4c92-bacc-fb5ab13d98fa" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
@@ -214,7 +213,6 @@ output application/json
 				<ee:set-payload resource="dwl/transactional-emails-advisors-and-configurator.dwl" />
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable resource="dwl/transactional-emails-boxspring-configurator-mapping.dwl" variableName="boxspring-configurator" />
 			</ee:variables>
 		</ee:transform>
 		<json-logger:logger doc:name="Functional" doc:id="19e27f19-3db2-44f6-b255-5264cf34b7f5" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" />

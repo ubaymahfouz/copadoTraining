@@ -632,4 +632,6 @@ type auto_dac1ef69_468d_4ffd_a0e2_4948fe5fbeec_Output_Variables_postQuotesSF = {
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#3b91e243-856f-4cbf-8cfa-9692281e6248"/>
+  <types:enrichment select="#ea326a68-e983-4878-8c62-f14789e5daaa"/>
 </types:mule>
