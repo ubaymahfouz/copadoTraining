@@ -1,6 +1,9 @@
 %dw 2.0
 output application/json
 var event = vars.'quote.step2.payload'
+fun format(d: DateTime) = d as String {
+	format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
+}
 ---
 {    
     users: [
@@ -23,7 +26,7 @@ var event = vars.'quote.step2.payload'
              [
                 {
                     "event_name": "quote_created",
-                    "timestamp": now(),
+                    "timestamp": format(now() >> "CET"),
                     "event_params": {
                         "url": event.pdfPermanentLink,
                         "custom": {
