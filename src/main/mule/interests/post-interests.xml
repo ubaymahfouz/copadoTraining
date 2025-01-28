@@ -132,10 +132,18 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 				</choice>
 					</route>
 					<route >
-						<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
+						<choice doc:name="Choice" doc:id="d7b7210b-4777-4dc5-bc13-b06fab07630d" >
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
+								<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
+							</when>
+						</choice>
 					</route>
 					<route >
-						<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+						<choice doc:name="Choice" doc:id="6b6df192-cc95-4a1b-9793-0dd852379009" >
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
+								<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+							</when>
+						</choice>
 					</route>
 				</scatter-gather>
 			</when>
@@ -148,7 +156,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		</choice>
 	</sub-flow>
 	<sub-flow name="insider-user-upsert-payload-to-q" doc:id="2356f09d-3e3d-4179-a38b-d03a5eb1e34b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to UPSERT a request to Insider now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to USER UPSERT a request to user upsert Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
@@ -158,7 +166,12 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 			<ee:variables >
 			</ee:variables>
 		</ee:transform>
-		<json-logger:logger doc:name="Functional" doc:id="b1810cb1-7b41-4c92-bacc-fb5ab13d98fa" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Debug Log" doc:id="f738896b-c611-4480-8163-c6518a4a8bbe" config-ref="JSON_Logger_Config" message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)." tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes
+}]]]></json-logger:content>
 		</json-logger:logger>
 		<azure-service-bus-messaging:send doc:name="Send to insider-user-upsert q" doc:id="4cf30cb6-9b98-4cac-b4a5-abf5838e984c" config-ref="Azure_Service_Bus_Messaging_Connector_Config" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}">
 		</azure-service-bus-messaging:send>
@@ -205,7 +218,7 @@ output application/json
 		</json-logger:logger>
 	</flow>
 	<sub-flow name="insider-send-emails-payload-to-q" doc:id="2497e361-9eff-473a-add5-790ebeeb067b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to UPSERT a request to Insider now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to Email UPSERT a request to email send Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Transactional emails mapping" doc:id="ea326a68-e983-4878-8c62-f14789e5daaa" >
@@ -215,7 +228,13 @@ output application/json
 			<ee:variables >
 			</ee:variables>
 		</ee:transform>
-		<json-logger:logger doc:name="Functional" doc:id="19e27f19-3db2-44f6-b255-5264cf34b7f5" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" />
+		<json-logger:logger doc:name="Debug Log" doc:id="28e16169-ad19-40ef-a4e4-eeed78466537" config-ref="JSON_Logger_Config" message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)." tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
 		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}" doc:name="Send to insider-email-send-outbound q" doc:id="b5f4abd4-012e-447f-ab9c-58daeafb4ecf" config-ref="Azure_Service_Bus_Messaging_Connector_Config" >
 		</azure-service-bus-messaging:send>
 	</sub-flow>

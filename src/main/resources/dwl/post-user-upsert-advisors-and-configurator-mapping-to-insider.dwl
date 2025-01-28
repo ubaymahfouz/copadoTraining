@@ -2,6 +2,9 @@
 output application/json skipNullOn = "everywhere"
 var interestData = vars.originalPayload.interestData
 var productData = vars.originalPayload.productData map ((item, index) -> item)
+fun format(d: DateTime) = d as String {
+	format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
+}
 ---
 if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 	"users": [{
@@ -16,9 +19,7 @@ if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 		},
 		"events": [{
 			"event_name": "user_interest_recorded_for_" ++ vars.originalPayload.source.campaign,
-			"timestamp": now() as DateTime as String {
-				format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
-			},
+			"timestamp": format(now() >> "CET"),
 			"event_params": {
 				"custom": {
 					"source": vars.originalPayload.source.name,
@@ -68,9 +69,7 @@ else
 		},
 		"events": [{
 			"event_name": "user_interest_recorded_for_" ++ vars.originalPayload.source.campaign,
-			"timestamp": now() as DateTime as String {
-				format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
-			},
+			"timestamp": format(now() >> "CET"),
 			"event_params": {
 				"custom": {
 					"source": vars.originalPayload.source.name,
