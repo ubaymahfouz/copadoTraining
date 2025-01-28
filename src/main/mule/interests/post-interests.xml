@@ -132,10 +132,18 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 				</choice>
 					</route>
 					<route >
-						<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
+						<choice doc:name="Choice" doc:id="d7b7210b-4777-4dc5-bc13-b06fab07630d" >
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
+								<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
+							</when>
+						</choice>
 					</route>
 					<route >
-						<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+						<choice doc:name="Choice" doc:id="6b6df192-cc95-4a1b-9793-0dd852379009" >
+							<when expression='#[p("insider_switch.insider_interests_active") == "true"]'>
+								<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+							</when>
+						</choice>
 					</route>
 				</scatter-gather>
 			</when>
