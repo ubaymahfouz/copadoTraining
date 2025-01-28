@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
+<mule xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core 
 	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 	http://www.mulesoft.org/schema/mule/json-logger 
 	http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 	http://www.mulesoft.org/schema/mule/http 
 	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 	http://www.mulesoft.org/schema/mule/ee/core 
-	http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd">
 	<sub-flow name="post-interests" doc:id="0b682ab6-3c82-4b00-8cd9-68d7ab8bf457">
 		<json-logger:logger doc:name="Functional Log" doc:id="ba214598-90f0-4d72-8ed0-3d17f8d6ff16" config-ref="JSON_Functional_Logger_Config"
 			message='#["Message to POST interests received, about to check if the interests are for a new or existing Customer."]' tracePoint="BEFORE_REQUEST"
@@ -102,7 +103,7 @@
 		<choice doc:name="Does the request contain a configurator?" doc:id="4f06734a-f097-4fdb-ae23-31bbb6184d50">
 			<when expression="#[vars.originalPayload.interestData != null]">
 				<json-logger:logger doc:name="Functional Log" doc:id="9dbd1c68-54bc-4747-97b5-0215082210a9" config-ref="JSON_Functional_Logger_Config"
-					message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud now."
+					message="Interests of the Customer(s) have been updated. About to POST a request to Salesforce Marketing Cloud or Insider now."
 					tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
 					<json-logger:content><![CDATA[null]]></json-logger:content>
 				</json-logger:logger>
@@ -115,19 +116,28 @@
 }]]]></http:uri-params>
 					</http:request>
 				</json-logger:logger-scope>
-				<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
+				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" >
+					<route >
+						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
+					<when expression='#[p("insider_switch.sfmc_active") == "true"]'>
+						<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />
 					</ee:message>
 				</ee:transform>
-				<json-logger:logger-scope doc:name="Logger scope" doc:id="175c4768-b32c-47b0-ac14-f96241317bd0"
-					configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http">
-					<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL"
-						doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration"
-						path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
+						<http:request method="POST" doc:name="POST Configurators @ Salesforce Marketing Cloud SL" doc:id="f6f969cc-83ae-48e9-986b-b38b47548cea" config-ref="HTTPS_Request_Salesforce-Marketing-Cloud_SL_configuration" path="${secure::https.request.salesforce-marketing-cloud-sl.configurators.path}">
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 					</http:request>
-				</json-logger:logger-scope>
+					</when>
+				</choice>
+					</route>
+					<route >
+						<flow-ref doc:name="insider-user-upsert-payload-to-q" doc:id="f6f35f4c-bfc1-4030-ada2-be92a3440195" name="insider-user-upsert-payload-to-q" />
+					</route>
+					<route >
+						<flow-ref doc:name="insider send emails payload to q" doc:id="652c9332-cf82-4b79-a595-b39bc56e416c" name="insider-send-emails-payload-to-q" targetValue="#[vars.originalPayload]" />
+					</route>
+				</scatter-gather>
 			</when>
 			<otherwise>
 				<json-logger:logger doc:name="Functional Log" doc:id="a11ea97b-8f42-47f5-a7e4-37d7b6807c3e" config-ref="JSON_Functional_Logger_Config"
@@ -137,6 +147,120 @@
 			</otherwise>
 		</choice>
 	</sub-flow>
+	<sub-flow name="insider-user-upsert-payload-to-q" doc:id="2356f09d-3e3d-4179-a38b-d03a5eb1e34b" >
+		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to UPSERT a request to Insider now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
+			<ee:message >
+				<ee:set-payload resource="dwl/post-user-upsert-advisors-and-configurator-mapping-to-insider.dwl" />
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="b1810cb1-7b41-4c92-bacc-fb5ab13d98fa" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes">
+		</json-logger:logger>
+		<azure-service-bus-messaging:send doc:name="Send to insider-user-upsert q" doc:id="4cf30cb6-9b98-4cac-b4a5-abf5838e984c" config-ref="Azure_Service_Bus_Messaging_Connector_Config" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}">
+		</azure-service-bus-messaging:send>
+	</sub-flow>
+	<flow name="post-user-upsert-from-q" doc:id="e3549c35-d53d-4ce4-8bc9-ef46b68ea38e" >
+		<azure-service-bus-messaging:message-listener doc:name="Message listener insider-user-upsert" doc:id="ad73ae1f-7570-4ec9-b51f-83d0c05acf42" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}"/>
+		<ee:transform doc:name="Set originalPayload variable" doc:id="898949ee-19c2-463f-a5dc-f97498ada84e" >
+			<ee:variables >
+				<ee:set-variable variableName="insiderEventToken" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+   requestToken: p("azure-vault::insider-x-request-token")
+}]]></ee:set-variable>
+				<ee:set-variable variableName="insiderEventPartner" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  name: p("azure-vault::insider-x-partner-name")
+}]]></ee:set-variable>
+				<ee:set-variable variableName="userUpsertQOriginalPayload" ><![CDATA[payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="d98cae66-c25c-499c-9a71-8959be2f7af7" config-ref="JSON_Logger_Config" message='#["About to post user upsert to insider"]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="fd5c751f-e174-481a-a7fb-425e5f5f0778" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
+			<http:request method="POST" doc:name="Insider API - user upsert" doc:id="0f71cb5c-ea3a-4035-995f-a3fe05460a55" config-ref="HTTP_Request_configuration_insider_event_configuration" path="${secure::https.request.insider.event.path}" correlationId="#[vars.correlationId]" >
+				<http:body ><![CDATA[#[vars.userUpsertQOriginalPayload]]]></http:body>
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+    "X-REQUEST-TOKEN" : vars.insiderEventToken.requestToken,
+    "X-PARTNER-NAME" : vars.insiderEventPartner.name
+}]]]></http:headers>
+			</http:request>
+		</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG Logger" doc:id="bee850b1-1f8e-4e8c-b60d-dfea495cf265" config-ref="JSON_Logger_Config" message="Successfully received profile upsert response from insider API" tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</flow>
+	<sub-flow name="insider-send-emails-payload-to-q" doc:id="2497e361-9eff-473a-add5-790ebeeb067b" >
+		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to UPSERT a request to Insider now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Transactional emails mapping" doc:id="ea326a68-e983-4878-8c62-f14789e5daaa" >
+			<ee:message >
+				<ee:set-payload resource="dwl/transactional-emails-advisors-and-configurator.dwl" />
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="19e27f19-3db2-44f6-b255-5264cf34b7f5" config-ref="JSON_Functional_Logger_Config" message="About to send advisor/configurator payload to queue - insider-user-upsert" tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" />
+		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}" doc:name="Send to insider-email-send-outbound q" doc:id="b5f4abd4-012e-447f-ab9c-58daeafb4ecf" config-ref="Azure_Service_Bus_Messaging_Connector_Config" >
+		</azure-service-bus-messaging:send>
+	</sub-flow>
+	<flow name="post-emails-from-q" doc:id="766aff8a-191f-4a3c-a037-e88c6601b4ce">
+		<azure-service-bus-messaging:message-listener doc:name="Message listener insider-email-send-outbound" doc:id="f9679d67-f503-4167-adba-804f843b9b02" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}"/>
+		<ee:transform doc:name="Set originalPayload variable" doc:id="f11e9747-bba8-4212-a5cb-04a1633af9c0" >
+			<ee:variables >
+				<ee:set-variable variableName="insiderEventToken" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+   requestToken: p("azure-vault::insider-x-request-token")
+}]]></ee:set-variable>
+				<ee:set-variable variableName="insiderEventPartner" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  name: p("azure-vault::insider-x-partner-name")
+}]]></ee:set-variable>
+				<ee:set-variable variableName="emailsQOriginalPayload" ><![CDATA[payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Functional" doc:id="4035cf3b-ad6c-4925-a927-5106b8dba3f3" config-ref="JSON_Logger_Config" message='#["About to post user upsert to insider"]' tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+			<json-logger:content ><![CDATA[null]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger-scope doc:name="Logger scope" doc:id="465ae67a-2f60-42fb-9735-2dd3cbf7faa4" configurationRef="JSON_Logger_Config" priority="DEBUG" category="nl.swisssense.tracking.http" >
+			<http:request method="POST" doc:name="Insider API - send email" doc:id="8644f560-4514-498d-8c6f-2047bf48537c" config-ref="HTTP_Request_configuration_insider_email_configuration" path="${secure::https.request.insider.email.path}" correlationId="#[vars.correlationId]" >
+				<http:body ><![CDATA[#[vars.emailsQOriginalPayload]]]></http:body>
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+    "X-REQUEST-TOKEN" : vars.insiderEventToken.requestToken,
+    "X-PARTNER-NAME" : vars.insiderEventPartner.name
+}]]]></http:headers>
+			</http:request>
+		</json-logger:logger-scope>
+		<json-logger:logger doc:name="DEBUG Logger" doc:id="ee728a33-ece7-4a8e-a430-41ee32921494" config-ref="JSON_Logger_Config" message="Successfully received profile upsert response from insider API" tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
+    attributes: attributes,
+    (vars: vars) if (vars != null)
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</flow>
 	<sub-flow name="post-interests_patch-customer" doc:id="193d4ca7-ccb4-4028-9902-29ffd62e2b39">
 		<choice doc:name="Is the customerType known?" doc:id="4f4074bf-8fb7-4976-b758-7652ce5ad507">
 			<when
