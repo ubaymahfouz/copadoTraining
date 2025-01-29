@@ -119,7 +119,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" maxConcurrency="1">
 					<route >
 						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
-							<when expression='#[p("insider_switch.insider_interests_active") == "false"]'>
+							<when expression='#[p("insider_switch.sfmc_active") == "true"]'>
 								<ee:transform doc:name="POST configurators request mapping" doc:id="365de60e-ea00-4de0-b64b-6226211395ae">
 					<ee:message>
 						<ee:set-payload resource="dwl/post-configurators-to-salesforce-marketing-cloud-sl-request-mapping.dwl" />
@@ -157,7 +157,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		</choice>
 	</sub-flow>
 	<sub-flow name="insider-user-upsert-payload-to-q" doc:id="2356f09d-3e3d-4179-a38b-d03a5eb1e34b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="About to do the mapping for the interestsData payload and then send it to insider-user-upsert Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="About to do transformation for the interestsData payload and then send it to insider-user-upsert Q." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
@@ -167,7 +167,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 			<ee:variables >
 			</ee:variables>
 		</ee:transform>
-		<json-logger:logger doc:name="Debug Log" doc:id="f738896b-c611-4480-8163-c6518a4a8bbe" config-ref="JSON_Logger_Config" message="transformation is completed, sending Payload to insider-user-upsert  Q" tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Debug Log" doc:id="f738896b-c611-4480-8163-c6518a4a8bbe" config-ref="JSON_Logger_Config" message="transformation is completed, sending Payload to insider-user-upsert Q" tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -212,10 +212,10 @@ output application/json
 }]]]></http:headers>
 			</http:request>
 		</json-logger:logger-scope>
-		<json-logger:logger doc:name="Functional" doc:id="2caec13e-4603-4b7f-b093-990b26f35afa" config-ref="JSON_Functional_Logger_Config" message="After POST insider event @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
+		<json-logger:logger doc:name="Functional" doc:id="2caec13e-4603-4b7f-b093-990b26f35afa" config-ref="JSON_Functional_Logger_Config" message="After POST insider user-upsert @ insider API" tracePoint="AFTER_REQUEST" category="nl.swisssense.attributes" correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
-		<json-logger:logger doc:name="DEBUG" doc:id="0583b7e5-178f-4762-8e60-aca263ed0015" config-ref="JSON_Logger_Config" message='#["successfully sent POST insider user upsert event @ insider API"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
+		<json-logger:logger doc:name="DEBUG" doc:id="0583b7e5-178f-4762-8e60-aca263ed0015" config-ref="JSON_Logger_Config" message='#["successfully sent POST insider user upsert @ insider API"]' tracePoint="AFTER_REQUEST" priority="DEBUG" category="nl.swisssense.payload" correlationId="#[vars.correlationId]" >
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -225,7 +225,7 @@ output application/json
 		</json-logger:logger>
 	</flow>
 	<sub-flow name="insider-send-emails-payload-to-q" doc:id="2497e361-9eff-473a-add5-790ebeeb067b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="About to do the mapping for the interestsData payload and then send it to insider-email-send-outbound Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="About to do transformation for the interestsData payload and then send it to insider-email-send-outbound Q." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Transactional emails mapping" doc:id="ea326a68-e983-4878-8c62-f14789e5daaa" >
