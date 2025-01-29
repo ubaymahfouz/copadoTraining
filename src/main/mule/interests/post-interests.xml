@@ -157,7 +157,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		</choice>
 	</sub-flow>
 	<sub-flow name="insider-user-upsert-payload-to-q" doc:id="2356f09d-3e3d-4179-a38b-d03a5eb1e34b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="About to USER UPSERT interests request to user upsert Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="b10a6a30-a734-464d-82fd-a1ad05f6a323" config-ref="JSON_Functional_Logger_Config" message="About to do the mapping for the interestsData payload and then send it to insider-user-upsert Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="advisors/configurators mapping" doc:id="3b91e243-856f-4cbf-8cfa-9692281e6248" >
@@ -167,7 +167,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 			<ee:variables >
 			</ee:variables>
 		</ee:transform>
-		<json-logger:logger doc:name="Debug Log" doc:id="f738896b-c611-4480-8163-c6518a4a8bbe" config-ref="JSON_Logger_Config" message="transformation is completed, about to send to user-upsert Q" tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Debug Log" doc:id="f738896b-c611-4480-8163-c6518a4a8bbe" config-ref="JSON_Logger_Config" message="transformation is completed, sending Payload to insider-user-upsert  Q" tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
@@ -225,7 +225,7 @@ output application/json
 		</json-logger:logger>
 	</flow>
 	<sub-flow name="insider-send-emails-payload-to-q" doc:id="2497e361-9eff-473a-add5-790ebeeb067b" >
-		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="Interests of the Customer(s) have been updated. About to Email UPSERT a request to email send Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
+		<json-logger:logger doc:name="Functional Log" doc:id="ff9f8f03-9f26-405f-839e-bd93cd4ffe07" config-ref="JSON_Functional_Logger_Config" message="About to do the mapping for the interestsData payload and then send it to insider-email-send-outbound Q now." tracePoint="BEFORE_REQUEST" category="nl.swisssense.attributes" >
 			<json-logger:content ><![CDATA[null]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Transactional emails mapping" doc:id="ea326a68-e983-4878-8c62-f14789e5daaa" >
@@ -235,7 +235,7 @@ output application/json
 			<ee:variables >
 			</ee:variables>
 		</ee:transform>
-		<json-logger:logger doc:name="Debug Log" doc:id="28e16169-ad19-40ef-a4e4-eeed78466537" config-ref="JSON_Logger_Config" message="No response received from Customers PL, creating new Lead for the given details (which are saved in originalPayload)." tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
+		<json-logger:logger doc:name="Debug Log" doc:id="28e16169-ad19-40ef-a4e4-eeed78466537" config-ref="JSON_Logger_Config" message="transformation is completed, sending Payload to insider-email-send-outbound Q" tracePoint="BEFORE_TRANSFORM" priority="DEBUG" category="nl.swisssense.attributes">
 			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     (payload: JSONLoggerModule::stringifyNonJSON(payload)) if (payload != null),
