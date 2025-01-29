@@ -129,6 +129,14 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 						<reconnect frequency="${secure::https.reconnection.frequency}" count="${secure::https.reconnection.attempts}" />
 					</http:request>
 								<logger level="INFO" doc:name="SFMC Logger" doc:id="05a40a3c-4f85-4e2c-9bc2-99838076dd2f" message="#[output application/json&#10;---&#10;payload]" />
+								<ee:transform doc:name="Json response format" doc:id="b122c81d-5fa5-4bfa-a144-286d55132865" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
 							</when>
 				</choice>
 					</route>
@@ -177,6 +185,14 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 		<azure-service-bus-messaging:send doc:name="Send to insider-user-upsert q" doc:id="4cf30cb6-9b98-4cac-b4a5-abf5838e984c" config-ref="Azure_Service_Bus_Messaging_Connector_Config" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}">
 		</azure-service-bus-messaging:send>
 		<logger level="INFO" doc:name="User Upsert Logger" doc:id="a3117196-c8d3-45a7-844d-207ff20690c6" message="#[output application/json&#10;---&#10;payload]"/>
+		<ee:transform doc:name="Json response format" doc:id="0d2213fd-39d5-48a7-9b2d-521d6aee3973" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<flow name="post-user-upsert-from-q" doc:id="e3549c35-d53d-4ce4-8bc9-ef46b68ea38e" >
 		<azure-service-bus-messaging:message-listener doc:name="Message listener insider-user-upsert" doc:id="ad73ae1f-7570-4ec9-b51f-83d0c05acf42" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.insider-user-upsert.q}"/>
@@ -246,6 +262,14 @@ output application/json
 		<azure-service-bus-messaging:send destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}" doc:name="Send to insider-email-send-outbound q" doc:id="b5f4abd4-012e-447f-ab9c-58daeafb4ecf" config-ref="Azure_Service_Bus_Messaging_Connector_Config" >
 		</azure-service-bus-messaging:send>
 		<logger level="INFO" doc:name="Email Send Logger" doc:id="538ee00f-7203-49e8-a760-b4b1c2748a54" message="#[output application/json&#10;---&#10;payload]" />
+		<ee:transform doc:name="Json response format" doc:id="d3b03e37-cd59-4374-ab9c-89d9a7a74124" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<flow name="post-emails-from-q" doc:id="766aff8a-191f-4a3c-a037-e88c6601b4ce">
 		<azure-service-bus-messaging:message-listener doc:name="Message listener insider-email-send-outbound" doc:id="f9679d67-f503-4167-adba-804f843b9b02" config-ref="Azure_Service_Bus_Messaging_Connector_Config" ackMode="AUTO" destinationName="${azure.servicebus.destination.quote.insider-email-send-outbound.q}"/>
