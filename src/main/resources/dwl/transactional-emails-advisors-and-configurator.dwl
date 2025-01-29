@@ -55,7 +55,7 @@ else
 	}],
 	"from": {
 		"name": "Swiss Sense",
-		"email": "contact@email.swisssense.nl"
+		"email": p("from_email.NL")
 	},
 	"reply_to": {
 		"name": "Swiss Sense",

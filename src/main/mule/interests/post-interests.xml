@@ -116,7 +116,7 @@ http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mules
 }]]]></http:uri-params>
 					</http:request>
 				</json-logger:logger-scope>
-				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" maxConcurrency="1">
+				<scatter-gather doc:name="Scatter-Gather" doc:id="5718d3d2-9c8e-424e-b286-0f3c0dde4bb9" maxConcurrency="3">
 					<route >
 						<choice doc:name="Choice" doc:id="dcca6075-e051-454c-a2fa-770560a4130a">
 							<when expression='#[p("insider_switch.sfmc_active") == "true"]'>
