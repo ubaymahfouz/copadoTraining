@@ -13,10 +13,11 @@ if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 			"email": vars.originalPayload.email
 		},
 		"attributes": {
-			"email_opt_in": if ( vars.originalPayload.subscriptions? ) "true" else "false",
+			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else "false",
 			"language": vars.originalPayload.language,
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
+		"append": "true",
 		"events": [{
 			"event_name": "mailmy_" ++ vars.originalPayload.source.campaign,
 			"timestamp": format(now() >> "CET"),
@@ -63,10 +64,11 @@ else
 			"email": vars.originalPayload.email
 		},
 		"attributes": {
-			"email_opt_in": if ( vars.originalPayload.subscriptions? ) "true" else "false",
+			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else "false",
 			"language": vars.originalPayload.language,
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
+		"append": "true",
 		"events": [{
 			"event_name": "mailmy_" ++ vars.originalPayload.source.campaign,
 			"timestamp": format(now() >> "CET"),
