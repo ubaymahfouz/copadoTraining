@@ -6,7 +6,6 @@ var productData = vars.originalPayload.productData map ((item, index) -> item)
 if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 	"subject": p("subject." ++ vars.originalPayload.source.campaign ++ "." ++ vars.originalPayload.language) default "Here is your offer",
 	"tos": [{
-		"name": "Random Customer",
 		"email": vars.originalPayload.email
 	}],
 	"from": {
