@@ -18,7 +18,7 @@ if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
 		"events": [{
-			"event_name": "user_interest_recorded_for_" ++ vars.originalPayload.source.campaign,
+			"event_name": "mailmy_" ++ vars.originalPayload.source.campaign,
 			"timestamp": format(now() >> "CET"),
 			"event_params": {
 				"custom": {
@@ -68,7 +68,7 @@ else
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
 		"events": [{
-			"event_name": "user_interest_recorded_for_" ++ vars.originalPayload.source.campaign,
+			"event_name": "mailmy_" ++ vars.originalPayload.source.campaign,
 			"timestamp": format(now() >> "CET"),
 			"event_params": {
 				"custom": {
