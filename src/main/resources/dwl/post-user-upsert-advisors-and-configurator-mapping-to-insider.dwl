@@ -3,7 +3,7 @@ output application/json skipNullOn = "everywhere"
 var interestData = vars.originalPayload.interestData
 var productData = vars.originalPayload.productData map ((item, index) -> item)
 fun format(d: DateTime) = d as String {
-	format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
+	format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
 }
 ---
 if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
