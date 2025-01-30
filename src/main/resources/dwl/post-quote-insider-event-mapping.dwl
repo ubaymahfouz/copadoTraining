@@ -2,7 +2,7 @@
 output application/json
 var event = vars.'quote.step2.payload'
 fun format(d: DateTime) = d as String {
-	format: "yyyy-HH-mm'T'HH:mm:ss'Z'"
+	format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
 }
 ---
 {    
