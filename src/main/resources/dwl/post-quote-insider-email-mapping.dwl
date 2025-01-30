@@ -3,10 +3,10 @@ output application/json
 var mail = vars.'quote.step2.payload'
 ---
 {    
-    "subject": if((mail.customer.language == "nl_nl") or (mail.customer.language == "be_be")) 
+    "subject": if((mail.customer.language == "nl_nl") or (mail.customer.language == "nl_be")) 
                 p("subject.nl_nl.subject" ) ++ " (" ++ (mail.orderHeader.id replace /^quote-/ with "" ) ++ ")" default ""
               else
-                if((mail.customer.language == "de_de") or (mail.customer.language == "at_at")) 
+                if((mail.customer.language == "de_de") or (mail.customer.language == "de_at")) 
                 p("subject.de_de.subject" ) ++ " (" ++ (mail.orderHeader.id replace /^quote-/ with "")  ++ ")" default ""
               else  
                 p("subject.nl_nl.subject" ) ++ " (" ++ (mail.orderHeader.id replace /^quote-/ with "")  ++ ")"  default "",
@@ -29,11 +29,11 @@ var mail = vars.'quote.step2.payload'
         },
      "template_id": if(mail.customer.language == "nl_nl")     p("subject.nl_nl.template_id" )  default ""
                         else 
-                             if(mail.customer.language == "be_be") p("subject.be_be.template_id" )  default ""
+                             if(mail.customer.language == "nl_be") p("subject.nl_be.template_id" )  default ""
                         else     
                              if(mail.customer.language == "de_de") p("subject.de_de.template_id" )  default "" 
                         else  
-                             if(mail.customer.language == "at_at") p("subject.at_at.template_id" )  default "" 
+                             if(mail.customer.language == "de_at") p("subject.de_at.template_id" )  default "" 
                         else ""     ,
      "dynamic_fields": 
         {
