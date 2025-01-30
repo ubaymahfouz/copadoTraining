@@ -16,7 +16,7 @@ if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 		"name": "Swiss Sense",
 		"email": p("reply_email." ++ vars.originalPayload.addresses[0].countryCode) default "contact@swisssense.nl"
 	},
-	"template_id": "13407",
+	"template_id": p("template_id." ++ vars.originalPayload.source.campaign ++ "." ++ vars.originalPayload.addresses[0].countryCode),
 	"dynamic_fields": {
 		"type": vars.originalPayload.source."type",
 		"campaign": vars.originalPayload.source.campaign,
