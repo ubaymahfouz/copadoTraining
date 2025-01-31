@@ -13,7 +13,7 @@ if ( vars.originalPayload.source.campaign == "boxspring-configurator" ) {
 			"email": vars.originalPayload.email
 		},
 		"attributes": {
-			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else "false",
+			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else null,
 			"language": vars.originalPayload.language ++ "_" ++ vars.originalPayload.addresses[0].countryCode,
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
@@ -72,7 +72,7 @@ else
 			"email": vars.originalPayload.email
 		},
 		"attributes": {
-			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else "false",
+			"email_optin": if ( vars.originalPayload.subscriptions? ) "true" else null,
 			"language": vars.originalPayload.language ++ "_" ++ vars.originalPayload.addresses[0].countryCode,
 			"country": vars.originalPayload.addresses[0].countryCode
 		},
