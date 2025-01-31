@@ -24,8 +24,8 @@ var mail = vars.'quote.step2.payload'
         },
     "reply_to":
         {
-            "name": mail.orderHeader.salesOffice.name,
-            "email": mail.orderHeader.salesOffice.storeEmail
+            "name": "Swiss Sense",
+            "email": p("reply_to-quote-insider-email." ++ mail.orderHeader.salesOffice.countryCode) default "contact@swisssense.com"
         },
      "template_id": if(mail.customer.language == "nl_nl")     p("subject.nl_nl.template_id" )  default ""
                         else 
