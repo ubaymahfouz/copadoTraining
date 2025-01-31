@@ -376,7 +376,13 @@ subject:
    boxspring-configurator:
       nl: "Alsjeblieft, jouw ontwerp!"
       de: "Hier ist Ihre persönliche Konfiguration!"
-      
+ 
+reply_to-quote-insider-email:
+     NL: "contact@swisssense.com"
+     BE: "contact@swisssense.com"
+     DE: "kontakt@swisssense.com"
+     AT: "kontakt@swisssense.com"
+        
 from_email:
      NL: "contact@emailuat.swisssense.com"
      DE: "contact@emailuat.swisssense.com"
