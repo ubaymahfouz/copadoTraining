@@ -162,6 +162,7 @@
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
+    
     <fields>
         <fullName>Description__c</fullName>
         <externalId>false</externalId>
